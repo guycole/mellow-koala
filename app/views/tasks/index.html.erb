@@ -1,0 +1,22 @@
+<h1>Tasks</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Start Time</th>
+      <th>Stop Time</th>
+      <th>Host</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tasks.each do |task| %>
+      <tr>
+        <td><%= task.name %></td>
+        <td><%= task.start_time %></td>
+        <td><%= task.stop_time %></td>
+        <td><%= task.host %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

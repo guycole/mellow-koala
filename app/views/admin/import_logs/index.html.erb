@@ -1,0 +1,51 @@
+<% content_for :title, "Import Logs" %>
+
+<div class="max-w-6xl mx-auto">
+  <h1 class="text-2xl font-bold text-gray-800 mb-4">Import Logs</h1>
+
+  <%= form_with url: admin_import_logs_path, method: :get, class: "flex gap-3 mb-6" do %>
+    <%= select_tag :import_type,
+        options_for_select([["All Types", ""], ["tasks", "tasks"], ["box_scores", "box_scores"]], params[:import_type]),
+        class: "border rounded px-3 py-2" %>
+    <%= submit_tag "Filter", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer" %>
+    <%= link_to "Clear", admin_import_logs_path, class: "text-gray-600 px-3 py-2 hover:underline" %>
+  <% end %>
+
+  <div class="bg-white rounded shadow overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="px-4 py-3 text-left">Source File</th>
+          <th class="px-4 py-3 text-left">Type</th>
+          <th class="px-4 py-3 text-left">Run At</th>
+          <th class="px-4 py-3 text-right">Processed</th>
+          <th class="px-4 py-3 text-right">Inserted</th>
+          <th class="px-4 py-3 text-right">Skipped</th>
+          <th class="px-4 py-3 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @import_logs.each do |log| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-mono text-xs"><%= log.source_file %></td>
+            <td class="px-4 py-3"><%= log.import_type %></td>
+            <td class="px-4 py-3 text-gray-600"><%= log.run_at&.strftime("%Y-%m-%d %H:%M:%S") %></td>
+            <td class="px-4 py-3 text-right"><%= log.records_processed %></td>
+            <td class="px-4 py-3 text-right"><%= log.records_inserted %></td>
+            <td class="px-4 py-3 text-right"><%= log.records_skipped %></td>
+            <td class="px-4 py-3"><%= link_to "View", admin_import_log_path(log), class: "text-blue-600 hover:underline" %></td>
+          </tr>
+        <% end %>
+        <% if @import_logs.empty? %>
+          <tr><td colspan="7" class="px-4 py-6 text-center text-gray-400">No import logs found</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @pagy.pages > 1 %>
+    <div class="mt-4 flex justify-center gap-2">
+      <%== pagy_nav(@pagy) %>
+    </div>
+  <% end %>
+</div>

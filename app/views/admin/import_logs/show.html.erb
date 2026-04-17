@@ -1,0 +1,45 @@
+<% content_for :title, "Import Log ##{@import_log.id}" %>
+
+<div class="max-w-3xl mx-auto">
+  <div class="mb-4">
+    <%= link_to "← Back to Import Logs", admin_import_logs_path, class: "text-blue-600 hover:underline" %>
+  </div>
+
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">Import Log #<%= @import_log.id %></h1>
+
+  <div class="bg-white rounded shadow p-6">
+    <dl class="grid grid-cols-2 gap-4">
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Source File</dt>
+        <dd class="mt-1 font-mono text-sm"><%= @import_log.source_file %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Import Type</dt>
+        <dd class="mt-1"><%= @import_log.import_type %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Run At</dt>
+        <dd class="mt-1"><%= @import_log.run_at&.strftime("%Y-%m-%d %H:%M:%S UTC") %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Records Processed</dt>
+        <dd class="mt-1"><%= @import_log.records_processed %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Records Inserted</dt>
+        <dd class="mt-1 text-green-600 font-medium"><%= @import_log.records_inserted %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-gray-500">Records Skipped</dt>
+        <dd class="mt-1 text-yellow-600 font-medium"><%= @import_log.records_skipped %></dd>
+      </div>
+    </dl>
+
+    <% if @import_log.error_details.present? %>
+      <div class="mt-6">
+        <dt class="text-sm font-medium text-gray-500 mb-2">Error Details</dt>
+        <pre class="bg-red-50 border border-red-200 rounded p-4 text-sm text-red-800 overflow-x-auto"><%= @import_log.error_details %></pre>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,112 @@
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.2ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-04-17 02:46:53.313397', '2026-04-17 02:46:53.313401') RETURNING "key" /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='MellowKoala'*/[0m
+Migrating to CreateUsers (20260417024558)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email_address" varchar NOT NULL, "password_digest" varchar NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email_address" ON "users" ("email_address") /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260417024558') RETURNING "version" /*application='MellowKoala'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='MellowKoala'*/[0m
+Migrating to CreateSessions (20260417024559)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[35m (0.9ms)[0m  [1m[35mCREATE TABLE "sessions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "ip_address" varchar, "user_agent" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, CONSTRAINT "fk_rails_758836b4f0"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_sessions_on_user_id" ON "sessions" ("user_id") /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260417024559') RETURNING "version" /*application='MellowKoala'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='MellowKoala'*/[0m
+Migrating to AddTouchedAtToSessions (20260417024604)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[35m (0.9ms)[0m  [1m[35mALTER TABLE "sessions" ADD "touched_at" datetime(6) DEFAULT CURRENT_TIMESTAMP NOT NULL /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260417024604') RETURNING "version" /*application='MellowKoala'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='MellowKoala'*/[0m
+Migrating to CreateTasks (20260417024625)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "tasks" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "uuid" varchar NOT NULL, "host" varchar NOT NULL, "start_time" datetime(6) NOT NULL, "stop_time" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_tasks_on_uuid" ON "tasks" ("uuid") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_name" ON "tasks" ("name") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_start_time" ON "tasks" ("start_time") /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260417024625') RETURNING "version" /*application='MellowKoala'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='MellowKoala'*/[0m
+Migrating to CreateBoxScores (20260417024626)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "box_scores" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "task_name" varchar NOT NULL, "task_uuid" varchar NOT NULL, "uuid" varchar NOT NULL, "population" decimal(20,4) NOT NULL, "time_stamp" datetime(6) NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_box_scores_on_uuid" ON "box_scores" ("uuid") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_box_scores_on_task_uuid" ON "box_scores" ("task_uuid") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_box_scores_on_time_stamp" ON "box_scores" ("time_stamp") /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260417024626') RETURNING "version" /*application='MellowKoala'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='MellowKoala'*/[0m
+Migrating to CreateImportLogs (20260417024627)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[35m (0.8ms)[0m  [1m[35mCREATE TABLE "import_logs" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "source_file" varchar NOT NULL, "import_type" varchar NOT NULL, "run_at" datetime(6) NOT NULL, "records_processed" integer DEFAULT 0 NOT NULL, "records_inserted" integer DEFAULT 0 NOT NULL, "records_skipped" integer DEFAULT 0 NOT NULL, "error_details" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_import_logs_on_import_type" ON "import_logs" ("import_type") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_import_logs_on_run_at" ON "import_logs" ("run_at") /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260417024627') RETURNING "version" /*application='MellowKoala'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='MellowKoala'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE IF EXISTS "box_scores" /*application='MellowKoala'*/[0m
+  [1m[35m (0.6ms)[0m  [1m[35mCREATE TABLE "box_scores" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "task_name" varchar NOT NULL, "task_uuid" varchar NOT NULL, "uuid" varchar NOT NULL, "population" decimal(20,4) NOT NULL, "time_stamp" datetime(6) NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_box_scores_on_task_uuid" ON "box_scores" ("task_uuid") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_box_scores_on_time_stamp" ON "box_scores" ("time_stamp") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_box_scores_on_uuid" ON "box_scores" ("uuid") /*application='MellowKoala'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "import_logs" /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "import_logs" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "source_file" varchar NOT NULL, "import_type" varchar NOT NULL, "run_at" datetime(6) NOT NULL, "records_processed" integer DEFAULT 0 NOT NULL, "records_inserted" integer DEFAULT 0 NOT NULL, "records_skipped" integer DEFAULT 0 NOT NULL, "error_details" text, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_import_logs_on_import_type" ON "import_logs" ("import_type") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_import_logs_on_run_at" ON "import_logs" ("run_at") /*application='MellowKoala'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "sessions" /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "sessions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "ip_address" varchar, "user_agent" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "touched_at" datetime(6) DEFAULT CURRENT_TIMESTAMP NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_sessions_on_user_id" ON "sessions" ("user_id") /*application='MellowKoala'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "tasks" /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "tasks" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "name" varchar NOT NULL, "uuid" varchar NOT NULL, "host" varchar NOT NULL, "start_time" datetime(6) NOT NULL, "stop_time" datetime(6), "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_name" ON "tasks" ("name") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_start_time" ON "tasks" ("start_time") /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_tasks_on_uuid" ON "tasks" ("uuid") /*application='MellowKoala'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mDROP TABLE IF EXISTS "users" /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "email_address" varchar NOT NULL, "password_digest" varchar NOT NULL, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email_address" ON "users" ("email_address") /*application='MellowKoala'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA foreign_keys /*application='MellowKoala'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys /*application='MellowKoala'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON /*application='MellowKoala'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF /*application='MellowKoala'*/[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mBEGIN immediate TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TEMPORARY TABLE "asessions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "ip_address" varchar, "user_agent" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "touched_at" datetime(6) DEFAULT CURRENT_TIMESTAMP NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "tindex_asessions_on_user_id" ON "asessions" ("user_id") /*application='MellowKoala'*/[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "asessions" ("id","user_id","ip_address","user_agent","created_at","updated_at","touched_at")
+                     SELECT "id","user_id","ip_address","user_agent","created_at","updated_at","touched_at" FROM "sessions" /*application='MellowKoala'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "sessions" /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "sessions" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer NOT NULL, "ip_address" varchar, "user_agent" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL, "touched_at" datetime(6) DEFAULT CURRENT_TIMESTAMP NOT NULL, CONSTRAINT "fk_rails_758836b4f0"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE INDEX "index_sessions_on_user_id" ON "sessions" ("user_id") /*application='MellowKoala'*/[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[32mINSERT INTO "sessions" ("id","user_id","ip_address","user_agent","created_at","updated_at","touched_at")
+                     SELECT "id","user_id","ip_address","user_agent","created_at","updated_at","touched_at" FROM "asessions" /*application='MellowKoala'*/[0m
+  [1m[35m (0.2ms)[0m  [1m[35mDROP TABLE "asessions" /*application='MellowKoala'*/[0m
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mCOMMIT TRANSACTION /*application='MellowKoala'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0 /*application='MellowKoala'*/[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1 /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY) /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES (20260417024627) /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" (version) VALUES
+(20260417024626),
+(20260417024625),
+(20260417024604),
+(20260417024559),
+(20260417024558); /*application='MellowKoala'*/[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime(6) NOT NULL, "updated_at" datetime(6) NOT NULL) /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-04-17 02:46:59.175844', '2026-04-17 02:46:59.175846') RETURNING "key" /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'environment' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Update (0.1ms)[0m  [1m[33mUPDATE "ar_internal_metadata" SET "value" = 'test', "updated_at" = '2026-04-17 02:46:59.177859' WHERE "ar_internal_metadata"."key" = 'environment' /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = 'schema_sha1' ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1 /*application='MellowKoala'*/[0m
+  [1m[36mActiveRecord::InternalMetadata Create (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('schema_sha1', '8d658b98b699d53fdfa18101c6ee84fb76263e0a', '2026-04-17 02:46:59.179038', '2026-04-17 02:46:59.179039') RETURNING "key" /*application='MellowKoala'*/[0m

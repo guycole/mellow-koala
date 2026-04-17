@@ -1,0 +1,48 @@
+<% content_for :title, "Box Scores" %>
+
+<div class="max-w-6xl mx-auto">
+  <h1 class="text-2xl font-bold text-gray-800 mb-4">Box Scores</h1>
+
+  <%= form_with url: box_scores_path, method: :get, class: "flex gap-3 mb-6" do %>
+    <%= text_field_tag :task_name, params[:task_name], placeholder: "Filter by task name", class: "border rounded px-3 py-2 flex-1" %>
+    <%= text_field_tag :task_uuid, params[:task_uuid], placeholder: "Filter by task UUID", class: "border rounded px-3 py-2 flex-1" %>
+    <%= submit_tag "Filter", class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer" %>
+    <%= link_to "Clear", box_scores_path, class: "text-gray-600 px-3 py-2 hover:underline" %>
+  <% end %>
+
+  <div class="bg-white rounded shadow overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-gray-50 text-gray-600 uppercase text-xs">
+        <tr>
+          <th class="px-4 py-3 text-left"><%= link_to "Task Name", box_scores_path(params.permit(:task_name, :task_uuid).merge(sort: "task_name", direction: params[:sort] == "task_name" && params[:direction] == "asc" ? "desc" : "asc")), class: "hover:underline" %></th>
+          <th class="px-4 py-3 text-left"><%= link_to "Timestamp", box_scores_path(params.permit(:task_name, :task_uuid).merge(sort: "time_stamp", direction: params[:sort] == "time_stamp" && params[:direction] == "asc" ? "desc" : "asc")), class: "hover:underline" %></th>
+          <th class="px-4 py-3 text-right"><%= link_to "Population", box_scores_path(params.permit(:task_name, :task_uuid).merge(sort: "population", direction: params[:sort] == "population" && params[:direction] == "asc" ? "desc" : "asc")), class: "hover:underline" %></th>
+          <th class="px-4 py-3 text-left">Task UUID</th>
+          <th class="px-4 py-3 text-left">UUID</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100">
+        <% @box_scores.each do |bs| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-4 py-3 font-medium"><%= bs.task_name %></td>
+            <td class="px-4 py-3 text-gray-600"><%= bs.time_stamp&.strftime("%Y-%m-%d %H:%M:%S") %></td>
+            <td class="px-4 py-3 text-right"><%= bs.population %></td>
+            <td class="px-4 py-3 text-gray-400 text-xs font-mono"><%= bs.task_uuid %></td>
+            <td class="px-4 py-3 text-gray-400 text-xs font-mono"><%= bs.uuid %></td>
+          </tr>
+        <% end %>
+        <% if @box_scores.empty? %>
+          <tr><td colspan="5" class="px-4 py-6 text-center text-gray-400">No box scores found</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <% if @pagy.pages > 1 %>
+    <div class="mt-4 flex justify-center gap-2">
+      <%== pagy_nav(@pagy) %>
+    </div>
+  <% end %>
+
+  <p class="mt-2 text-sm text-gray-500">Showing <%= @pagy.count %> total box scores</p>
+</div>

@@ -1,0 +1,29 @@
+# Bundler
+.bundle/
+vendor/bundle
+'$HOME'*
+
+# Rails
+/log/*
+!/log/.keep
+/tmp/
+/storage/*.sqlite3
+/storage/*.sqlite3-*
+/public/assets
+/public/packs
+
+# Testing
+/coverage/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Node
+/node_modules/
+
+# OS
+.DS_Store
+*.swp
+$HOME

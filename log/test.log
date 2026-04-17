@@ -314,3 +314,912 @@ Processing by Admin::ImportLogsController#index as HTML
   Rendered layout layouts/application.html.erb (Duration: 2.0ms | GC: 0.2ms)
 Completed 200 OK in 9ms (Views: 2.3ms | ActiveRecord: 0.3ms (4 queries, 0 cached) | GC: 0.4ms)
   [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.2ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.3ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.1ms)[0m  [1m[31mDELETE FROM "users";
+INSERT INTO "users" ("id", "email_address", "password_digest", "created_at", "updated_at") VALUES (980190962, 'one@example.com', '$2a$12$z/caWTpfD1udcvuXD99vnOfOkMhzDLKzhfxl3xkHU9Yf4vigtvxg6', '2026-04-17 02:54:37.501930', '2026-04-17 02:54:37.501930'), (298486374, 'two@example.com', '$2a$12$z/caWTpfD1udcvuXD99vnOfOkMhzDLKzhfxl3xkHU9Yf4vigtvxg6', '2026-04-17 02:54:37.501930', '2026-04-17 02:54:37.501930')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (1.0ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+Admin::ImportLogsControllerTest: test_index_accessible_when_logged_in
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email_address", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["email_address", "[FILTERED]"], ["password_digest", "[FILTERED]"], ["created_at", "2026-04-17 02:54:37.510961"], ["updated_at", "2026-04-17 02:54:37.510961"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-04-17 02:54:37 +0000
+Processing by SessionsController#create as HTML
+  Parameters: {"email_address"=>"[FILTERED]", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email_address" = ? LIMIT ?[0m  [["email_address", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSession Create (0.3ms)[0m  [1m[32mINSERT INTO "sessions" ("user_id", "ip_address", "user_agent", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id", "touched_at"[0m  [["user_id", 980190963], ["ip_address", "127.0.0.1"], ["user_agent", nil], ["created_at", "2026-04-17 02:54:37.552650"], ["updated_at", "2026-04-17 02:54:37.552650"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 20ms (ActiveRecord: 0.7ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/admin/import_logs" for 127.0.0.1 at 2026-04-17 02:54:37 +0000
+Processing by Admin::ImportLogsController#index as HTML
+  [1m[36mSession Load (0.1ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSession Update (0.1ms)[0m  [1m[33mUPDATE "sessions" SET "touched_at" = ? WHERE "sessions"."id" = ?[0m  [["touched_at", "2026-04-17 02:54:37.562903"], ["id", 1]]
+  [1m[36mImportLog Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "import_logs"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering admin/import_logs/index.html.erb within layouts/application
+  [1m[36mImportLog Load (0.1ms)[0m  [1m[34mSELECT "import_logs".* FROM "import_logs" ORDER BY "import_logs"."run_at" DESC LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered admin/import_logs/index.html.erb within layouts/application (Duration: 1.4ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 3.4ms | GC: 0.0ms)
+Completed 200 OK in 13ms (Views: 5.1ms | ActiveRecord: 0.4ms (4 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------------------
+Admin::ImportLogsControllerTest: test_index_redirects_without_login
+-------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email_address", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["email_address", "[FILTERED]"], ["password_digest", "[FILTERED]"], ["created_at", "2026-04-17 02:54:37.576081"], ["updated_at", "2026-04-17 02:54:37.576081"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/admin/import_logs" for 127.0.0.1 at 2026-04-17 02:54:37 +0000
+Processing by Admin::ImportLogsController#index as HTML
+Redirected to http://www.example.com/session/new
+Filter chain halted as :require_authentication rendered or redirected
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------
+ImportLogTest: test_records_processed_must_be_>=_0
+--------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_import_type_presence_required
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------
+ImportLogTest: test_import_type_must_be_tasks_or_box_scores
+-----------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_source_file_presence_required
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------
+ImportLogTest: test_valid_import_log_saves
+------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------
+ImportLogTest: test_records_skipped_must_be_>=_0
+------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_records_inserted_must_be_>=_0
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------
+ImportLogTest: test_run_at_presence_required
+--------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------
+BoxScoreTest: test_task_uuid_presence_required
+----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "62fb25f6-8375-407f-a5b3-300f3510e9ef"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------
+BoxScoreTest: test_population_must_be_>=_0
+------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "55a10c5b-345f-45b7-9190-d7981e40a633"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------
+BoxScoreTest: test_decimal_precision_round_trips
+------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "eb893ebe-1842-4cb2-afdb-75c1fcede3ee"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.2ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "test-task"], ["task_uuid", "bc554fae-3dce-4aa3-b222-48eb9719cf66"], ["uuid", "eb893ebe-1842-4cb2-afdb-75c1fcede3ee"], ["population", 123.4567], ["time_stamp", "2026-04-17 02:54:37.596185"], ["created_at", "2026-04-17 02:54:37.596817"], ["updated_at", "2026-04-17 02:54:37.596817"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" WHERE "box_scores"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------
+BoxScoreTest: test_uuid_uniqueness
+----------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "9bfe8b91-4c79-4e57-8599-415dcd032284"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.1ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "test-task"], ["task_uuid", "f2f0e5f6-2d62-46f6-bbc1-af3239bdaaf5"], ["uuid", "9bfe8b91-4c79-4e57-8599-415dcd032284"], ["population", 42.5], ["time_stamp", "2026-04-17 02:54:37.598593"], ["created_at", "2026-04-17 02:54:37.599152"], ["updated_at", "2026-04-17 02:54:37.599152"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "9bfe8b91-4c79-4e57-8599-415dcd032284"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------
+BoxScoreTest: test_valid_box_score_saves
+----------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "9c08715e-e9f9-432e-baa0-7829036a62d3"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------
+BoxScoreTest: test_time_stamp_presence_required
+-----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "bd837659-06b2-40f2-8738-e0de0c41df7f"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------
+BoxScoreTest: test_task_name_presence_required
+----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "1b584224-510f-479b-bef8-a286a08f1aa8"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------
+BoxScoreTest: test_uuid_presence_required
+-----------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------
+TasksControllerTest: test_index_returns_tasks
+---------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "efe0d333-4159-4d2a-85ae-01ca64f687d9"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.1ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "t1"], ["uuid", "efe0d333-4159-4d2a-85ae-01ca64f687d9"], ["host", "h1"], ["start_time", "2026-04-17 01:54:37.605088"], ["stop_time", nil], ["created_at", "2026-04-17 02:54:37.609636"], ["updated_at", "2026-04-17 02:54:37.609636"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/tasks" for 127.0.0.1 at 2026-04-17 02:54:37 +0000
+Processing by TasksController#index as HTML
+  [1m[36mTask Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" ORDER BY start_time desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 1.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.2ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 2.5ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------
+TasksControllerTest: test_index_filters_by_name
+-----------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "07766d04-7faa-4151-9442-29f8c8f7e9e0"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.2ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "alpha"], ["uuid", "07766d04-7faa-4151-9442-29f8c8f7e9e0"], ["host", "h1"], ["start_time", "2026-04-17 01:54:37.616389"], ["stop_time", nil], ["created_at", "2026-04-17 02:54:37.616942"], ["updated_at", "2026-04-17 02:54:37.616942"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "1f1717dd-c6f0-47e4-81d3-54596690745a"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.1ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "beta"], ["uuid", "1f1717dd-c6f0-47e4-81d3-54596690745a"], ["host", "h1"], ["start_time", "2026-04-17 01:54:37.617589"], ["stop_time", nil], ["created_at", "2026-04-17 02:54:37.618074"], ["updated_at", "2026-04-17 02:54:37.618074"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/tasks?name=alpha" for 127.0.0.1 at 2026-04-17 02:54:37 +0000
+Processing by TasksController#index as HTML
+  Parameters: {"name"=>"alpha"}
+  [1m[36mTask Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks" WHERE (name LIKE ?)[0m  [[nil, "%alpha%"]]
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE (name LIKE ?) ORDER BY start_time desc LIMIT ? OFFSET ?[0m  [[nil, "%alpha%"], ["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.3ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------
+TasksControllerTest: test_index_is_accessible_without_login
+-----------------------------------------------------------
+Started GET "/tasks" for 127.0.0.1 at 2026-04-17 02:54:37 +0000
+Processing by TasksController#index as HTML
+  [1m[36mTask Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" ORDER BY start_time desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 0.7ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.0ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.2ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------
+BoxScoresControllerTest: test_index_is_accessible_without_login
+---------------------------------------------------------------
+Started GET "/box_scores" for 127.0.0.1 at 2026-04-17 02:54:37 +0000
+Processing by BoxScoresController#index as HTML
+  [1m[36mBoxScore Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "box_scores"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering box_scores/index.html.erb within layouts/application
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" ORDER BY time_stamp desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered box_scores/index.html.erb within layouts/application (Duration: 1.3ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.6ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.8ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------------
+BoxScoresControllerTest: test_index_returns_box_scores
+------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "5452b736-e77a-4919-a106-2c7cabddcfb0"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.1ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "t1"], ["task_uuid", "80046913-2f1b-46e5-98a8-a54c208127b0"], ["uuid", "5452b736-e77a-4919-a106-2c7cabddcfb0"], ["population", 10.0], ["time_stamp", "2026-04-17 02:54:37.631691"], ["created_at", "2026-04-17 02:54:37.632358"], ["updated_at", "2026-04-17 02:54:37.632358"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/box_scores" for 127.0.0.1 at 2026-04-17 02:54:37 +0000
+Processing by BoxScoresController#index as HTML
+  [1m[36mBoxScore Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "box_scores"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering box_scores/index.html.erb within layouts/application
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" ORDER BY time_stamp desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered box_scores/index.html.erb within layouts/application (Duration: 13.9ms | GC: 12.8ms)
+  Rendered layout layouts/application.html.erb (Duration: 14.3ms | GC: 12.8ms)
+Completed 200 OK in 15ms (Views: 14.4ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 12.8ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+TaskTest: test_duration_display_returns_In_Progress_for_nil_stop_time
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_name_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "591834de-9db4-40cf-8bfa-54a737fe5f4f"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------------------------
+TaskTest: test_duration_returns_Float_seconds_when_stop_time_present
+--------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------
+TaskTest: test_duration_returns_nil_when_stop_time_is_nil
+---------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_uuid_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------
+TaskTest: test_stop_time_can_be_nil
+-----------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "cd7ea960-510b-4fd2-9904-fa580b3620c5"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------
+TaskTest: test_duration_display_returns_HH:MM:SS_format
+-------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------
+TaskTest: test_start_time_presence_required
+-------------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "9db60e9a-4e36-4288-95ca-6d049f2c8024"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------
+TaskTest: test_uuid_uniqueness
+------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "e950bbf6-bf3a-4ef2-bdcc-5d784f794e43"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.1ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "test-task"], ["uuid", "e950bbf6-bf3a-4ef2-bdcc-5d784f794e43"], ["host", "worker-01"], ["start_time", "2026-04-17 00:54:37.656786"], ["stop_time", "2026-04-17 01:54:37.656796"], ["created_at", "2026-04-17 02:54:37.657312"], ["updated_at", "2026-04-17 02:54:37.657312"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "e950bbf6-bf3a-4ef2-bdcc-5d784f794e43"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_host_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "0764ad7d-c309-46c7-b8d4-db7daf21e519"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------
+TaskTest: test_valid_task_saves_successfully
+--------------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "2f2b379b-2ba3-4513-9840-933093cfe303"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.1ms)[0m  [1m[31mDELETE FROM "users";
+INSERT INTO "users" ("id", "email_address", "password_digest", "created_at", "updated_at") VALUES (980190962, 'one@example.com', '$2a$12$0znrpftCsnHeRCMJ723hFOobl8aBK6vlJclMInBkJ60LW06pYUrBW', '2026-04-17 02:54:57.311161', '2026-04-17 02:54:57.311161'), (298486374, 'two@example.com', '$2a$12$0znrpftCsnHeRCMJ723hFOobl8aBK6vlJclMInBkJ60LW06pYUrBW', '2026-04-17 02:54:57.311161', '2026-04-17 02:54:57.311161')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------
+BoxScoresControllerTest: test_index_is_accessible_without_login
+---------------------------------------------------------------
+Started GET "/box_scores" for 127.0.0.1 at 2026-04-17 02:54:57 +0000
+Processing by BoxScoresController#index as HTML
+  [1m[36mBoxScore Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "box_scores"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering box_scores/index.html.erb within layouts/application
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" ORDER BY time_stamp desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered box_scores/index.html.erb within layouts/application (Duration: 1.9ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.2ms | GC: 0.0ms)
+Completed 200 OK in 16ms (Views: 7.9ms | ActiveRecord: 0.2ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------------
+BoxScoresControllerTest: test_index_returns_box_scores
+------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "653fd17f-c8e3-4c74-a859-1ec68ed3fe09"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.2ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "t1"], ["task_uuid", "65664761-d147-4d3e-9f59-9701d1d84a62"], ["uuid", "653fd17f-c8e3-4c74-a859-1ec68ed3fe09"], ["population", 10.0], ["time_stamp", "2026-04-17 02:54:57.356197"], ["created_at", "2026-04-17 02:54:57.362127"], ["updated_at", "2026-04-17 02:54:57.362127"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/box_scores" for 127.0.0.1 at 2026-04-17 02:54:57 +0000
+Processing by BoxScoresController#index as HTML
+  [1m[36mBoxScore Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "box_scores"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering box_scores/index.html.erb within layouts/application
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" ORDER BY time_stamp desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered box_scores/index.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.4ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------
+BoxScoreTest: test_time_stamp_presence_required
+-----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "7402e02b-906c-4a1f-8182-35b569a44feb"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------
+BoxScoreTest: test_population_must_be_>=_0
+------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "d5c22aa0-5228-4c10-87c1-2b5b6fa83347"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------
+BoxScoreTest: test_decimal_precision_round_trips
+------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "98ae0669-dbae-40ea-92e3-0f9cb1c5756f"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.1ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "test-task"], ["task_uuid", "e6c9cc3b-dada-413a-844c-25f577466a42"], ["uuid", "98ae0669-dbae-40ea-92e3-0f9cb1c5756f"], ["population", 123.4567], ["time_stamp", "2026-04-17 02:54:57.368673"], ["created_at", "2026-04-17 02:54:57.369251"], ["updated_at", "2026-04-17 02:54:57.369251"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" WHERE "box_scores"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------
+BoxScoreTest: test_valid_box_score_saves
+----------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "6b7216eb-40f0-4958-b3fe-9a5c8faca67d"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------
+BoxScoreTest: test_task_name_presence_required
+----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "0f1967f5-d130-4785-92b5-f78d34a61ab7"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------
+BoxScoreTest: test_uuid_uniqueness
+----------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "db6e9b74-61d2-44a1-bf57-a77bd2f8233a"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.1ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "test-task"], ["task_uuid", "3f7b2538-905b-4a31-9581-018fa8cd53cf"], ["uuid", "db6e9b74-61d2-44a1-bf57-a77bd2f8233a"], ["population", 42.5], ["time_stamp", "2026-04-17 02:54:57.372490"], ["created_at", "2026-04-17 02:54:57.372990"], ["updated_at", "2026-04-17 02:54:57.372990"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "db6e9b74-61d2-44a1-bf57-a77bd2f8233a"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------
+BoxScoreTest: test_task_uuid_presence_required
+----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "d04a387a-5897-4633-bfd2-9f9635ce1e5c"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------
+BoxScoreTest: test_uuid_presence_required
+-----------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------
+TaskTest: test_duration_display_returns_HH:MM:SS_format
+-------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------
+TaskTest: test_start_time_presence_required
+-------------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "348d89fa-1a0f-4f19-a610-dadef6249ff9"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+TaskTest: test_duration_display_returns_In_Progress_for_nil_stop_time
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_uuid_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------
+TaskTest: test_valid_task_saves_successfully
+--------------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "c54447c0-e2d8-46aa-b802-d0142d9bc249"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_host_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "4d4bc97d-ef98-4e6e-832c-038dae7aa116"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------
+TaskTest: test_uuid_uniqueness
+------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "f8afc25d-b785-46c1-afa9-ce7d200aad3c"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.2ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "test-task"], ["uuid", "f8afc25d-b785-46c1-afa9-ce7d200aad3c"], ["host", "worker-01"], ["start_time", "2026-04-17 00:54:57.385901"], ["stop_time", "2026-04-17 01:54:57.385910"], ["created_at", "2026-04-17 02:54:57.386450"], ["updated_at", "2026-04-17 02:54:57.386450"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "f8afc25d-b785-46c1-afa9-ce7d200aad3c"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------------------------
+TaskTest: test_duration_returns_Float_seconds_when_stop_time_present
+--------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------
+TaskTest: test_stop_time_can_be_nil
+-----------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "fa2b804d-4137-41e6-a7ce-a588e630b7b0"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------
+TaskTest: test_duration_returns_nil_when_stop_time_is_nil
+---------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_name_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "beff6af9-866e-4eda-986c-e820ac5c1414"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------
+ImportLogTest: test_records_skipped_must_be_>=_0
+------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_import_type_presence_required
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------
+ImportLogTest: test_import_type_must_be_tasks_or_box_scores
+-----------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------
+ImportLogTest: test_valid_import_log_saves
+------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_records_inserted_must_be_>=_0
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_source_file_presence_required
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------
+ImportLogTest: test_records_processed_must_be_>=_0
+--------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------
+ImportLogTest: test_run_at_presence_required
+--------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------
+TasksControllerTest: test_index_filters_by_name
+-----------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "cdd4db56-913f-42de-bce7-43f27779365e"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.1ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "alpha"], ["uuid", "cdd4db56-913f-42de-bce7-43f27779365e"], ["host", "h1"], ["start_time", "2026-04-17 01:54:57.401538"], ["stop_time", nil], ["created_at", "2026-04-17 02:54:57.402110"], ["updated_at", "2026-04-17 02:54:57.402110"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "eaff3316-f492-4465-899e-05637d37740c"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.1ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "beta"], ["uuid", "eaff3316-f492-4465-899e-05637d37740c"], ["host", "h1"], ["start_time", "2026-04-17 01:54:57.402853"], ["stop_time", nil], ["created_at", "2026-04-17 02:54:57.403363"], ["updated_at", "2026-04-17 02:54:57.403363"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/tasks?name=alpha" for 127.0.0.1 at 2026-04-17 02:54:57 +0000
+Processing by TasksController#index as HTML
+  Parameters: {"name"=>"alpha"}
+  [1m[36mTask Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks" WHERE (name LIKE ?)[0m  [[nil, "%alpha%"]]
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE (name LIKE ?) ORDER BY start_time desc LIMIT ? OFFSET ?[0m  [[nil, "%alpha%"], ["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 1.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.1ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 2.4ms | ActiveRecord: 0.2ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------
+TasksControllerTest: test_index_returns_tasks
+---------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "8df25938-d03d-4120-89b1-eac0e584ad9b"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.1ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "t1"], ["uuid", "8df25938-d03d-4120-89b1-eac0e584ad9b"], ["host", "h1"], ["start_time", "2026-04-17 01:54:57.411758"], ["stop_time", nil], ["created_at", "2026-04-17 02:54:57.412415"], ["updated_at", "2026-04-17 02:54:57.412415"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/tasks" for 127.0.0.1 at 2026-04-17 02:54:57 +0000
+Processing by TasksController#index as HTML
+  [1m[36mTask Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" ORDER BY start_time desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.3ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------
+TasksControllerTest: test_index_is_accessible_without_login
+-----------------------------------------------------------
+Started GET "/tasks" for 127.0.0.1 at 2026-04-17 02:54:57 +0000
+Processing by TasksController#index as HTML
+  [1m[36mTask Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" ORDER BY start_time desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 0.6ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.0ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.1ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+Admin::ImportLogsControllerTest: test_index_accessible_when_logged_in
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email_address", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["email_address", "[FILTERED]"], ["password_digest", "[FILTERED]"], ["created_at", "2026-04-17 02:54:57.422657"], ["updated_at", "2026-04-17 02:54:57.422657"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-04-17 02:54:57 +0000
+Processing by SessionsController#create as HTML
+  Parameters: {"email_address"=>"[FILTERED]", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email_address" = ? LIMIT ?[0m  [["email_address", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSession Create (0.3ms)[0m  [1m[32mINSERT INTO "sessions" ("user_id", "ip_address", "user_agent", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id", "touched_at"[0m  [["user_id", 980190963], ["ip_address", "127.0.0.1"], ["user_agent", nil], ["created_at", "2026-04-17 02:54:57.436397"], ["updated_at", "2026-04-17 02:54:57.436397"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 12ms (ActiveRecord: 0.6ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/admin/import_logs" for 127.0.0.1 at 2026-04-17 02:54:57 +0000
+Processing by Admin::ImportLogsController#index as HTML
+  [1m[36mSession Load (0.1ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSession Update (0.1ms)[0m  [1m[33mUPDATE "sessions" SET "touched_at" = ? WHERE "sessions"."id" = ?[0m  [["touched_at", "2026-04-17 02:54:57.455771"], ["id", 1]]
+  [1m[36mImportLog Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "import_logs"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering admin/import_logs/index.html.erb within layouts/application
+  [1m[36mImportLog Load (0.1ms)[0m  [1m[34mSELECT "import_logs".* FROM "import_logs" ORDER BY "import_logs"."run_at" DESC LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered admin/import_logs/index.html.erb within layouts/application (Duration: 1.1ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.7ms | GC: 0.0ms)
+Completed 200 OK in 6ms (Views: 1.9ms | ActiveRecord: 0.3ms (4 queries, 0 cached) | GC: 0.5ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------------------
+Admin::ImportLogsControllerTest: test_index_redirects_without_login
+-------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email_address", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["email_address", "[FILTERED]"], ["password_digest", "[FILTERED]"], ["created_at", "2026-04-17 02:54:57.462543"], ["updated_at", "2026-04-17 02:54:57.462543"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/admin/import_logs" for 127.0.0.1 at 2026-04-17 02:54:57 +0000
+Processing by Admin::ImportLogsController#index as HTML
+Redirected to http://www.example.com/session/new
+Filter chain halted as :require_authentication rendered or redirected
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.4ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "schema_sha1"]]
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN immediate TRANSACTION[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[35mPRAGMA foreign_keys[0m
+  [1m[35mSQL (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = ON[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = OFF[0m
+  [1m[36mFixtures Load (0.1ms)[0m  [1m[31mDELETE FROM "users";
+INSERT INTO "users" ("id", "email_address", "password_digest", "created_at", "updated_at") VALUES (980190962, 'one@example.com', '$2a$12$zRQARbLwc5STxrXNJ46CFu3UgFVlaTklVwzaAo5cmAInIHwxjOcFq', '2026-04-17 02:56:23.918174', '2026-04-17 02:56:23.918174'), (298486374, 'two@example.com', '$2a$12$zRQARbLwc5STxrXNJ46CFu3UgFVlaTklVwzaAo5cmAInIHwxjOcFq', '2026-04-17 02:56:23.918174', '2026-04-17 02:56:23.918174')[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA defer_foreign_keys = 0[0m
+  [1m[35m (0.0ms)[0m  [1m[35mPRAGMA foreign_keys = 1[0m
+  [1m[36mTRANSACTION (0.9ms)[0m  [1m[36mCOMMIT TRANSACTION[0m
+  [1m[35m (0.1ms)[0m  [1m[35mPRAGMA foreign_key_check[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------
+ImportLogTest: test_run_at_presence_required
+--------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------
+ImportLogTest: test_valid_import_log_saves
+------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------
+ImportLogTest: test_import_type_must_be_tasks_or_box_scores
+-----------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_import_type_presence_required
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_source_file_presence_required
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------
+ImportLogTest: test_records_skipped_must_be_>=_0
+------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------
+ImportLogTest: test_records_processed_must_be_>=_0
+--------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------
+ImportLogTest: test_records_inserted_must_be_>=_0
+-------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------
+TasksControllerTest: test_index_filters_by_name
+-----------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "cfb36b1b-2315-4bbf-a86d-77dab9c31247"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.2ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "alpha"], ["uuid", "cfb36b1b-2315-4bbf-a86d-77dab9c31247"], ["host", "h1"], ["start_time", "2026-04-17 01:56:23.941326"], ["stop_time", nil], ["created_at", "2026-04-17 02:56:23.948136"], ["updated_at", "2026-04-17 02:56:23.948136"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "89f1cdc2-0004-423e-ac25-0360c9ae92ae"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.1ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "beta"], ["uuid", "89f1cdc2-0004-423e-ac25-0360c9ae92ae"], ["host", "h1"], ["start_time", "2026-04-17 01:56:23.949118"], ["stop_time", nil], ["created_at", "2026-04-17 02:56:23.949817"], ["updated_at", "2026-04-17 02:56:23.949817"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/tasks?name=alpha" for 127.0.0.1 at 2026-04-17 02:56:23 +0000
+Processing by TasksController#index as HTML
+  Parameters: {"name"=>"alpha"}
+  [1m[36mTask Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks" WHERE (name LIKE ?)[0m  [[nil, "%alpha%"]]
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" WHERE (name LIKE ?) ORDER BY "start_time" desc LIMIT ? OFFSET ?[0m  [[nil, "%alpha%"], ["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 2.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 6.6ms | GC: 0.0ms)
+Completed 200 OK in 15ms (Views: 8.3ms | ActiveRecord: 0.2ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------------------
+TasksControllerTest: test_index_is_accessible_without_login
+-----------------------------------------------------------
+Started GET "/tasks" for 127.0.0.1 at 2026-04-17 02:56:23 +0000
+Processing by TasksController#index as HTML
+  [1m[36mTask Count (0.1ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" ORDER BY "start_time" desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.4ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------
+TasksControllerTest: test_index_returns_tasks
+---------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "2f06285c-a7a1-4807-8589-587e80b5983d"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.2ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "t1"], ["uuid", "2f06285c-a7a1-4807-8589-587e80b5983d"], ["host", "h1"], ["start_time", "2026-04-17 01:56:23.996570"], ["stop_time", nil], ["created_at", "2026-04-17 02:56:23.997386"], ["updated_at", "2026-04-17 02:56:23.997386"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/tasks" for 127.0.0.1 at 2026-04-17 02:56:23 +0000
+Processing by TasksController#index as HTML
+  [1m[36mTask Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "tasks"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering tasks/index.html.erb within layouts/application
+  [1m[36mTask Load (0.1ms)[0m  [1m[34mSELECT "tasks".* FROM "tasks" ORDER BY "start_time" desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered tasks/index.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.4ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------
+BoxScoreTest: test_uuid_presence_required
+-----------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------
+BoxScoreTest: test_valid_box_score_saves
+----------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "4cee56e1-2d3e-4773-b515-79adf0ba314a"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------
+BoxScoreTest: test_decimal_precision_round_trips
+------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "1b9c44e1-c3c3-43dc-b08a-4e03be002383"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.2ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "test-task"], ["task_uuid", "0f902d0f-21dc-4e5c-b53c-1b5fbf06bd44"], ["uuid", "1b9c44e1-c3c3-43dc-b08a-4e03be002383"], ["population", 123.4567], ["time_stamp", "2026-04-17 02:56:24.008922"], ["created_at", "2026-04-17 02:56:24.009700"], ["updated_at", "2026-04-17 02:56:24.009700"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" WHERE "box_scores"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------
+BoxScoreTest: test_population_must_be_>=_0
+------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "5ed4c716-b2e7-42a3-b9a0-4ce9031c94dd"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------
+BoxScoreTest: test_uuid_uniqueness
+----------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "c792d2ae-3757-47fa-b465-2efc38e4617b"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.1ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "test-task"], ["task_uuid", "13e7a559-ded7-4de1-bdee-b48c7f6378ff"], ["uuid", "c792d2ae-3757-47fa-b465-2efc38e4617b"], ["population", 42.5], ["time_stamp", "2026-04-17 02:56:24.012526"], ["created_at", "2026-04-17 02:56:24.013099"], ["updated_at", "2026-04-17 02:56:24.013099"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "c792d2ae-3757-47fa-b465-2efc38e4617b"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------------------
+BoxScoreTest: test_time_stamp_presence_required
+-----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "018c2b98-495d-4dfa-b63d-967184d1ee73"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------
+BoxScoreTest: test_task_uuid_presence_required
+----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "b5e8b9fd-4ea9-4b15-8129-1d5988812964"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+----------------------------------------------
+BoxScoreTest: test_task_name_presence_required
+----------------------------------------------
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "d56b15c0-be13-4d9c-b28a-0a089e740760"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------------------------------
+BoxScoresControllerTest: test_index_returns_box_scores
+------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mBoxScore Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "box_scores" WHERE "box_scores"."uuid" = ? LIMIT ?[0m  [["uuid", "14bedbe4-120d-4505-bfe3-55b3652e679c"], ["LIMIT", 1]]
+  [1m[36mBoxScore Create (0.1ms)[0m  [1m[32mINSERT INTO "box_scores" ("task_name", "task_uuid", "uuid", "population", "time_stamp", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["task_name", "t1"], ["task_uuid", "f2bda89a-21d3-40b4-b06b-e5fa60a9c425"], ["uuid", "14bedbe4-120d-4505-bfe3-55b3652e679c"], ["population", 10.0], ["time_stamp", "2026-04-17 02:56:24.017726"], ["created_at", "2026-04-17 02:56:24.018271"], ["updated_at", "2026-04-17 02:56:24.018271"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/box_scores" for 127.0.0.1 at 2026-04-17 02:56:24 +0000
+Processing by BoxScoresController#index as HTML
+  [1m[36mBoxScore Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "box_scores"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering box_scores/index.html.erb within layouts/application
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" ORDER BY "time_stamp" desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered box_scores/index.html.erb within layouts/application (Duration: 1.5ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 2.0ms | GC: 0.0ms)
+Completed 200 OK in 3ms (Views: 2.2ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------
+BoxScoresControllerTest: test_index_is_accessible_without_login
+---------------------------------------------------------------
+Started GET "/box_scores" for 127.0.0.1 at 2026-04-17 02:56:24 +0000
+Processing by BoxScoresController#index as HTML
+  [1m[36mBoxScore Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "box_scores"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering box_scores/index.html.erb within layouts/application
+  [1m[36mBoxScore Load (0.1ms)[0m  [1m[34mSELECT "box_scores".* FROM "box_scores" ORDER BY "time_stamp" desc LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered box_scores/index.html.erb within layouts/application (Duration: 0.8ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.2ms | GC: 0.0ms)
+Completed 200 OK in 2ms (Views: 1.3ms | ActiveRecord: 0.1ms (2 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------------------
+Admin::ImportLogsControllerTest: test_index_redirects_without_login
+-------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email_address", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["email_address", "[FILTERED]"], ["password_digest", "[FILTERED]"], ["created_at", "2026-04-17 02:56:24.032069"], ["updated_at", "2026-04-17 02:56:24.032069"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started GET "/admin/import_logs" for 127.0.0.1 at 2026-04-17 02:56:24 +0000
+Processing by Admin::ImportLogsController#index as HTML
+Redirected to http://www.example.com/session/new
+Filter chain halted as :require_authentication rendered or redirected
+Completed 302 Found in 0ms (ActiveRecord: 0.0ms (0 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+Admin::ImportLogsControllerTest: test_index_accessible_when_logged_in
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mUser Create (0.3ms)[0m  [1m[32mINSERT INTO "users" ("email_address", "password_digest", "created_at", "updated_at") VALUES (?, ?, ?, ?) RETURNING "id"[0m  [["email_address", "[FILTERED]"], ["password_digest", "[FILTERED]"], ["created_at", "2026-04-17 02:56:24.037961"], ["updated_at", "2026-04-17 02:56:24.037961"]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Started POST "/session" for 127.0.0.1 at 2026-04-17 02:56:24 +0000
+Processing by SessionsController#create as HTML
+  Parameters: {"email_address"=>"[FILTERED]", "password"=>"[FILTERED]"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT "users".* FROM "users" WHERE "users"."email_address" = ? LIMIT ?[0m  [["email_address", "[FILTERED]"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.1ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mSession Create (0.3ms)[0m  [1m[32mINSERT INTO "sessions" ("user_id", "ip_address", "user_agent", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?) RETURNING "id", "touched_at"[0m  [["user_id", 980190963], ["ip_address", "127.0.0.1"], ["user_agent", nil], ["created_at", "2026-04-17 02:56:24.052151"], ["updated_at", "2026-04-17 02:56:24.052151"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+Redirected to http://www.example.com/
+Completed 302 Found in 12ms (ActiveRecord: 0.7ms (2 queries, 0 cached) | GC: 0.0ms)
+Started GET "/admin/import_logs" for 127.0.0.1 at 2026-04-17 02:56:24 +0000
+Processing by Admin::ImportLogsController#index as HTML
+  [1m[36mSession Load (0.1ms)[0m  [1m[34mSELECT "sessions".* FROM "sessions" WHERE "sessions"."id" = ? LIMIT ?[0m  [["id", 1], ["LIMIT", 1]]
+  [1m[36mSession Update (0.1ms)[0m  [1m[33mUPDATE "sessions" SET "touched_at" = ? WHERE "sessions"."id" = ?[0m  [["touched_at", "2026-04-17 02:56:24.057942"], ["id", 1]]
+  [1m[36mImportLog Count (0.0ms)[0m  [1m[34mSELECT COUNT(*) FROM "import_logs"[0m
+  Rendering layout layouts/application.html.erb
+  Rendering admin/import_logs/index.html.erb within layouts/application
+  [1m[36mImportLog Load (0.1ms)[0m  [1m[34mSELECT "import_logs".* FROM "import_logs" ORDER BY "import_logs"."run_at" DESC LIMIT ? OFFSET ?[0m  [["LIMIT", 25], ["OFFSET", 0]]
+  Rendered admin/import_logs/index.html.erb within layouts/application (Duration: 1.2ms | GC: 0.0ms)
+  Rendered layout layouts/application.html.erb (Duration: 1.9ms | GC: 0.0ms)
+Completed 200 OK in 6ms (Views: 2.2ms | ActiveRecord: 0.3ms (4 queries, 0 cached) | GC: 0.0ms)
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-----------------------------------
+TaskTest: test_stop_time_can_be_nil
+-----------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "c7d373f7-3fa9-4a05-ac13-a477fa36c075"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_uuid_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" IS NULL LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------
+TaskTest: test_duration_returns_nil_when_stop_time_is_nil
+---------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+------------------------------
+TaskTest: test_uuid_uniqueness
+------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mSAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.2ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "6b003046-2921-4df6-bd0f-4158957d5fa6"], ["LIMIT", 1]]
+  [1m[36mTask Create (0.2ms)[0m  [1m[32mINSERT INTO "tasks" ("name", "uuid", "host", "start_time", "stop_time", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING "id"[0m  [["name", "test-task"], ["uuid", "6b003046-2921-4df6-bd0f-4158957d5fa6"], ["host", "worker-01"], ["start_time", "2026-04-17 00:56:24.079900"], ["stop_time", "2026-04-17 01:56:24.079911"], ["created_at", "2026-04-17 02:56:24.080559"], ["updated_at", "2026-04-17 02:56:24.080559"]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[35mRELEASE SAVEPOINT active_record_1[0m
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "6b003046-2921-4df6-bd0f-4158957d5fa6"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------
+TaskTest: test_start_time_presence_required
+-------------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "fc2478c7-c27e-4342-80dd-2766ffa52c91"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+---------------------------------------------------------------------
+TaskTest: test_duration_display_returns_In_Progress_for_nil_stop_time
+---------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_host_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "413a1040-4bc8-4580-ac6c-6bcddaa34f7a"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------------------------------
+TaskTest: test_duration_returns_Float_seconds_when_stop_time_present
+--------------------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------------------------
+TaskTest: test_duration_display_returns_HH:MM:SS_format
+-------------------------------------------------------
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+-------------------------------------
+TaskTest: test_name_presence_required
+-------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "9bf417ca-081c-488f-8f1b-a4424abc90d3"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[36mBEGIN deferred TRANSACTION[0m
+--------------------------------------------
+TaskTest: test_valid_task_saves_successfully
+--------------------------------------------
+  [1m[36mTask Exists? (0.1ms)[0m  [1m[34mSELECT 1 AS one FROM "tasks" WHERE "tasks"."uuid" = ? LIMIT ?[0m  [["uuid", "3092b8d0-c710-4157-a3b1-bb8e430a41e2"], ["LIMIT", 1]]
+  [1m[36mTRANSACTION (0.0ms)[0m  [1m[31mROLLBACK TRANSACTION[0m

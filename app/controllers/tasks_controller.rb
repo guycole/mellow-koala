@@ -12,8 +12,8 @@ class TasksController < ApplicationController
     end
 
     sort_column = %w[name host start_time stop_time].include?(params[:sort]) ? params[:sort] : "start_time"
-    sort_direction = params[:direction] == "asc" ? "asc" : "desc"
-    scope = scope.order("#{sort_column} #{sort_direction}")
+    sort_direction = params[:direction] == "asc" ? :asc : :desc
+    scope = scope.order(Arel.sql("#{Task.connection.quote_column_name(sort_column)} #{sort_direction}"))
 
     @pagy, @tasks = pagy(scope)
   end

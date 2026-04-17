@@ -12,8 +12,8 @@ class BoxScoresController < ApplicationController
     end
 
     sort_column = %w[task_name task_uuid time_stamp population].include?(params[:sort]) ? params[:sort] : "time_stamp"
-    sort_direction = params[:direction] == "asc" ? "asc" : "desc"
-    scope = scope.order("#{sort_column} #{sort_direction}")
+    sort_direction = params[:direction] == "asc" ? :asc : :desc
+    scope = scope.order(Arel.sql("#{BoxScore.connection.quote_column_name(sort_column)} #{sort_direction}"))
 
     @pagy, @box_scores = pagy(scope)
   end

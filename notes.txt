@@ -1,0 +1,4 @@
+specify init --here --ai claude
+
+constitution with gpt-5.2 medium maybe copilot?
+

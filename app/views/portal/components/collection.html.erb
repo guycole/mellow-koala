@@ -8,11 +8,15 @@
       <p class="text-gray-500">No collection data available yet for this component.</p>
     </div>
   <% else %>
-    <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">
-      <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Collection Snapshot</h2>
-      <p class="text-xs text-gray-500 mb-3">Received: <strong><%= @latest_collection.received_at&.utc&.iso8601 %></strong></p>
-      <pre class="bg-gray-50 rounded p-4 text-sm overflow-x-auto text-gray-700"><%= JSON.pretty_generate(@latest_collection.payload) rescue @latest_collection.payload.to_s %></pre>
-    </div>
+    <% if @latest_collection.payload["project"] == "heeler" %>
+      <%= render "heeler_collection", snapshot: @latest_collection %>
+    <% else %>
+      <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">
+        <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Collection Snapshot</h2>
+        <p class="text-xs text-gray-500 mb-3">Received: <strong><%= @latest_collection.received_at&.utc&.iso8601 %></strong></p>
+        <pre class="bg-gray-50 rounded p-4 text-sm overflow-x-auto text-gray-700"><%= JSON.pretty_generate(@latest_collection.payload) rescue @latest_collection.payload.to_s %></pre>
+      </div>
+    <% end %>
 
     <% if @collection_history.length > 1 %>
       <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6">

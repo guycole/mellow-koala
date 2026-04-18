@@ -15,6 +15,7 @@ Schema and data correctness are first-class.
 - Migrations MUST be reversible where feasible and reviewed for safety.
 - Enforce invariants at the database level where appropriate (uniqueness, non-null, foreign keys).
 - Store only necessary data; define retention/deletion expectations when relevant.
+- **All timestamps MUST be stored and exchanged in UTC ("Z time", i.e., ISO 8601 with `Z` suffix or `+00:00` offset).** Never store or transmit local/offset-naive times.
 
 ### III. Security by Default
 Assume all inputs are hostile.
@@ -63,4 +64,4 @@ Optimize for clarity over cleverness.
 - This constitution overrides ad-hoc practices.
 - Amendments require: rationale, impact assessment, migration plan, and version bump.
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-18 | **Last Amended**: 2026-04-18
+**Version**: 1.1.0 | **Ratified**: 2026-04-18 | **Last Amended**: 2026-04-18

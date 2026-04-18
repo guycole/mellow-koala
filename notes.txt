@@ -2,3 +2,6 @@ specify init --here --ai claude
 
 constitution with gpt-5.2 medium maybe copilot?
 
+how to maintain project? does branch 004-mellow-component-portal ever get merged?
+
+try updating as task with heeler component 

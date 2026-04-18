@@ -1,0 +1,31 @@
+<div class="max-w-4xl">
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-gray-800"><%= @component.display_name %> — Collection</h1>
+  </div>
+
+  <% if @latest_collection.nil? %>
+    <div class="rounded-lg border border-dashed border-gray-300 p-10 text-center">
+      <p class="text-gray-500">No collection data available yet for this component.</p>
+    </div>
+  <% else %>
+    <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">
+      <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Collection Snapshot</h2>
+      <p class="text-xs text-gray-500 mb-3">Received: <strong><%= @latest_collection.received_at&.utc&.iso8601 %></strong></p>
+      <pre class="bg-gray-50 rounded p-4 text-sm overflow-x-auto text-gray-700"><%= JSON.pretty_generate(@latest_collection.payload) rescue @latest_collection.payload.to_s %></pre>
+    </div>
+
+    <% if @collection_history.length > 1 %>
+      <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6">
+        <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">History (last 10)</h2>
+        <ul class="divide-y divide-gray-100">
+          <% @collection_history.each do |snap| %>
+            <li class="py-2 flex justify-between text-sm">
+              <code class="text-gray-600"><%= snap.snapshot_id %></code>
+              <span class="text-gray-400"><%= snap.received_at&.utc&.iso8601 %></span>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+  <% end %>
+</div>

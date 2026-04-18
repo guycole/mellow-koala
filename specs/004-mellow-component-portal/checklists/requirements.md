@@ -15,7 +15,7 @@
 ## Spec Completeness
 
 - ✅ Edge cases listed
-- ✅ Functional requirements enumerated (FR-001 .. FR-032)
+- ✅ Functional requirements enumerated (FR-001 .. FR-036)
 - ✅ Key entities described conceptually
 - ✅ Non-functional requirements included
 - ✅ Success criteria measurable

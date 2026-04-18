@@ -157,6 +157,60 @@ components:
           additionalProperties: true
           description: Snapshot data; schema may evolve
 
+    HeelerCollectionPayload:
+      description: |
+        Mellow Heeler WiFi AP beacon collection payload (Issue #25).
+        Submitted as the `payload` field of a collection snapshot.
+      type: object
+      properties:
+        geoLoc:
+          type: object
+          properties:
+            site:
+              type: string
+              description: Site/location identifier
+        platform:
+          type: string
+          description: Hardware platform (e.g. rpi3c)
+        project:
+          type: string
+          description: Always "heeler" for Mellow Heeler payloads
+        version:
+          type: integer
+          description: Payload format version
+        wifi:
+          type: array
+          description: Observed WiFi AP beacons
+          items:
+            type: object
+            properties:
+              ssid:
+                type: string
+              bssid:
+                type: string
+              frequency_mhz:
+                type: integer
+              signal_dbm:
+                type: integer
+              capability:
+                type: string
+        zTime:
+          type: integer
+          description: Unix timestamp of observation
+      example:
+        geoLoc:
+          site: anderson1
+        platform: rpi3c
+        project: heeler
+        version: 1
+        wifi:
+          - bssid: "00:22:6b:81:03:d9"
+            capability: unknown
+            frequency_mhz: 2437
+            signal_dbm: -86
+            ssid: braingang2
+        zTime: 1742095222
+
     SnapshotAccepted:
       type: object
       required: [status, component_id, snapshot_id]

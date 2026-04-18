@@ -59,6 +59,26 @@ As an operator, I want to view a component’s detail page and collection inform
 
 ---
 
+### User Story 6 - Mellow Heeler Collection View (Priority: P2)
+
+As an operator, I want to see Mellow Heeler’s latest WiFi AP beacon observations so I can monitor wireless network activity at each site.
+
+**Source**: [GitHub Issue #25 — mellow heeler component](https://github.com/guycole/mellow-koala/issues/25)
+
+**Why this priority**: Heeler is the first concrete component with a defined payload schema and display requirements.
+
+**Independent Test**: Upload a Heeler collection snapshot; navigate to Heeler’s collection page; verify timestamp, AP count, and the AP table are rendered correctly.
+
+**Acceptance Scenarios (BDD)**:
+
+1. **Given** a Heeler collection snapshot has been received, **When** I view the Heeler collection page, **Then** I see the timestamp of the most recent observation
+2. **Given** a Heeler collection snapshot has been received, **When** I view the Heeler collection page, **Then** I see the count of WiFi AP beacons in the last observation
+3. **Given** a Heeler collection snapshot has been received, **When** I view the Heeler collection page, **Then** I see a table of up to 15 AP beacons with columns: SSID, BSSID, frequency (MHz), signal strength (dBm)
+4. **Given** a Heeler snapshot has more than 15 AP beacons, **When** I view the collection page, **Then** only the first 15 are displayed
+5. **Given** no Heeler collection data has been received, **When** I view the Heeler collection page, **Then** I see an empty state message
+
+---
+
 ### User Story 4 - Left Navigation for Components (Priority: P2)
 
 As an operator, I want a persistent left navigation bar listing components and their pages so I can quickly move between component details and collection information.
@@ -158,6 +178,14 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 - **FR-030**: Each component MUST have a dedicated CLI utility that can submit configuration and collection payloads to the API
 - **FR-031**: CLI utilities MUST provide clear success/failure output suitable for automation
 - **FR-032**: CLI utilities MUST support configuring the API credential via environment variable or config file (no plaintext secret required on the command line)
+
+
+#### Mellow Heeler — Component-Specific Display Requirements
+
+- **FR-033**: Mellow Heeler collection page MUST display the timestamp of the most recent observation
+- **FR-034**: Mellow Heeler collection page MUST display the count of WiFi AP beacons in the last observation
+- **FR-035**: Mellow Heeler collection page MUST display a table of up to 15 AP beacons per observation, with columns: SSID, BSSID, frequency (MHz), signal strength (dBm)
+- **FR-036**: Mellow Heeler collection payload schema is defined in `data-model.md` (see HeelerCollectionPayload)
 
 ### Key Entities *(include if feature involves data)*
 

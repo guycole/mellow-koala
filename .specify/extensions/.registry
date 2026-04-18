@@ -8,7 +8,7 @@
       "enabled": true,
       "priority": 10,
       "registered_commands": {
-        "copilot": [
+        "claude": [
           "speckit.git.feature",
           "speckit.git.validate",
           "speckit.git.remote",
@@ -17,7 +17,7 @@
         ]
       },
       "registered_skills": [],
-      "installed_at": "2026-04-17T01:31:50.034642+00:00"
+      "installed_at": "2026-04-18T03:24:30.954954+00:00"
     }
   }
 }

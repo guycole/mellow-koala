@@ -4,6 +4,7 @@ RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       build-essential \
       libpq-dev \
+      libyaml-dev \
       curl \
       git \
       nodejs \
@@ -13,7 +14,8 @@ RUN apt-get update -qq && \
 WORKDIR /rails
 
 COPY Gemfile Gemfile.lock ./
-RUN bundle install --without development test
+RUN bundle config set --local without 'development test' && \
+    bundle install
 
 COPY . .
 

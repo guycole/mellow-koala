@@ -14,6 +14,8 @@ this document.
 | Concern | Choice | Version |
 |---------|--------|---------|
 | Production host OS | Ubuntu LTS | 22.04.4 |
+| Production host user | `wombat` | — |
+| Production repo path | `/home/wombat/Documents/github/mellow-koala` | — |
 | Container runtime | Docker | latest stable |
 | Container image build | Built from source on the production host | — |
 | Database | PostgreSQL | 14 |

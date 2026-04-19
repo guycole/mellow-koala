@@ -13,6 +13,8 @@ RUN apt-get update -qq && \
 
 WORKDIR /rails
 
+ENV RAILS_ENV=production
+
 COPY Gemfile Gemfile.lock ./
 RUN bundle config set --local without 'development test' && \
     bundle install

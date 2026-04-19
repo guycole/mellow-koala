@@ -12,3 +12,10 @@ psql -h localhost -p 5432 -U koala_client -d koala
 
 docker build -t mellow-koala:latest .
 
+RAILS_ENV=production
+RAILS_MASTER_KEY=<contents of config/master.key
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=wombat_admin
+DB_PASSWORD=<your password>
+SECRET_KEY_BASE=<output of: openssl rand -hex 64>

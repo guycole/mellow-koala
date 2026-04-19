@@ -1,3 +1,18 @@
+<!--
+  Sync Impact Report
+  Version change: 1.1.0 → 1.2.0
+  Modified principles: None
+  Added sections: "Production Deployment" under Additional Constraints (vendor-neutral);
+                  vendor specifics moved to docs/architecture-decisions/ADR-001
+  Removed sections: None
+  Templates requiring updates:
+    ✅ .specify/memory/constitution.md (this file)
+    ✅ .specify/templates/plan-template.md (Target Platform / Constraints fields already accommodate this; no structural change needed)
+    ✅ .specify/templates/spec-template.md (no structural change needed)
+    ✅ .specify/templates/tasks-template.md (no structural change needed)
+  Follow-up TODOs: None
+-->
+
 # Web Application (Database-Backed) Constitution
 
 ## Core Principles
@@ -46,6 +61,26 @@ Optimize for clarity over cleverness.
 ### Compatibility
 - Public interfaces (UI routes, APIs) must be versioned or changed with a migration path when breaking changes occur.
 
+### Production Deployment
+The application MUST be containerized in production; the database MUST run outside the
+container on the host.
+
+- The container image MUST be built from source on the production host; pre-built registry
+  images are not assumed.
+- The database MUST NOT be containerized in production.
+- The database MUST only accept connections from localhost; it MUST NOT be accessible
+  from other machines on the network.
+- Database connection details MUST be injected via environment variables; no hard-coded
+  host, port, or credentials are permitted in the image.
+- Database migrations MUST run as a distinct step before the application container starts.
+- The production container image MUST be minimal: no development dependencies, no test files.
+- Health/readiness endpoints (see Principle IV) MUST be reachable from the container host.
+- Secrets MUST be injected via environment variables or a secrets manager; they MUST NOT
+  be baked into the image.
+
+See [ADR-001: Production Deployment Stack](../../docs/architecture-decisions/ADR-001-production-deployment-stack.md)
+for the rationale behind specific technology choices.
+
 ## Development Workflow & Quality Gates
 
 ### Definition of Done (per change)
@@ -64,4 +99,4 @@ Optimize for clarity over cleverness.
 - This constitution overrides ad-hoc practices.
 - Amendments require: rationale, impact assessment, migration plan, and version bump.
 
-**Version**: 1.1.0 | **Ratified**: 2026-04-18 | **Last Amended**: 2026-04-18
+**Version**: 1.2.1 | **Ratified**: 2026-04-18 | **Last Amended**: 2026-04-19

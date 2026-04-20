@@ -27,7 +27,7 @@ docker compose exec web bundle exec rspec
 ```bash
 export MELLOW_KOALA_TOKEN='replace-me'
 
-curl -X POST http://localhost:3000/api/components/mellow-hyena/configuration_snapshots \
+curl -X POST http://localhost:3000/api/components/mellow-hyena-adsb/configuration_snapshots \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer ${MELLOW_KOALA_TOKEN}" \
   -d '{
@@ -45,7 +45,7 @@ curl -X POST http://localhost:3000/api/components/mellow-hyena/configuration_sna
 ```bash
 export MELLOW_KOALA_TOKEN='replace-me'
 
-curl -X POST http://localhost:3000/api/components/mellow-hyena/collection_snapshots \
+curl -X POST http://localhost:3000/api/components/mellow-hyena-adsb/collection_snapshots \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer ${MELLOW_KOALA_TOKEN}" \
   -d '{
@@ -60,8 +60,8 @@ curl -X POST http://localhost:3000/api/components/mellow-hyena/collection_snapsh
 ## Portal Pages
 
 - `/` index overview
-- `/components/mellow-hyena` details
-- `/components/mellow-hyena/collection` collection
+- `/components/mellow-hyena-adsb` details
+- `/components/mellow-hyena-adsb/collection` collection
 - `/carousel` carousel mode
 
 ## Notes

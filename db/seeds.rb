@@ -4,7 +4,7 @@
 
 [
   { component_id: "mellow-heeler",  display_name: "Mellow Heeler",  description: "Reports WiFi AP beacon observations" },
-  { component_id: "mellow-hyena",   display_name: "Mellow Hyena",   description: "Mellow Hyena component" },
+  { component_id: "mellow-hyena-adsb",   display_name: "Mellow Hyena-ADSB",   description: "Mellow Hyena-ADSB component" },
   { component_id: "mellow-mastodon", display_name: "Mellow Mastodon", description: "Mellow Mastodon component" },
   { component_id: "mellow-manatee", display_name: "Mellow Manatee", description: "Mellow Manatee component" }
 ].each do |attrs|

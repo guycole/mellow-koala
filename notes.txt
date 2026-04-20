@@ -9,9 +9,6 @@ try updating as task with heeler component
 psql -h localhost -p 5432 -U koala_admin -d koala
 psql -h localhost -p 5432 -U koala_client -d koala
 
-
-docker build -t mellow-koala:latest .
-
 /etc/mellow-koala.env
 RAILS_ENV=production
 RAILS_MASTER_KEY=<contents of config/credentials.yml.enc
@@ -21,20 +18,23 @@ DB_USERNAME=wombat_admin
 DB_PASSWORD=<your password>
 SECRET_KEY_BASE=<output of: openssl rand -hex 64>
 
-docker run --rm \
-  --env-file /etc/mellow-koala.env \
-  --network host \
-  mellow-koala:latest \
-  bundle exec rails db:migrate
+# smtp:
+#   user_name: my-smtp-user
+#   password: my-smtp-password
+#
+# aws:
+#   access_key_id: 123
+#   secret_access_key: 345
 
-docker run -d \
-  --name mellow-koala \
-  --env-file /etc/mellow-koala.env \
-  --network host \
-  --restart unless-stopped \
-  mellow-koala:latest
+# Used as the base secret for all MessageVerifiers in Rails, including the one protecting cookies.
+secret_key_base: 2242555804fff6e93f99a01048c2a7f8d4c782b351aff514fed1794a31e95e9bcefa5c3615d8c4fcb773e0482dd425eea4e7775256fc8568f44c812fd9da774e
 
-docker logs mellow-koala
+
+docker build -t koala:latest .
+docker run --rm --env-file /etc/mellow-koala.env --network host koala:latest bundle exec rails db:migrate
+docker run -d --name koala --env-file /etc/mellow-koala.env --network host --restart unless-stopped koala:latest
+
+docker logs koala
 curl http://localhost:3000/up
 
 cd /home/wombat/Documents/github/mellow-koala

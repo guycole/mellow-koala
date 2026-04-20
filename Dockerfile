@@ -21,7 +21,7 @@ RUN bundle config set --local without 'development test' && \
 
 COPY . .
 
-RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
+RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
 
 EXPOSE 3000
 CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

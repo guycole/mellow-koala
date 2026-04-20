@@ -19,9 +19,9 @@ RSpec.describe Component, type: :model do
   end
 
   it "auto-sets slug from display_name" do
-    c = build(:component, slug: nil, display_name: "Mellow Hyena")
+    c = build(:component, slug: nil, display_name: "Mellow Hyena-ADSB")
     c.valid?
-    expect(c.slug).to eq("mellow-hyena")
+    expect(c.slug).to eq("mellow-hyena-adsb")
   end
 
   describe ".authenticate_by_token" do

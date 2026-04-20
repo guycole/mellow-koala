@@ -16,5 +16,15 @@ test:
   database: mellow_koala_test
 
 production:
-  <<: *default
-  database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>
+  primary:
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>
+  cable:
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>
+  cache:
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>
+  queue:
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>

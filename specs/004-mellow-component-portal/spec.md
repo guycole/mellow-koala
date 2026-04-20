@@ -3,7 +3,7 @@
 **Feature Branch**: `004-mellow-component-portal`  
 **Created**: 2026-04-18  
 **Status**: Draft  
-**Input**: User description: "Mellow Koala is a web application which provides information about other Mellow components such as Mellow Heeler, Mellow Hyena, Mellow Mastodon, etc. Each compnents can share configuration and collection information. The index page will provide an overview of mellow component configurations. There will be a navigation bar on the left side to navigate for component details and collection information. There will also be a carousel mode which cycles through the component pages. Components will update their information via dedicated command line utilities to a Mellow Koala API."
+**Input**: User description: "Mellow Koala is a web application which provides information about other Mellow components such as Mellow Heeler, Mellow Hyena-ADSB, Mellow Mastodon, etc. Each compnents can share configuration and collection information. The index page will provide an overview of mellow component configurations. There will be a navigation bar on the left side to navigate for component details and collection information. There will also be a carousel mode which cycles through the component pages. Components will update their information via dedicated command line utilities to a Mellow Koala API."
 
 ## User Scenarios & Testing *(mandatory)*
 

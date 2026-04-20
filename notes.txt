@@ -44,4 +44,8 @@ docker run --rm --env-file /etc/mellow-koala.env --network host mellow-koala:lat
 docker stop mellow-koala && docker rm mellow-koala
 docker run -d --name mellow-koala --env-file /etc/mellow-koala.env --network host --restart unless-stopped mellow-koala:latest
 
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+sudo apt-get install -y libyaml-dev libffi-dev zlib1g-dev build-essential
 
+rbenv install -l
+rbenv install 3.4.9

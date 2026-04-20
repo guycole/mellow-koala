@@ -1,31 +1,15 @@
 services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mellow_koala_development
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
   web:
-    build: .
-    command: bash -c "bundle exec rails db:prepare && bundle exec rails server -b 0.0.0.0"
-    volumes:
-      - .:/rails
-      - bundle_cache:/usr/local/bundle
+    image: koala:latest
+    command: bash -c "bundle exec rails db:prepare && bundle exec rails db:seed && bundle exec rails server -b 0.0.0.0"
     ports:
       - "3000:3000"
     environment:
-      DB_HOST: db
-      DB_USERNAME: postgres
-      DB_PASSWORD: postgres
-      RAILS_ENV: development
-    depends_on:
-      - db
+      DB_HOST: host.docker.internal
+      DB_USERNAME: gsc
+      DB_PASSWORD: byteme
+      RAILS_ENV: production
+      SECRET_KEY_BASE: dev-secret-not-for-production
 
 volumes:
   postgres_data:
-  bundle_cache:

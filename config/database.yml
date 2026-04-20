@@ -17,6 +17,4 @@ test:
 
 production:
   <<: *default
-  database: mellow_koala_production
-  username: <%= ENV.fetch("DB_USERNAME") { "mellow_koala" } %>
-  password: <%= ENV["DB_PASSWORD"] %>
+  database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>

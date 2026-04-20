@@ -11,10 +11,10 @@ RSpec.describe "Index Overview", type: :system do
   end
 
   it "shows component list with timestamps" do
-    component = create(:component, display_name: "Mellow Hyena")
+    component = create(:component, display_name: "Mellow Hyena-ADSB")
     create(:configuration_snapshot, component: component, received_at: 1.hour.ago)
     visit root_path
-    expect(page).to have_text("Mellow Hyena")
+    expect(page).to have_text("Mellow Hyena-ADSB")
   end
 
   it "marks stale components visually" do

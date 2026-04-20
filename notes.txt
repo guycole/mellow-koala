@@ -6,4 +6,34 @@ how to maintain project? does branch 004-mellow-component-portal ever get merged
 
 try updating as task with heeler component 
 
+psql -h localhost -p 5432 -U koala_admin -d koala
+psql -h localhost -p 5432 -U koala_client -d koala
+
+/etc/mellow-koala.env
+RAILS_ENV=production
+RAILS_MASTER_KEY=<contents of config/credentials.yml.enc
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=wombat_admin
+DB_PASSWORD=<your password>
+SECRET_KEY_BASE=<output of: openssl rand -hex 64>
+
 docker build -t koala:latest .
+docker run --rm --env-file /etc/mellow-koala.env --network host koala:latest bundle exec rails db:migrate
+docker run -d --name koala --env-file /etc/mellow-koala.env --network host --restart unless-stopped koala:latest
+
+docker logs koala
+curl http://localhost:3000/up
+
+cd /home/wombat/Documents/github/mellow-koala
+git pull
+docker build -t mellow-koala:latest .
+docker run --rm --env-file /etc/mellow-koala.env --network host mellow-koala:latest bundle exec rails db:migrate
+docker stop mellow-koala && docker rm mellow-koala
+docker run -d --name mellow-koala --env-file /etc/mellow-koala.env --network host --restart unless-stopped mellow-koala:latest
+
+curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+sudo apt-get install -y libyaml-dev libffi-dev zlib1g-dev build-essential
+
+rbenv install -l
+rbenv install 3.4.9

@@ -12,10 +12,36 @@ psql -h localhost -p 5432 -U koala_client -d koala
 
 docker build -t mellow-koala:latest .
 
+/etc/mellow-koala.env
 RAILS_ENV=production
-RAILS_MASTER_KEY=<contents of config/master.key
+RAILS_MASTER_KEY=<contents of config/credentials.yml.enc
 DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=wombat_admin
 DB_PASSWORD=<your password>
 SECRET_KEY_BASE=<output of: openssl rand -hex 64>
+
+docker run --rm \
+  --env-file /etc/mellow-koala.env \
+  --network host \
+  mellow-koala:latest \
+  bundle exec rails db:migrate
+
+docker run -d \
+  --name mellow-koala \
+  --env-file /etc/mellow-koala.env \
+  --network host \
+  --restart unless-stopped \
+  mellow-koala:latest
+
+docker logs mellow-koala
+curl http://localhost:3000/up
+
+cd /home/wombat/Documents/github/mellow-koala
+git pull
+docker build -t mellow-koala:latest .
+docker run --rm --env-file /etc/mellow-koala.env --network host mellow-koala:latest bundle exec rails db:migrate
+docker stop mellow-koala && docker rm mellow-koala
+docker run -d --name mellow-koala --env-file /etc/mellow-koala.env --network host --restart unless-stopped mellow-koala:latest
+
+

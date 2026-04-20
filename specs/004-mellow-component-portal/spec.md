@@ -7,22 +7,24 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - CLI Upload of Component Configuration & Collection Info (Priority: P1)
+### User Story 1 - CLI Import of Component Configuration & Collection Info (Priority: P1)
 
-As a Mellow component maintainer, I want a dedicated CLI utility to upload my component’s configuration and collection information to the Mellow Koala API so the portal stays up to date.
+As a Mellow component maintainer, I want a dedicated CLI utility to import my component’s data from a JSON file into the Mellow Koala API so the portal always shows the freshest values.
 
 **Why this priority**: Without ingestion, the portal has nothing to display.
 
-**Independent Test**: POST a valid configuration payload and a valid collection payload; verify they persist and are visible in the UI.
+**Note**: Each collector component has a dedicated import utility that reads a JSON file. On import, existing collection data for that component is deleted and replaced with the new values. Only the freshest snapshot is retained.
+
+**Independent Test**: Import a collection JSON file; verify only the new data is visible in the UI (prior data is gone).
 
 **Acceptance Scenarios (BDD)**:
 
-1. **Given** a component identifier exists and the CLI is authenticated for that component, **When** the CLI uploads a valid configuration payload, **Then** the API accepts it and stores a new configuration snapshot
-2. **Given** a component identifier exists and the CLI is authenticated for that component, **When** the CLI uploads valid collection information, **Then** the API accepts it and stores a new collection snapshot
-3. **Given** the CLI uploads an invalid payload, **When** the API processes it, **Then** the API rejects it with actionable validation errors
-4. **Given** the CLI retries the same upload with an idempotency key, **When** the API receives it again, **Then** it does not create duplicates and returns an idempotent success response
-5. **Given** the CLI is missing authentication, **When** it uploads a snapshot, **Then** the API rejects the request with 401 Unauthorized
-6. **Given** the CLI provides invalid authentication, **When** it uploads a snapshot, **Then** the API rejects the request with 403 Forbidden
+1. **Given** a component identifier exists and the CLI is authenticated for that component, **When** the CLI imports a valid collection JSON file, **Then** the API deletes existing collection data for that component and stores the new values
+2. **Given** a component identifier exists and the CLI is authenticated for that component, **When** the CLI imports a valid configuration payload, **Then** the API accepts it and stores a new configuration snapshot
+3. **Given** the CLI uploads an invalid payload, **When** the API processes it, **Then** the API rejects it with actionable validation errors and does NOT delete existing data
+4. **Given** the CLI retries the same import, **When** the API receives it again, **Then** it replaces the existing collection data with the same values (idempotent result)
+5. **Given** the CLI is missing authentication, **When** it imports a snapshot, **Then** the API rejects the request with 401 Unauthorized
+6. **Given** the CLI provides invalid authentication, **When** it imports a snapshot, **Then** the API rejects the request with 403 Forbidden
 7. **Given** the CLI is authenticated for component A, **When** it attempts to upload to component B’s endpoint, **Then** the API rejects the request with 403 Forbidden
 
 ---
@@ -45,18 +47,20 @@ As an operator, I want the index page to show an overview of configuration for a
 
 ### User Story 3 - Component Detail & Collection Information Pages (Priority: P2)
 
-As an operator, I want to view a component’s detail page and collection information so I can inspect configuration and understand what data the component is collecting.
+As an operator, I want to view a component’s applicable pages so I can inspect its configuration or collection data.
 
 **Why this priority**: The index is summary-only; operators need drill-down.
 
-**Independent Test**: Navigate to a component page and verify it shows the latest configuration snapshot and recent collection records.
+**Note**: Not all components have a Details page. Collector components expose Collection only. Only components that submit configuration snapshots have a Details page.
+
+**Independent Test**: Navigate to a non-collector component and verify it shows the latest configuration snapshot; navigate to a collector component and verify only the collection view is available.
 
 **Acceptance Scenarios (BDD)**:
 
-1. **Given** a component exists, **When** I navigate to that component’s detail page, **Then** I see the latest configuration snapshot
+1. **Given** a non-collector component exists, **When** I navigate to that component’s detail page, **Then** I see the latest configuration snapshot
 2. **Given** a component has collection information, **When** I open the collection view, **Then** I see recent collection summaries/items with timestamps
 3. **Given** a component has never reported collection information, **When** I open the collection view, **Then** I see an empty state explaining no data is available yet
-
+4. **Given** a collector component exists, **When** I attempt to navigate to its detail page, **Then** I am redirected to or shown only the collection view
 ---
 
 ### User Story 6 - Mellow Heeler Collection View (Priority: P2)
@@ -66,6 +70,8 @@ As an operator, I want to see Mellow Heeler’s latest WiFi AP beacon observatio
 **Source**: [GitHub Issue #25 — mellow heeler component](https://github.com/guycole/mellow-koala/issues/25)
 
 **Why this priority**: Heeler is the first concrete component with a defined payload schema and display requirements.
+
+**Note**: Mellow Heeler is a collector component and exposes the **Collection view only**. Collector components do not have a Details (configuration snapshot) page.
 
 **Independent Test**: Upload a Heeler collection snapshot; navigate to Heeler’s collection page; verify timestamp, AP count, and the AP table are rendered correctly.
 
@@ -91,7 +97,8 @@ As an operator, I want a persistent left navigation bar listing components and t
 
 1. **Given** I am on any page, **When** the page renders, **Then** I see a left navigation bar
 2. **Given** multiple components exist, **When** I view the left navigation, **Then** I see an entry for each component
-3. **Given** I click a component’s “Details” link, **When** navigation completes, **Then** I arrive at that component’s detail page
+3. **Given** I click a component’s “Details” link (where available), **When** navigation completes, **Then** I arrive at that component’s detail page
+4. **Given** a collector component is listed in the navigation, **When** I view its nav entry, **Then** only a Collection link is shown (no Details link)
 
 ---
 
@@ -117,7 +124,8 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 - Stale component data vs fresh data (freshness window)
 - Large configuration/collection payloads (size limits)
 - Payloads missing optional fields (forward compatibility)
-- Duplicate uploads / retries (idempotency)
+- Import failure mid-delete (system MUST NOT leave component with no data if new payload is invalid)
+- Concurrent imports for the same component (last writer wins or serialized)
 - Concurrent uploads (consistency)
 - Carousel encounters a component page that errors (skip + continue)
 - Carousel config missing/invalid dwell time (defaults and bounds)
@@ -137,12 +145,13 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 
 - **FR-005**: System MUST provide a component detail page that displays the latest configuration snapshot
 - **FR-006**: System MUST provide a view for collection information per component
+- **FR-006a**: Collector components (those that only submit collection snapshots) MUST NOT expose a Details page; the system MUST treat collection as their only view
 - **FR-007**: Component pages MUST show appropriate empty states when no data exists
 
 #### Navigation
 
 - **FR-008**: System MUST provide a persistent left navigation bar across portal pages
-- **FR-009**: Navigation MUST list each component and provide links to at least: Details and Collection
+- **FR-009**: Navigation MUST list each component with a Collection link; a Details link MUST NOT be shown for collector components (those that only submit collection snapshots)
 - **FR-010**: Navigation MUST indicate the currently active page
 
 #### API for Component Updates
@@ -153,7 +162,7 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 - **FR-014**: API endpoints MUST validate payload shape and required fields
 - **FR-015**: API endpoints MUST return clear error messages for invalid requests
 - **FR-016**: API endpoints MUST enforce request size limits
-- **FR-017**: API endpoints MUST support idempotent retries using an idempotency key or upload identifier
+- **FR-017**: Collection import endpoints MUST be idempotent: re-submitting the same payload MUST result in the same stored state (replace semantics guarantee this by design)
 - **FR-018**: System MUST store accepted payloads and make them visible in the UI
 
 #### Authentication (Component Utilities)
@@ -175,7 +184,9 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 
 #### CLI Utilities
 
-- **FR-030**: Each component MUST have a dedicated CLI utility that can submit configuration and collection payloads to the API
+- **FR-030**: Each collector component MUST have a dedicated CLI import utility that reads a JSON file and submits collection data to the API
+- **FR-030a**: On a successful collection import, the system MUST delete all existing collection data for that component before storing the new values; only the freshest data is retained
+- **FR-030b**: If the import payload is invalid, the system MUST reject it with actionable errors and MUST NOT delete existing collection data
 - **FR-031**: CLI utilities MUST provide clear success/failure output suitable for automation
 - **FR-032**: CLI utilities MUST support configuring the API credential via environment variable or config file (no plaintext secret required on the command line)
 
@@ -186,12 +197,13 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 - **FR-034**: Mellow Heeler collection page MUST display the count of WiFi AP beacons in the last observation
 - **FR-035**: Mellow Heeler collection page MUST display a table of up to 15 AP beacons per observation, with columns: SSID, BSSID, frequency (MHz), signal strength (dBm)
 - **FR-036**: Mellow Heeler collection payload schema is defined in `data-model.md` (see HeelerCollectionPayload)
+- **FR-037**: Collector components (those that only submit collection snapshots) MUST NOT have a Details (configuration snapshot) page; navigation MUST only expose the Collection view for these components
 
 ### Key Entities *(include if feature involves data)*
 
 - **Component**: A contributing Mellow application (includes an ingestion credential used by its CLI utility).
 - **ConfigurationSnapshot**: Historical configuration snapshots per component.
-- **CollectionSnapshot**: Historical collection snapshots per component.
+- **CollectionSnapshot**: The current (freshest) collection data for a component. Replaced in full on each successful import; only one active record is retained per component.
 - **CarouselSession**: Runtime state for cycling.
 
 ### Non-Functional Requirements
@@ -199,7 +211,7 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 - **NFR-001**: Index page SHOULD load in under 2 seconds for 100 components
 - **NFR-002**: API endpoints SHOULD respond in under 2 seconds for typical payloads
 - **NFR-003**: API MUST reject malformed JSON with actionable validation errors
-- **NFR-004**: System SHOULD preserve raw payloads for audit/debugging
+- **NFR-004**: System MAY preserve the most recent raw payload per component for debugging; long-term audit history of collection data is out of scope
 - **NFR-005**: Carousel timing SHOULD be accurate within ±2 seconds per dwell interval
 
 ## Success Criteria
@@ -208,7 +220,7 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 2. Index shows an accurate overview with freshness indicators
 3. Operators can navigate via left nav to details/collection pages for each component
 4. Carousel cycles through component pages with the configured dwell and loops
-5. Retry uploads do not create duplicates (idempotency)
+5. Re-importing the same JSON file leaves the component with identical data (idempotent result)
 
 ## Assumptions & Constraints
 
@@ -216,6 +228,8 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 - Component utilities are the only API clients and are treated as the “users” of the ingestion API.
 - Upload endpoints require simple authentication (e.g., a per-component shared secret/bearer token). Network controls (reverse proxy allowlist/firewall) are recommended but are not a substitute for authentication.
 - Payload schemas may evolve; unknown fields should be tolerated and preserved.
+- Collection data for a component represents the current state only; historical collection data is not retained.
+- Configuration snapshots remain append-only (historical); only collection data is replaced on import.
 
 ## Out of Scope (V1)
 

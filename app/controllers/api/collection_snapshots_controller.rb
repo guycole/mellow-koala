@@ -3,7 +3,8 @@ class Api::CollectionSnapshotsController < Api::BaseController
     result = Ingestion::IngestSnapshot.new(
       component: @authenticated_component,
       snapshot_class: CollectionSnapshot,
-      params: snapshot_params
+      params: snapshot_params,
+      replace: true
     ).call
 
     if result.success?

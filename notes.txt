@@ -49,3 +49,29 @@ sudo apt-get install -y libyaml-dev libffi-dev zlib1g-dev build-essential
 
 rbenv install -l
 rbenv install 3.4.9
+
+spec kit 0.7.2.dev0 integration claude
+
+docker run --rm -it --env-file /etc/mellow-koala.env --network host koala:latest bin/rails console
+
+Loading production environment (Rails 8.0.5)
+mellow-koala(prod)> 
+mellow-koala(prod)> c = Component.find_by(component_id: "mellow-heeler")
+mellow-koala(prod)> puts c.inspect
+nil
+=> nil
+mellow-koala(prod)> new_token = SecureRandom.hex(32)
+mellow-koala(prod)> c.ingest_token = new_token
+mellow-koala(prod)> c.save!
+mellow-koala(prod)> puts "Your token: #{new_token}"
+(mellow-koala):5:in '<main>': undefined method 'ingest_token=' for nil (NoMethodError)
+mellow-koala(prod)* c = Component.create!(
+mellow-koala(prod)*   component_id: "mellow-heeler",
+mellow-koala(prod)*   display_name: "Mellow Heeler",
+mellow-koala(prod)*   ingest_token: (new_token = SecureRandom.hex(32))
+mellow-koala(prod)> )
+mellow-koala(prod)> puts "Your token: #{new_token}"
+Your token: bcbeb75a8c47286fc4d0afd648e6b6d2358ae262616eb812b503b606b3c256b2
+=> nil
+mellow-koala(prod)> 
+

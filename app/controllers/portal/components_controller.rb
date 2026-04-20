@@ -8,6 +8,7 @@ class Portal::ComponentsController < Portal::BaseController
 
   def show
     @component = Component.find_by!(slug: params[:slug])
+    redirect_to collection_component_path(@component) if @component.collector?
     @latest_config = @component.configuration_snapshots.accepted.recent.first
     @config_history = @component.configuration_snapshots.accepted.recent.limit(10)
   end

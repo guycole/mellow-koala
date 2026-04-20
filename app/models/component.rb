@@ -8,6 +8,10 @@ class Component < ApplicationRecord
   validates :display_name, presence: true
   validates :slug, presence: true, uniqueness: true
   validates :ingest_token_digest, presence: true
+  validates :collector, inclusion: { in: [ true, false ] }
+
+  scope :collectors, -> { where(collector: true) }
+  scope :non_collectors, -> { where(collector: false) }
 
   before_validation :set_slug, if: -> { slug.blank? && display_name.present? }
 

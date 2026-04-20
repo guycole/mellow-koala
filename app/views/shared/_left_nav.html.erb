@@ -7,7 +7,7 @@
     <% nav_components.each do |component| %>
       <div class="mb-3">
         <div class="text-sm font-medium text-gray-700 mb-1"><%= component.display_name %></div>
-        <%= link_to "Details", component_path(component), class: "block pl-2 py-1 text-sm rounded #{'bg-indigo-50 text-indigo-700 font-medium' if current_page?(component_path(component))} hover:bg-gray-100" %>
+        <%= link_to "Details", component_path(component), class: "block pl-2 py-1 text-sm rounded #{'bg-indigo-50 text-indigo-700 font-medium' if current_page?(component_path(component))} hover:bg-gray-100" unless component.collector? %>
         <%= link_to "Collection", collection_component_path(component), class: "block pl-2 py-1 text-sm rounded #{'bg-indigo-50 text-indigo-700 font-medium' if current_page?(collection_component_path(component))} hover:bg-gray-100" %>
       </div>
     <% end %>

@@ -24,15 +24,17 @@ RSpec.describe "Api::CollectionSnapshots", type: :request do
       expect(CollectionSnapshot.count).to eq(1)
     end
 
-    it "returns 200 on idempotent retry" do
-      create(:collection_snapshot, component: component, snapshot_id: "col-0001")
+    it "replaces existing collection data on re-upload" do
+      create(:collection_snapshot, component: component, snapshot_id: "col-old-001")
+      create(:collection_snapshot, component: component, snapshot_id: "col-old-002")
 
       post "/api/components/#{component.component_id}/collection_snapshots",
            params: valid_payload.to_json,
            headers: auth_headers
 
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:created)
       expect(CollectionSnapshot.count).to eq(1)
+      expect(CollectionSnapshot.first.snapshot_id).to eq("col-0001")
     end
 
     it "returns 401 without auth" do

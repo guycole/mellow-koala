@@ -1,3 +1,0 @@
-docker run --rm --env-file /etc/mellow-koala.env 
-  --network host koala:latest bundle exec rails db:migrate
-

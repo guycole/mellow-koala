@@ -29,7 +29,6 @@ SECRET_KEY_BASE=<output of: openssl rand -hex 64>
 # Used as the base secret for all MessageVerifiers in Rails, including the one protecting cookies.
 secret_key_base: 2242555804fff6e93f99a01048c2a7f8d4c782b351aff514fed1794a31e95e9bcefa5c3615d8c4fcb773e0482dd425eea4e7775256fc8568f44c812fd9da774e
 
-
 docker build -t koala:latest .
 docker run --rm --env-file /etc/mellow-koala.env --network host koala:latest bundle exec rails db:migrate
 docker run -d --name koala --env-file /etc/mellow-koala.env --network host --restart unless-stopped koala:latest

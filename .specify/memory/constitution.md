@@ -1,53 +1,69 @@
 <!--
 Sync Impact Report:
-
- 2.0.0 (Embedded Systems Specialization)
+─────────────────────────────────────────────────────────────────────────────
+Version: 1.2.1 → 2.0.0 → 2.0.1 → 2.0.2 (ARM64 & Resource Clarification)
 Date: 2026-04-22
 
-CHANGES:
--  Specialized constitution for embedded monitoring application
--  Added embedded/edge computing context and constraints
--  New principle: VI. Offline-First & Air-Gap Ready
--  Enhanced Performance principle for ARM resource constraints
--  Updated Technology Stack for ARM Linux and limited packages
--  Added Embedded Deployment Constraints section
--  Clarified purpose: monitoring embedded applications
--  Replaced generic web app principles with Mellow Koala specifics
+CHANGES IN 2.0.2 (PATCH):
+- ✅ Clarified ARM architecture: 64-bit ARM (ARM64) only, not 32-bit
+- ✅ Clarified resource profile: generous resources, not constrained
+- ✅ Updated Principle V: Performance & Scalability (removed "Constraints")
+- ✅ Softened resource management requirements (SHOULD vs MUST)
+- ✅ All references updated: ARM → ARM64 throughout document
+
+CHANGES IN 2.0.1 (PATCH):
+- ✅ Corrected database from MySQL to PostgreSQL (technical accuracy fix)
+
+CHANGES IN 2.0.0 (MAJOR):
+- ✅ Specialized constitution for embedded monitoring application
+- ✅ Added embedded/edge computing context and constraints
+- ✅ New principle: VI. Offline-First & Air-Gap Ready
+- ✅ Enhanced Performance principle for ARM resource constraints
+- ✅ Updated Technology Stack for ARM Linux and limited packages
+- ✅ Added Embedded Deployment Constraints section
+- ✅ Clarified purpose: monitoring embedded applications
+- ✅ Replaced generic web app principles with Mellow Koala specifics
 
 PRINCIPLES MODIFIED:
-- All principles customized for embedded ARM monitoring context
- Enhanced for embedded resource constraints
+- V. Performance & Resource Constraints → Performance & Scalability
+  (clarified: generous resources, not constrained)
+- All principles customized for embedded ARM64 monitoring context
 - Security principle adapted for air-gapped environments
 
 PRINCIPLES ADDED:
 - VI. Offline-First & Air-Gap Ready (NEW - critical for embedded)
 
 SECTIONS MODIFIED:
- ARM Linux, offline-capable, no cloud
+- Technology Stack → ARM64 Linux, offline-capable, no cloud, PostgreSQL
 - Added "Embedded Deployment Constraints" section
- Added ARM-specific considerations
+- Development Workflow → Added ARM64-specific considerations
+- Purpose statement → Clarified 64-bit ARM with generous resources
 
 VERSION BUMP RATIONALE:
- 2.0.0): Fundamental shift from generic web app to 
-  embedded systems monitoring. This is a backward-incompatible change
-  that redefines the project scope and deployment model.
+- PATCH (2.0.1 → 2.0.2): Architecture and resource profile clarification
+- PATCH (2.0.0 → 2.0.1): Database technology correction (MySQL → PostgreSQL)
+- MAJOR (1.2.1 → 2.0.0): Fundamental shift from generic web app to 
+  embedded systems monitoring. Backward-incompatible change that redefines
+  the project scope and deployment model.
 
 TEMPLATES STATUS:
--  .specify/templates/plan-template.md (reviewed - compatible)
--  .specify/templates/spec-template.md (reviewed - compatible)
--  .specify/templates/tasks-template.md (reviewed - compatible)
+- ✅ .specify/templates/plan-template.md (reviewed - compatible)
+- ✅ .specify/templates/spec-template.md (reviewed - compatible)
+- ✅ .specify/templates/tasks-template.md (reviewed - compatible)
 
 PREVIOUS VERSIONS:
+- 2.0.1 (2026-04-22): Database correction (MySQL → PostgreSQL)
+- 2.0.0 (2026-04-22): Embedded systems specialization
 - 1.2.1 (2026-04-19): Generic web application constitution
 - 1.0.0 (2026-04-17): Initial constitution
-
+─────────────────────────────────────────────────────────────────────────────
 -->
 
 # Mellow Koala Constitution
 
 **Purpose**: Monitoring and displaying data from embedded applications running
-on ARM Linux hosts, potentially in air-gapped or internet-isolated
-environments.
+on 64-bit ARM Linux hosts with generous resources, potentially in air-gapped or
+internet-isolated environments.
 
 ## Core Principles
 
@@ -94,22 +110,23 @@ run successfully before deployment.
 **Rationale**: Automated testing prevents regressions and provides confidence
 when refactoring or adding features.
 
-### V. Performance & Resource Constraints
+### V. Performance & Scalability
 
 Database queries MUST be optimized to avoid N+1 problems (use eager loading).
 Long-running import jobs MUST use background processing (e.g., Sidekiq, solid
 queue). Response times for user-facing pages SHOULD be under 200ms. Import
 utilities MUST handle batch processing for large datasets.
 
-**Embedded System Constraints**: The application runs on ARM Linux hosts with
-limited resources. Memory usage MUST be monitored and bounded. Background jobs
-MUST respect system resource limits. Database size growth MUST be manageable
-through data retention policies. The application MUST operate efficiently on
-ARM architecture with limited package availability.
+**Embedded Deployment Context**: The application runs on 64-bit ARM Linux hosts
+with generous resources. While resource-efficient code is preferred, the system
+has adequate memory and CPU capacity for typical Rails applications. Database
+size growth MUST still be manageable through data retention policies where
+appropriate. The application MUST operate efficiently on ARM64 architecture with
+limited package availability.
 
 **Rationale**: As a data aggregation system for embedded monitoring, query
-performance and resource efficiency directly impact system viability on
-constrained hardware.
+performance and import efficiency directly impact user experience and system
+reliability, even with generous hardware resources.
 
 ### VI. Offline-First & Air-Gap Ready
 
@@ -128,12 +145,13 @@ would make the system unusable in its primary deployment context.
 
 **Core Stack**:
 - Ruby on Rails 8.x
-- MySQL database
+- PostgreSQL database
 - Tailwind CSS for styling
-- ARM Linux hosts (embedded systems)
+- ARM64 Linux hosts (64-bit ARM embedded systems)
 
 **Deployment Environment**:
-- ARM architecture (32-bit or 64-bit depending on hardware)
+- ARM64 architecture (64-bit ARM only)
+- Generous hardware resources (adequate memory and CPU)
 - Limited package availability compared to x86_64 Linux
 - Potentially air-gapped (no external internet access)
 - No cloud services or external dependencies
@@ -144,7 +162,7 @@ would make the system unusable in its primary deployment context.
 - Database migrations MUST be reversible where possible
 - Asset pipeline MUST be configured for production optimization
 - Background job processing MUST be configured for imports
-- ARM compatibility MUST be verified for all dependencies
+- ARM64 compatibility MUST be verified for all dependencies
 
 **Constraints**:
 - Import utilities MUST be implemented as Rails commands or Rake tasks
@@ -158,11 +176,11 @@ would make the system unusable in its primary deployment context.
 ## Embedded Deployment Constraints
 
 **Package Management**:
-- Gem dependencies MUST be compatible with ARM architecture
-- Native extensions MUST compile on ARM Linux or have ARM-compatible prebuilt
-  binaries
-- Dependency updates MUST be testable in ARM environment before production
-- Document any gems that require special compilation flags for ARM
+- Gem dependencies MUST be compatible with ARM64 architecture
+- Native extensions MUST compile on ARM64 Linux or have ARM64-compatible
+  prebuilt binaries
+- Dependency updates MUST be testable in ARM64 environment before production
+- Document any gems that require special compilation flags for ARM64
 
 **Offline Installation**:
 - Bundle MUST support `bundle package --all` for offline installation
@@ -171,10 +189,12 @@ would make the system unusable in its primary deployment context.
 - Documentation MUST include offline installation procedures
 
 **Resource Management**:
-- Database size MUST be monitored with automatic cleanup/archival policies
+- Database size SHOULD be monitored with cleanup/archival policies where
+  appropriate
 - Log rotation MUST be configured to prevent disk space exhaustion
-- Background job queues MUST have memory limits and timeout configurations
-- Monitoring of system resources (CPU, memory, disk) SHOULD be included
+- Background job queues SHOULD have timeout configurations for long-running
+  tasks
+- Basic monitoring of system resources (CPU, memory, disk) is recommended
 
 **Data Collection**:
 - Import utilities collect data from other embedded Mellow projects on the
@@ -195,20 +215,20 @@ would make the system unusable in its primary deployment context.
 - All changes MUST be reviewed before merging to main branch
 - Reviews MUST verify compliance with this constitution
 - Database migrations MUST be reviewed for safety and reversibility
-- ARM compatibility MUST be verified for new dependencies
+- ARM64 compatibility MUST be verified for new dependencies
 
 **Testing Gates**:
 - All tests MUST pass before merging
 - New features MUST include appropriate test coverage
 - Import utilities MUST be tested with sample data before production use
-- ARM deployment MUST be tested before production rollout
+- ARM64 deployment MUST be tested before production rollout
 
 **Deployment**:
 - Database migrations MUST be tested on staging before production
 - Deployment MUST follow zero-downtime principles where possible
 - Rollback procedures MUST be documented and tested
 - Deployment packages MUST be self-contained for air-gapped installation
-- ARM-specific deployment considerations MUST be documented
+- ARM64-specific deployment considerations MUST be documented
 
 ## Governance
 
@@ -228,14 +248,14 @@ Changes to core principles require documented justification and team consensus.
 - All feature specifications MUST reference relevant principles
 - Implementation plans MUST include constitution compliance checks
 - Code reviews MUST verify adherence to security and data integrity principles
-- ARM compatibility MUST be verified for dependency changes
+- ARM64 compatibility MUST be verified for dependency changes
 
 **Complexity Justification**:
 - Deviations from Rails conventions MUST be documented in implementation plans
 - Performance optimizations that sacrifice simplicity MUST be justified with
   metrics
-- Third-party dependencies MUST be justified and ARM-compatibility verified
+- Third-party dependencies MUST be justified and ARM64-compatibility verified
 - Cloud or internet-dependent features MUST be justified as non-core optional
   enhancements only
 
-**Version**: 2.0.0 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-04-22
+**Version**: 2.0.2 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-04-22

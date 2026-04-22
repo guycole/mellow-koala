@@ -1,102 +1,241 @@
 <!--
-  Sync Impact Report
-  Version change: 1.1.0 → 1.2.0
-  Modified principles: None
-  Added sections: "Production Deployment" under Additional Constraints (vendor-neutral);
-                  vendor specifics moved to docs/architecture-decisions/ADR-001
-  Removed sections: None
-  Templates requiring updates:
-    ✅ .specify/memory/constitution.md (this file)
-    ✅ .specify/templates/plan-template.md (Target Platform / Constraints fields already accommodate this; no structural change needed)
-    ✅ .specify/templates/spec-template.md (no structural change needed)
-    ✅ .specify/templates/tasks-template.md (no structural change needed)
-  Follow-up TODOs: None
+Sync Impact Report:
+
+ 2.0.0 (Embedded Systems Specialization)
+Date: 2026-04-22
+
+CHANGES:
+-  Specialized constitution for embedded monitoring application
+-  Added embedded/edge computing context and constraints
+-  New principle: VI. Offline-First & Air-Gap Ready
+-  Enhanced Performance principle for ARM resource constraints
+-  Updated Technology Stack for ARM Linux and limited packages
+-  Added Embedded Deployment Constraints section
+-  Clarified purpose: monitoring embedded applications
+-  Replaced generic web app principles with Mellow Koala specifics
+
+PRINCIPLES MODIFIED:
+- All principles customized for embedded ARM monitoring context
+ Enhanced for embedded resource constraints
+- Security principle adapted for air-gapped environments
+
+PRINCIPLES ADDED:
+- VI. Offline-First & Air-Gap Ready (NEW - critical for embedded)
+
+SECTIONS MODIFIED:
+ ARM Linux, offline-capable, no cloud
+- Added "Embedded Deployment Constraints" section
+ Added ARM-specific considerations
+
+VERSION BUMP RATIONALE:
+ 2.0.0): Fundamental shift from generic web app to 
+  embedded systems monitoring. This is a backward-incompatible change
+  that redefines the project scope and deployment model.
+
+TEMPLATES STATUS:
+-  .specify/templates/plan-template.md (reviewed - compatible)
+-  .specify/templates/spec-template.md (reviewed - compatible)
+-  .specify/templates/tasks-template.md (reviewed - compatible)
+
+PREVIOUS VERSIONS:
+- 1.2.1 (2026-04-19): Generic web application constitution
+- 1.0.0 (2026-04-17): Initial constitution
+
 -->
 
-# Web Application (Database-Backed) Constitution
+# Mellow Koala Constitution
+
+**Purpose**: Monitoring and displaying data from embedded applications running
+on ARM Linux hosts, potentially in air-gapped or internet-isolated
+environments.
 
 ## Core Principles
 
-### I. Behavior-Driven Development (NON-NEGOTIABLE)
-All features are defined and validated via behavior-first acceptance criteria.
-- Define behavior as **executable acceptance scenarios** (Given/When/Then) before implementation.
-- Each change MUST include at least one acceptance scenario that proves user-visible value.
-- Prefer end-to-end/system tests for user journeys; use lower-level tests to cover edge cases.
-- If behavior changes, update scenarios first, then implementation.
+### I. Rails Convention Over Configuration
 
-### II. Database Integrity is Part of the Product
-Schema and data correctness are first-class.
-- Schema changes MUST be applied via migrations.
-- Migrations MUST be reversible where feasible and reviewed for safety.
-- Enforce invariants at the database level where appropriate (uniqueness, non-null, foreign keys).
-- Store only necessary data; define retention/deletion expectations when relevant.
-- **All timestamps MUST be stored and exchanged in UTC ("Z time", i.e., ISO 8601 with `Z` suffix or `+00:00` offset).** Never store or transmit local/offset-naive times.
+Follow Rails conventions and established patterns for maintainability and team
+productivity. Deviations from Rails conventions MUST be documented with clear
+justification. Prefer standard Rails patterns (ActiveRecord, RESTful routes,
+standard directory structure) unless specific requirements demand otherwise.
 
-### III. Security by Default
-Assume all inputs are hostile.
-- Validate and sanitize all inbound data (web forms, JSON, headers, query params).
-- Apply least-privilege to database access.
-- Never log secrets; treat PII as sensitive.
+**Rationale**: Rails conventions reduce cognitive load, improve onboarding,
+and leverage battle-tested patterns from the Rails community.
 
-### IV. Observability is Required
-If it can’t be understood in production, it’s not done.
-- Structured logs for requests and background work.
-- Correlate actions with request IDs/trace IDs.
-- Health/readiness endpoints for deployment/monitoring.
+### II. Data Integrity First
 
-### V. Simplicity & Maintainability
-Optimize for clarity over cleverness.
-- Keep components cohesive with clear boundaries.
-- Prefer boring, well-known patterns.
-- Add complexity only when justified by a measurable requirement.
+Data imported from other Mellow projects MUST maintain referential integrity
+and consistency. All data imports MUST be idempotent and auditable. Database
+constraints (foreign keys, unique constraints, NOT NULL) MUST be defined at
+the database level, not just in application code.
 
-## Additional Constraints
+**Rationale**: As a display system aggregating data from multiple embedded
+sources, data quality and consistency are critical to system trustworthiness.
 
-### Performance & Reliability
-- Paginate list views by default.
-- Avoid unbounded queries and obvious N+1 patterns.
-- Establish request/payload size limits for APIs.
-- Define clear error behavior (status codes/messages) for failures.
+### III. Security By Design
 
-### Compatibility
-- Public interfaces (UI routes, APIs) must be versioned or changed with a migration path when breaking changes occur.
+All user inputs MUST be validated and sanitized. Authentication and
+authorization MUST be implemented for administrative functions. Database
+credentials and secrets MUST never be committed to version control. SQL
+injection prevention through parameterized queries is NON-NEGOTIABLE.
 
-### Production Deployment
-The application MUST be containerized in production; the database MUST run outside the
-container on the host.
+**Air-Gapped Context**: External authentication providers MUST NOT be required.
+Security measures MUST function in isolated networks without internet access.
 
-- The container image MUST be built from source on the production host; pre-built registry
-  images are not assumed.
-- The database MUST NOT be containerized in production.
-- The database MUST only accept connections from localhost; it MUST NOT be accessible
-  from other machines on the network.
-- Database connection details MUST be injected via environment variables; no hard-coded
-  host, port, or credentials are permitted in the image.
-- Database migrations MUST run as a distinct step before the application container starts.
-- The production container image MUST be minimal: no development dependencies, no test files.
-- Health/readiness endpoints (see Principle IV) MUST be reachable from the container host.
-- Secrets MUST be injected via environment variables or a secrets manager; they MUST NOT
-  be baked into the image.
+**Rationale**: Embedded monitoring systems require security without cloud
+dependencies. Air-gapped deployments cannot rely on external services.
 
-See [ADR-001: Production Deployment Stack](../../docs/architecture-decisions/ADR-001-production-deployment-stack.md)
-for the rationale behind specific technology choices.
+### IV. Test Coverage
 
-## Development Workflow & Quality Gates
+All import utilities MUST have integration tests verifying correct data
+transformation and loading. Critical user journeys MUST have system/feature
+tests. Test coverage for models and controllers SHOULD exceed 80%. Tests MUST
+run successfully before deployment.
 
-### Definition of Done (per change)
-- Acceptance scenarios updated/added (BDD).
-- Automated test suite passes.
-- Database changes include migrations + tests/coverage for constraints.
-- Observability added/updated for new behavior (logs/metrics if available).
-- Documentation updated when behavior or interfaces change.
+**Rationale**: Automated testing prevents regressions and provides confidence
+when refactoring or adding features.
 
-### Review Expectations
-- Behavior is reviewed at the scenario level (Given/When/Then reads like requirements).
-- Review includes data model impact and migration safety.
+### V. Performance & Resource Constraints
+
+Database queries MUST be optimized to avoid N+1 problems (use eager loading).
+Long-running import jobs MUST use background processing (e.g., Sidekiq, solid
+queue). Response times for user-facing pages SHOULD be under 200ms. Import
+utilities MUST handle batch processing for large datasets.
+
+**Embedded System Constraints**: The application runs on ARM Linux hosts with
+limited resources. Memory usage MUST be monitored and bounded. Background jobs
+MUST respect system resource limits. Database size growth MUST be manageable
+through data retention policies. The application MUST operate efficiently on
+ARM architecture with limited package availability.
+
+**Rationale**: As a data aggregation system for embedded monitoring, query
+performance and resource efficiency directly impact system viability on
+constrained hardware.
+
+### VI. Offline-First & Air-Gap Ready
+
+The application MUST function without external internet access. All
+dependencies and packages MUST be bundleable for offline installation. No
+cloud-based services or external APIs SHOULD be required for core
+functionality. Configuration MUST support fully air-gapped deployment
+scenarios. Updates and maintenance procedures MUST account for disconnected
+environments.
+
+**Rationale**: Embedded monitoring systems often operate in isolated or
+air-gapped networks for security or physical isolation. Internet dependency
+would make the system unusable in its primary deployment context.
+
+## Technology Stack & Constraints
+
+**Core Stack**:
+- Ruby on Rails 8.x
+- MySQL database
+- Tailwind CSS for styling
+- ARM Linux hosts (embedded systems)
+
+**Deployment Environment**:
+- ARM architecture (32-bit or 64-bit depending on hardware)
+- Limited package availability compared to x86_64 Linux
+- Potentially air-gapped (no external internet access)
+- No cloud services or external dependencies
+
+**Requirements**:
+- Ruby version MUST be specified in `.ruby-version` and Gemfile
+- All gems MUST be vendored or bundleable for offline installation
+- Database migrations MUST be reversible where possible
+- Asset pipeline MUST be configured for production optimization
+- Background job processing MUST be configured for imports
+- ARM compatibility MUST be verified for all dependencies
+
+**Constraints**:
+- Import utilities MUST be implemented as Rails commands or Rake tasks
+- Database connection pooling MUST be configured appropriately for
+  concurrent imports and resource limits
+- Logs MUST include timestamps and severity levels
+- External HTTP calls MUST NOT be required for core functionality
+- Memory footprint MUST be appropriate for embedded systems
+- No CDN or external asset dependencies in production
+
+## Embedded Deployment Constraints
+
+**Package Management**:
+- Gem dependencies MUST be compatible with ARM architecture
+- Native extensions MUST compile on ARM Linux or have ARM-compatible prebuilt
+  binaries
+- Dependency updates MUST be testable in ARM environment before production
+- Document any gems that require special compilation flags for ARM
+
+**Offline Installation**:
+- Bundle MUST support `bundle package --all` for offline installation
+- Asset precompilation MUST work without internet access
+- Database setup scripts MUST not require external downloads
+- Documentation MUST include offline installation procedures
+
+**Resource Management**:
+- Database size MUST be monitored with automatic cleanup/archival policies
+- Log rotation MUST be configured to prevent disk space exhaustion
+- Background job queues MUST have memory limits and timeout configurations
+- Monitoring of system resources (CPU, memory, disk) SHOULD be included
+
+**Data Collection**:
+- Import utilities collect data from other embedded Mellow projects on the
+  same network
+- Communication protocols MUST be network-local (no internet routing required)
+- Data sources MAY be unreachable temporarily; import utilities MUST handle
+  graceful degradation
+
+## Development Workflow
+
+**Version Control**:
+- Use feature branches following Spec Kit naming conventions
+  (`###-feature-name`)
+- Commit messages MUST be descriptive and reference related issues/features
+- Never commit secrets, credentials, or database dumps
+
+**Code Review**:
+- All changes MUST be reviewed before merging to main branch
+- Reviews MUST verify compliance with this constitution
+- Database migrations MUST be reviewed for safety and reversibility
+- ARM compatibility MUST be verified for new dependencies
+
+**Testing Gates**:
+- All tests MUST pass before merging
+- New features MUST include appropriate test coverage
+- Import utilities MUST be tested with sample data before production use
+- ARM deployment MUST be tested before production rollout
+
+**Deployment**:
+- Database migrations MUST be tested on staging before production
+- Deployment MUST follow zero-downtime principles where possible
+- Rollback procedures MUST be documented and tested
+- Deployment packages MUST be self-contained for air-gapped installation
+- ARM-specific deployment considerations MUST be documented
 
 ## Governance
 
-- This constitution overrides ad-hoc practices.
-- Amendments require: rationale, impact assessment, migration plan, and version bump.
+This constitution supersedes all other development practices and preferences.
+Changes to core principles require documented justification and team consensus.
 
-**Version**: 1.2.1 | **Ratified**: 2026-04-18 | **Last Amended**: 2026-04-19
+**Amendment Process**:
+- Proposed amendments MUST include rationale and impact analysis
+- Version number MUST be incremented following semantic versioning:
+  - MAJOR: Backward-incompatible principle changes or removals
+  - MINOR: New principles or substantial guidance additions
+  - PATCH: Clarifications, wording improvements, non-semantic updates
+- All dependent templates and documentation MUST be updated when principles
+  change
+
+**Compliance Review**:
+- All feature specifications MUST reference relevant principles
+- Implementation plans MUST include constitution compliance checks
+- Code reviews MUST verify adherence to security and data integrity principles
+- ARM compatibility MUST be verified for dependency changes
+
+**Complexity Justification**:
+- Deviations from Rails conventions MUST be documented in implementation plans
+- Performance optimizations that sacrifice simplicity MUST be justified with
+  metrics
+- Third-party dependencies MUST be justified and ARM-compatibility verified
+- Cloud or internet-dependent features MUST be justified as non-core optional
+  enhancements only
+
+**Version**: 2.0.0 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-04-22

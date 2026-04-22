@@ -47,6 +47,5 @@ this document.
 ## Alternatives Considered
 
 - **Podman** instead of Docker — compatible, but Docker is more familiar to the current team.
-- **Managed database (RDS/Cloud SQL)** — viable at larger scale; deferred until needed.
 - **Docker Compose in production** — considered, but a single `docker run` with env vars
   is simpler for a single-host deployment.

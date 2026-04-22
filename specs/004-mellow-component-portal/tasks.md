@@ -43,7 +43,8 @@ description: "Task list for implementing feature 004"
   - ensure secrets are never logged
 - [ ] T008 Create shared API error handling + JSON response shape (`app/controllers/api/base_controller.rb`)
 - [ ] T009 Add request size limit enforcement (Rack / Rails config and/or reverse-proxy guidance) and ensure `413` response path is covered
-- [ ] T010 [P] Add structured logging fields for ingestion (`request_id`, `component_id`, `snapshot_type`, `snapshot_id`, `status`, `duration_ms`, `payload_bytes`) without logging secrets
+- [ ] T010 [P] Add structured logging fields for ingestion (`request_id`, `component_id`, `snapshot_type`, `snapshot_id`, `status`, `duration_ms`, `payload_bytes`) in JSON format for Elasticsearch ingestion without logging secrets
+- [ ] T011 [P] Add Prometheus metrics exposition endpoint (`/metrics`) for monitoring (request counts, durations, errors)
 
 **Checkpoint**: Data model + auth + error handling exist; user story work can begin.
 

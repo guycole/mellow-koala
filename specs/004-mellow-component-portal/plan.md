@@ -17,7 +17,10 @@ Build Mellow Koala as a Rails 8 + Tailwind CSS web application backed by Postgre
 **Primary Dependencies**: Rails 8, tailwindcss-rails, pg, (testing) rspec-rails, capybara  
 **Storage**: PostgreSQL 15+  
 **Testing**: BDD-first acceptance scenarios (system specs) + RSpec request/model specs  
-**Target Platform**: Docker on Linux hosts (dev via Docker Compose)  
+**Target Platform**: Docker on ARM64 Linux hosts (dev via Docker Compose)  
+**Deployment**: Docker containers on 64-bit ARM embedded systems with generous resources  
+**Monitoring**: Prometheus (metrics), Elasticsearch (structured logs)  
+**Network**: Potentially air-gapped (no external internet dependencies)  
 **Project Type**: Web application  
 **Performance Goals**: Index <2s for 100 components; API typical response <2s  
 **Constraints**: No browser auth for public portal views; ingestion API requires simple per-component auth; enforce payload size limits + idempotency; preserve raw payloads  
@@ -27,12 +30,15 @@ Build Mellow Koala as a Rails 8 + Tailwind CSS web application backed by Postgre
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-Derived from `.specify/memory/constitution.md`:
+Derived from `.specify/memory/constitution.md` (v2.0.4):
 
-- **BDD (NON-NEGOTIABLE)**: Use feature/system specs for Stories 1–5 (Given/When/Then). Treat scenarios as the primary truth; update them first when behavior changes.
-- **Database integrity**: Use migrations; enforce unique constraints for idempotency; prefer FK relationships; keep raw JSON payload for audit.
-- **Security by default**: Strict JSON validation, size limits, safe error messages; require per-component auth for ingestion and do not log secrets.
-- **Observability**: Log accepted/rejected uploads with component identifiers + request IDs; surface staleness and recent errors in UI.
+- **Rails conventions**: Follow standard Rails patterns (ActiveRecord, RESTful routes, standard directory structure).
+- **Data integrity**: Use migrations; enforce unique constraints for idempotency; prefer FK relationships; keep raw JSON payload for audit; all timestamps in UTC.
+- **Security by design**: Strict JSON validation, size limits, safe error messages; require per-component auth for ingestion and do not log secrets; no external auth providers (air-gapped compatible).
+- **Test coverage**: BDD (NON-NEGOTIABLE) - Use feature/system specs for Stories 1–5 (Given/When/Then). Treat scenarios as the primary truth; update them first when behavior changes.
+- **Performance & scalability**: Optimize queries (avoid N+1); background processing for long operations; <200ms page response target.
+- **Offline-first**: All dependencies bundleable; no cloud services required; Docker images for ARM64.
+- **Observability**: Log accepted/rejected uploads with component identifiers + request IDs; structured logs for Elasticsearch; expose metrics for Prometheus; surface staleness and recent errors in UI.
 - **Maintainability**: Service objects for ingestion/parsing; keep UI controllers thin.
 
 No violations requiring justification.

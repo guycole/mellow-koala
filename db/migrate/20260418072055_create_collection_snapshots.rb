@@ -11,7 +11,7 @@ class CreateCollectionSnapshots < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :collection_snapshots, [:component_id, :snapshot_id], unique: true, name: 'idx_collection_snapshots_component_snapshot'
-    add_index :collection_snapshots, [:component_id, :received_at]
+    add_index :collection_snapshots, [ :component_id, :snapshot_id ], unique: true, name: 'idx_collection_snapshots_component_snapshot'
+    add_index :collection_snapshots, [ :component_id, :received_at ]
   end
 end

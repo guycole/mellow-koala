@@ -5,6 +5,6 @@ FactoryBot.define do
     captured_at { 1.hour.ago }
     received_at { Time.current }
     status { "accepted" }
-    payload { { "collections" => [{ "name" => "items", "count" => 42 }] } }
+    payload { { "collections" => [ { "name" => "items", "count" => 42 } ] } }
   end
 end

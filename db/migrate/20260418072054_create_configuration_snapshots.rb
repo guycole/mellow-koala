@@ -11,7 +11,7 @@ class CreateConfigurationSnapshots < ActiveRecord::Migration[8.0]
 
       t.timestamps
     end
-    add_index :configuration_snapshots, [:component_id, :snapshot_id], unique: true, name: 'idx_config_snapshots_component_snapshot'
-    add_index :configuration_snapshots, [:component_id, :received_at]
+    add_index :configuration_snapshots, [ :component_id, :snapshot_id ], unique: true, name: 'idx_config_snapshots_component_snapshot'
+    add_index :configuration_snapshots, [ :component_id, :received_at ]
   end
 end

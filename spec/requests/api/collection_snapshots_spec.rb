@@ -8,7 +8,7 @@ RSpec.describe "Api::CollectionSnapshots", type: :request do
     {
       snapshot_id: "col-0001",
       captured_at: "2026-04-18T06:00:00Z",
-      payload: { collections: [{ name: "items", count: 42 }] }
+      payload: { collections: [ { name: "items", count: 42 } ] }
     }
   end
 

@@ -7,7 +7,7 @@ RSpec.describe "Component Collection", type: :system do
 
   it "shows latest collection snapshot" do
     create(:collection_snapshot, component: component,
-           payload: { "collections" => [{ "name" => "items", "count" => 99 }] })
+           payload: { "collections" => [ { "name" => "items", "count" => 99 } ] })
     visit collection_component_path(component)
     expect(page).to have_text("Mellow Hyena-ADSB")
     expect(page).to have_text("99")

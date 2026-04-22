@@ -12,13 +12,13 @@ module Ingestion
     def call
       if @params[:payload].nil?
         return Result.new(success?: false, status_code: :bad_request,
-                          errors: ["payload is required"])
+                          errors: [ "payload is required" ])
       end
 
       snapshot_id = @params[:snapshot_id]
       if snapshot_id.blank?
         return Result.new(success?: false, status_code: :bad_request,
-                          errors: ["snapshot_id is required"])
+                          errors: [ "snapshot_id is required" ])
       end
 
       if @replace

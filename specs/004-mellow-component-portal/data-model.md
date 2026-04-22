@@ -13,6 +13,7 @@ Represents a contributing Mellow application (Heeler, Hyena, Mastodon, etc.).
 - `display_name` (string, required)
 - `slug` (string, unique, required)
 - `description` (text, optional)
+- `is_collector` (boolean, default false, required) — if true, component only submits collection snapshots and has no Details page; only Collection view is exposed in UI and navigation
 - `ingest_token_digest` (string, required) — hashed bearer token used by the component CLI utility (NEVER store plaintext)
 - `token_rotated_at` (timestamp, optional)
 - `created_at`, `updated_at`
@@ -21,6 +22,12 @@ Represents a contributing Mellow application (Heeler, Hyena, Mastodon, etc.).
 - Unique index on `component_id`
 - Unique index on `slug`
 - `ingest_token_digest` MUST be non-null; compare tokens using constant-time comparison (or bcrypt)
+- `is_collector` MUST default to false; used by routing and navigation to hide Details link/page for collector components
+
+**Collector Component Behavior**:
+- When `is_collector = true`: component only has Collection view; Details page/link MUST NOT be shown
+- When `is_collector = false`: component may have both Details and Collection views
+- Examples: Mellow Heeler is a collector (`is_collector = true`)
 
 ---
 
@@ -81,6 +88,7 @@ Immutable snapshot of a component’s collection information.
 
 - Keep raw payload JSONB for audit/debugging and forward compatibility.
 - Extract only minimal summary fields if needed for performance.
+- **Collection Snapshot Retention**: Collection snapshots are stored with idempotency keys (like configuration snapshots) to prevent duplicate storage on retry. However, the "delete existing collection data" language in FR-030a refers to the *replace semantics* for display purposes: the UI and API treat collection data as "current state only" and show only the most recent snapshot. Historical collection snapshots are retained in the database for audit but are not surfaced in the primary UI views.
 
 ---
 

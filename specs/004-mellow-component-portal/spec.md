@@ -3,7 +3,15 @@
 **Feature Branch**: `004-mellow-component-portal`  
 **Created**: 2026-04-18  
 **Status**: Draft  
-**Input**: User description: "Mellow Koala is a web application which provides information about other Mellow components such as Mellow Heeler, Mellow Hyena-ADSB, Mellow Mastodon, etc. Each compnents can share configuration and collection information. The index page will provide an overview of mellow component configurations. There will be a navigation bar on the left side to navigate for component details and collection information. There will also be a carousel mode which cycles through the component pages. Components will update their information via dedicated command line utilities to a Mellow Koala API."
+**Input**: User description: "Mellow Koala is a web application which provides information about other Mellow components such as Mellow Heeler, Mellow Hyena-ADSB, Mellow Mastodon, etc. Each component can share configuration and collection information. The index page will provide an overview of available collection tasking. There will be a navigation bar on the left side to navigate for component details and collection information. There will also be a carousel mode which cycles through the component pages. Components will update their information via dedicated command line utilities to a Mellow Koala API."
+
+## Technical Environment
+
+**Platform**: Docker containers on ARM64 Linux (64-bit ARM embedded systems with generous resources)  
+**Database**: PostgreSQL 15+  
+**Monitoring**: Prometheus (metrics), Elasticsearch (structured logs)  
+**Network**: Air-gapped capable (no external internet dependencies)  
+**Deployment**: Potentially offline/isolated networks; all dependencies must be bundleable
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -29,9 +37,9 @@ As a Mellow component maintainer, I want a dedicated CLI utility to import my co
 
 ---
 
-### User Story 2 - Index Overview of Component Configurations (Priority: P1)
+### User Story 2 - Index Overview of Component Tasking (Priority: P1)
 
-As an operator, I want the index page to show an overview of configuration for all known Mellow components so I can quickly understand what is configured and whether it is fresh.
+As an operator, I want the index page to show an overview of tasking for all known Mellow components so I can quickly understand what work is being done and whether it is fresh.
 
 **Why this priority**: It is the primary operator view and a fast way to spot problems.
 

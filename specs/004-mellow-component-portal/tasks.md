@@ -31,7 +31,7 @@ description: "Task list for implementing feature 004"
 ## Phase 2: Foundational (Blocking Prerequisites)
 
 - [ ] T005 Create database migrations + models for core entities:
-  - `app/models/component.rb`
+  - `app/models/component.rb` (include `is_collector` boolean field)
   - `app/models/configuration_snapshot.rb`
   - `app/models/collection_snapshot.rb`
   - migrations in `db/migrate/*` with constraints/indexes from `specs/004-mellow-component-portal/data-model.md`
@@ -117,6 +117,9 @@ description: "Task list for implementing feature 004"
 - [ ] T028 [US3] Implement component details route/controller/view (`app/controllers/portal/components_controller.rb`, `app/views/portal/components/show.html.erb`)
 - [ ] T029 [US3] Implement component collection route/controller/view (`app/controllers/portal/collections_controller.rb`, `app/views/portal/collections/show.html.erb`)
 - [ ] T030 [US3] Add “not found” behavior for unknown component slugs (404)
+- [ ] T030a [US3] Implement `is_collector` conditional logic: redirect/404 on Details page access for collector components; hide Details link in navigation
+
+**Checkpoint**: Component pages working with collector-aware routing.
 
 ---
 
@@ -132,6 +135,9 @@ description: "Task list for implementing feature 004"
 
 - [ ] T032 [US4] Implement nav partial + helper (`app/views/shared/_left_nav.html.erb`, `app/helpers/navigation_helper.rb`)
 - [ ] T033 [US4] Ensure active link highlighting works
+- [ ] T033a [US4] Hide Details link for collector components (check `is_collector` flag)
+
+**Checkpoint**: Navigation complete with collector-aware link visibility.
 
 ---
 
@@ -152,11 +158,41 @@ description: "Task list for implementing feature 004"
 
 ---
 
-## Phase 8: Polish & Cross-Cutting
+## Phase 8: User Story 6 - Mellow Heeler Collection View (Priority: P2)
 
-- [ ] T039 [P] Documentation: verify `quickstart.md` curl examples work with auth and match OpenAPI
-- [ ] T040 Security hardening pass: confirm secrets never logged; ensure constant-time token verification
-- [ ] T041 Run full test suite in Docker (`bundle exec rspec` via compose)
+**Goal**: Display Mellow Heeler's WiFi AP beacon observations with timestamp, count, and table of up to 15 APs.
+
+**Independent Test**: Upload Heeler collection JSON; navigate to Heeler collection page; verify timestamp, AP count, and table rendering.
+
+### Tests for US6 (BDD-first)
+
+- [ ] T042 [P] [US6] System spec: Heeler collection shows timestamp of most recent observation (`spec/system/heeler_collection_spec.rb`)
+- [ ] T043 [P] [US6] System spec: Heeler collection shows count of WiFi AP beacons
+- [ ] T044 [P] [US6] System spec: Heeler collection table displays up to 15 APs with SSID, BSSID, frequency (MHz), signal (dBm)
+- [ ] T045 [P] [US6] System spec: Heeler collection truncates display to 15 APs when more than 15 are present
+- [ ] T046 [P] [US6] System spec: Heeler empty state when no collection data received
+
+### Implementation for US6
+
+- [ ] T047 [US6] Mark Heeler component as collector (`is_collector = true`) in seed data or migration
+- [ ] T048 [US6] Create Heeler-specific collection view template (`app/views/portal/collections/_heeler.html.erb`)
+- [ ] T049 [US6] Parse HeelerCollectionPayload schema: extract `zTime`, `wifi` array
+- [ ] T050 [US6] Render timestamp (convert `zTime` Unix timestamp to display format)
+- [ ] T051 [US6] Render AP count (length of `wifi` array)
+- [ ] T052 [US6] Render AP table with columns: SSID, BSSID, frequency (MHz), signal (dBm); limit to first 15 entries
+- [ ] T053 [US6] Add component-specific view routing logic (check `project` field or component identifier to select correct partial)
+
+**Checkpoint**: US6 complete; Heeler collection view functional and independently verifiable.
+
+---
+
+## Phase 9: Polish & Cross-Cutting
+
+- [ ] T054 [P] Documentation: verify `quickstart.md` curl examples work with auth and match OpenAPI
+- [ ] T055 Security hardening pass: confirm secrets never logged; ensure constant-time token verification
+- [ ] T056 Run full test suite in Docker (`bundle exec rspec` via compose)
+- [ ] T057 [P] Verify all FR-001 through FR-037 are implemented and tested
+- [ ] T058 [P] Constitution compliance final check against v2.0.4
 
 ---
 

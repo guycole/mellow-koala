@@ -1,8 +1,16 @@
 <!--
 Sync Impact Report:
 ─────────────────────────────────────────────────────────────────────────────
-Version: 1.2.1 → 2.0.0 → 2.0.1 → 2.0.2 → 2.0.3 (Monitoring Infrastructure)
+Version: 1.2.1 → 2.0.0 → 2.0.1 → 2.0.2 → 2.0.3 → 2.0.4 (Docker Deployment)
 Date: 2026-04-22
+
+CHANGES IN 2.0.4 (PATCH):
+- ✅ Added Docker containerization to deployment model
+- ✅ Updated Deployment Environment: Docker in production
+- ✅ Added Docker image requirements for ARM64 architecture
+- ✅ Updated Offline Installation: Docker image export/load procedures
+- ✅ Updated Testing Gates: Docker image testing on ARM64
+- ✅ Updated Deployment section: Docker-specific requirements
 
 CHANGES IN 2.0.3 (PATCH):
 - ✅ Added monitoring infrastructure: Prometheus & Elasticsearch
@@ -41,13 +49,18 @@ PRINCIPLES ADDED:
 - VI. Offline-First & Air-Gap Ready (NEW - critical for embedded)
 
 SECTIONS MODIFIED:
+- Deployment Environment → Docker containerization in production
 - Technology Stack → Added Monitoring & Observability (Prometheus, Elasticsearch)
 - Technology Stack → ARM64 Linux, offline-capable, no cloud, PostgreSQL
+- Offline Installation → Docker image export/load procedures
+- Testing Gates → Docker image testing requirements
+- Deployment → Docker-specific deployment requirements
 - Added "Embedded Deployment Constraints" section
 - Development Workflow → Added ARM64-specific considerations
 - Purpose statement → Clarified 64-bit ARM with generous resources
 
 VERSION BUMP RATIONALE:
+- PATCH (2.0.3 → 2.0.4): Added Docker deployment model to deployment context
 - PATCH (2.0.2 → 2.0.3): Added available monitoring infrastructure details
 - PATCH (2.0.1 → 2.0.2): Architecture and resource profile clarification
 - PATCH (2.0.0 → 2.0.1): Database technology correction (MySQL → PostgreSQL)
@@ -61,6 +74,7 @@ TEMPLATES STATUS:
 - ✅ .specify/templates/tasks-template.md (reviewed - compatible)
 
 PREVIOUS VERSIONS:
+- 2.0.3 (2026-04-22): Monitoring infrastructure (Prometheus, Elasticsearch)
 - 2.0.2 (2026-04-22): ARM64 & resource clarification
 - 2.0.1 (2026-04-22): Database correction (MySQL → PostgreSQL)
 - 2.0.0 (2026-04-22): Embedded systems specialization
@@ -164,6 +178,7 @@ would make the system unusable in its primary deployment context.
 - Elasticsearch (log aggregation and search)
 
 **Deployment Environment**:
+- Docker containerization in production
 - ARM64 architecture (64-bit ARM only)
 - Generous hardware resources (adequate memory and CPU)
 - Limited package availability compared to x86_64 Linux
@@ -172,6 +187,8 @@ would make the system unusable in its primary deployment context.
 
 **Requirements**:
 - Ruby version MUST be specified in `.ruby-version` and Gemfile
+- Application MUST be containerized using Docker for production deployment
+- Docker images MUST be buildable for ARM64 architecture
 - All gems MUST be vendored or bundleable for offline installation
 - Database migrations MUST be reversible where possible
 - Asset pipeline MUST be configured for production optimization
@@ -199,9 +216,12 @@ would make the system unusable in its primary deployment context.
 - Document any gems that require special compilation flags for ARM64
 
 **Offline Installation**:
+- Docker images MUST be exportable and loadable for air-gapped deployment
+- Docker images MUST be built for ARM64 architecture
 - Bundle MUST support `bundle package --all` for offline installation
 - Asset precompilation MUST work without internet access
 - Database setup scripts MUST not require external downloads
+- Documentation MUST include offline Docker image transfer procedures
 - Documentation MUST include offline installation procedures
 
 **Resource Management**:
@@ -238,13 +258,16 @@ would make the system unusable in its primary deployment context.
 - All tests MUST pass before merging
 - New features MUST include appropriate test coverage
 - Import utilities MUST be tested with sample data before production use
+- Docker images MUST be tested on ARM64 before production rollout
 - ARM64 deployment MUST be tested before production rollout
 
 **Deployment**:
+- Production deployment uses Docker containers
+- Docker images MUST be built for ARM64 architecture
 - Database migrations MUST be tested on staging before production
 - Deployment MUST follow zero-downtime principles where possible
 - Rollback procedures MUST be documented and tested
-- Deployment packages MUST be self-contained for air-gapped installation
+- Docker images MUST be self-contained for air-gapped installation
 - ARM64-specific deployment considerations MUST be documented
 
 ## Governance
@@ -275,4 +298,4 @@ Changes to core principles require documented justification and team consensus.
 - Cloud or internet-dependent features MUST be justified as non-core optional
   enhancements only
 
-**Version**: 2.0.3 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-04-22
+**Version**: 2.0.4 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-04-22

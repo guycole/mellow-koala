@@ -1,6 +1,6 @@
-# Requirements Checklist: Mellow Component Portal
+# Requirements Checklist: Mellow Collector Portal
 
-**Feature**: 004-mellow-component-portal  
+**Feature**: 004-mellow-collector-portal  
 **Generated**: 2026-04-18  
 **Status**: Draft
 

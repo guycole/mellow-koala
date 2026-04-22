@@ -1,4 +1,4 @@
-# Quickstart: Mellow Component Portal (Rails 8 + Tailwind + Postgres + Docker)
+# Quickstart: Mellow Collector Portal (Rails 8 + Tailwind + Postgres + Docker)
 
 This describes the intended developer workflow once implementation is complete.
 
@@ -27,7 +27,7 @@ docker compose exec web bundle exec rspec
 ```bash
 export MELLOW_KOALA_TOKEN='replace-me'
 
-curl -X POST http://localhost:3000/api/components/mellow-hyena-adsb/configuration_snapshots \
+curl -X POST http://localhost:3000/api/collectors/mellow-hyena-adsb/configuration_snapshots \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer ${MELLOW_KOALA_TOKEN}" \
   -d '{
@@ -45,7 +45,7 @@ curl -X POST http://localhost:3000/api/components/mellow-hyena-adsb/configuratio
 ```bash
 export MELLOW_KOALA_TOKEN='replace-me'
 
-curl -X POST http://localhost:3000/api/components/mellow-hyena-adsb/collection_snapshots \
+curl -X POST http://localhost:3000/api/collectors/mellow-hyena-adsb/collection_snapshots \
   -H 'Content-Type: application/json' \
   -H "Authorization: Bearer ${MELLOW_KOALA_TOKEN}" \
   -d '{
@@ -60,12 +60,12 @@ curl -X POST http://localhost:3000/api/components/mellow-hyena-adsb/collection_s
 ## Portal Pages
 
 - `/` index overview
-- `/components/mellow-hyena-adsb` details
-- `/components/mellow-hyena-adsb/collection` collection
+- `/collectors/mellow-hyena-adsb` details
+- `/collectors/mellow-hyena-adsb/collection` collection
 - `/carousel` carousel mode
 
 ## Notes
 
 - Portal pages are public.
-- Ingestion API requires a per-component bearer token (recommended to run behind additional network controls such as a reverse proxy allowlist/firewall).
+- Ingestion API requires a per-collector bearer token (recommended to run behind additional network controls such as a reverse proxy allowlist/firewall).
 - Enforce payload size limits; default staleness window 24h; carousel dwell default 30s.

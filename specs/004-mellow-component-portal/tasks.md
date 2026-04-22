@@ -3,9 +3,9 @@
 description: "Task list for implementing feature 004"
 ---
 
-# Tasks: Mellow Component Portal
+# Tasks: Mellow Collector Portal
 
-**Input**: Design documents in `specs/004-mellow-component-portal/` (spec.md, plan.md, research.md, data-model.md, contracts/)
+**Input**: Design documents in `specs/004-mellow-collector-portal/` (spec.md, plan.md, research.md, data-model.md, contracts/)
 
 **Organization**: Tasks are grouped by user story so each story can be implemented and verified independently.
 
@@ -19,9 +19,9 @@ description: "Task list for implementing feature 004"
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 Create Rails 8 app skeleton with Tailwind + Postgres configuration (see `specs/004-mellow-component-portal/plan.md`)
+- [ ] T001 Create Rails 8 app skeleton with Tailwind + Postgres configuration (see `specs/004-mellow-collector-portal/plan.md`)
 - [ ] T002 [P] Add base folders/namespaces for controllers (`app/controllers/api`, `app/controllers/portal`) and services (`app/services/`)
-- [ ] T003 [P] Add Docker + Docker Compose files per `specs/004-mellow-component-portal/quickstart.md`
+- [ ] T003 [P] Add Docker + Docker Compose files per `specs/004-mellow-collector-portal/quickstart.md`
 - [ ] T004 [P] Add RSpec + Capybara baseline configuration for request + system specs (`spec/requests`, `spec/system`)
 
 **Checkpoint**: App boots in Docker, DB connects, test suite runs.
@@ -31,28 +31,28 @@ description: "Task list for implementing feature 004"
 ## Phase 2: Foundational (Blocking Prerequisites)
 
 - [ ] T005 Create database migrations + models for core entities:
-  - `app/models/component.rb` (include `is_collector` boolean field)
+  - `app/models/collector.rb` (include `collection_only` boolean field)
   - `app/models/configuration_snapshot.rb`
   - `app/models/collection_snapshot.rb`
-  - migrations in `db/migrate/*` with constraints/indexes from `specs/004-mellow-component-portal/data-model.md`
-- [ ] T006 Add idempotency constraints (unique `(component_id, snapshot_id)` for both snapshot tables)
-- [ ] T007 Implement ingestion authentication mechanism (simple per-component bearer token):
+  - migrations in `db/migrate/*` with constraints/indexes from `specs/004-mellow-collector-portal/data-model.md`
+- [ ] T006 Add idempotency constraints (unique `(collector_id, snapshot_id)` for both snapshot tables)
+- [ ] T007 Implement ingestion authentication mechanism (simple per-collector bearer token):
   - store only token digests (no plaintext)
-  - verify token for the component in the URL
+  - verify token for the collector in the URL
   - return 401 (missing) / 403 (invalid or mismatched)
   - ensure secrets are never logged
 - [ ] T008 Create shared API error handling + JSON response shape (`app/controllers/api/base_controller.rb`)
 - [ ] T009 Add request size limit enforcement (Rack / Rails config and/or reverse-proxy guidance) and ensure `413` response path is covered
-- [ ] T010 [P] Add structured logging fields for ingestion (`request_id`, `component_id`, `snapshot_type`, `snapshot_id`, `status`, `duration_ms`, `payload_bytes`) in JSON format for Elasticsearch ingestion without logging secrets
+- [ ] T010 [P] Add structured logging fields for ingestion (`request_id`, `collector_id`, `snapshot_type`, `snapshot_id`, `status`, `duration_ms`, `payload_bytes`) in JSON format for Elasticsearch ingestion without logging secrets
 - [ ] T011 [P] Add Prometheus metrics exposition endpoint (`/metrics`) for monitoring (request counts, durations, errors)
 
 **Checkpoint**: Data model + auth + error handling exist; user story work can begin.
 
 ---
 
-## Phase 3: User Story 1 - CLI Upload of Component Configuration & Collection Info (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - CLI Upload of Collector Configuration & Collection Info (Priority: P1) 🎯 MVP
 
-**Goal**: Authenticated components can upload configuration + collection snapshots via JSON API with validation, idempotency, and clear errors.
+**Goal**: Authenticated collectors can upload configuration + collection snapshots via JSON API with validation, idempotency, and clear errors.
 
 **Independent Test**: Use curl (with `Authorization: Bearer ...`) to POST snapshots; verify persistence + visibility in portal.
 
@@ -61,7 +61,7 @@ description: "Task list for implementing feature 004"
 - [ ] T011 [P] [US1] Request spec: valid authenticated upload returns 201 and persists snapshot (`spec/requests/api/configuration_snapshots_spec.rb`)
 - [ ] T012 [P] [US1] Request spec: idempotent replay returns 200 and does not duplicate (`spec/requests/api/*_snapshots_spec.rb`)
 - [ ] T013 [P] [US1] Request spec: missing auth returns 401 (`spec/requests/api/*_snapshots_spec.rb`)
-- [ ] T014 [P] [US1] Request spec: invalid token or component mismatch returns 403 (`spec/requests/api/*_snapshots_spec.rb`)
+- [ ] T014 [P] [US1] Request spec: invalid token or collector mismatch returns 403 (`spec/requests/api/*_snapshots_spec.rb`)
 - [ ] T015 [P] [US1] Request spec: invalid payload returns 400 with actionable validation errors
 
 ### Implementation for US1
@@ -71,79 +71,79 @@ description: "Task list for implementing feature 004"
   - `app/controllers/api/configuration_snapshots_controller.rb`
   - `app/controllers/api/collection_snapshots_controller.rb`
 - [ ] T018 [US1] Implement ingestion service objects (`app/services/ingestion/*`) for:
-  - auth check + component lookup
+  - auth check + collector lookup
   - JSON validation
   - idempotency handling
   - persistence
 - [ ] T019 [US1] Persist snapshots and ensure raw JSON payload is stored (JSONB) for audit/debug
-- [ ] T020 [US1] Ensure OpenAPI contract matches behavior (`specs/004-mellow-component-portal/contracts/mellow-koala-api.openapi.yml`)
+- [ ] T020 [US1] Ensure OpenAPI contract matches behavior (`specs/004-mellow-collector-portal/contracts/mellow-koala-api.openapi.yml`)
 
 **Checkpoint**: US1 complete and independently verifiable.
 
 ---
 
-## Phase 4: User Story 2 - Index Overview of Component Configurations (Priority: P1)
+## Phase 4: User Story 2 - Index Overview of Collector Configurations (Priority: P1)
 
-**Goal**: Public index page shows all components with last-updated timestamps and staleness indicator.
+**Goal**: Public index page shows all collectors with last-updated timestamps and staleness indicator.
 
-**Independent Test**: Seed two components + snapshots; visit `/` and verify freshness/staleness display.
+**Independent Test**: Seed two collectors + snapshots; visit `/` and verify freshness/staleness display.
 
 ### Tests for US2 (BDD-first)
 
-- [ ] T021 [US2] System spec: empty state when no components reported (`spec/system/index_overview_spec.rb`)
-- [ ] T022 [US2] System spec: renders component list with timestamps + staleness indicator
+- [ ] T021 [US2] System spec: empty state when no collectors reported (`spec/system/index_overview_spec.rb`)
+- [ ] T022 [US2] System spec: renders collector list with timestamps + staleness indicator
 
 ### Implementation for US2
 
 - [ ] T023 [US2] Implement portal index controller + view (`app/controllers/portal/index_controller.rb`, `app/views/portal/index/*`)
-- [ ] T024 [US2] Implement query/service for overview data (latest snapshots per component) (`app/services/portal/overview_query.rb`)
+- [ ] T024 [US2] Implement query/service for overview data (latest snapshots per collector) (`app/services/portal/overview_query.rb`)
 - [ ] T025 [US2] Add freshness window configuration (env var; default 24h) and staleness logic
 
 **Checkpoint**: Index overview is public and accurate.
 
 ---
 
-## Phase 5: User Story 3 - Component Detail & Collection Information Pages (Priority: P2)
+## Phase 5: User Story 3 - Collector Detail & Collection Information Pages (Priority: P2)
 
-**Goal**: Public component pages provide drill-down for latest config + collection info with empty states.
+**Goal**: Public collector pages provide drill-down for latest config + collection info with empty states.
 
 ### Tests for US3 (BDD-first)
 
-- [ ] T026 [P] [US3] System spec: component details shows latest config snapshot + empty states (`spec/system/component_details_spec.rb`)
-- [ ] T027 [P] [US3] System spec: collection page shows latest collection snapshot + empty states (`spec/system/component_collection_spec.rb`)
+- [ ] T026 [P] [US3] System spec: collector details shows latest config snapshot + empty states (`spec/system/collector_details_spec.rb`)
+- [ ] T027 [P] [US3] System spec: collection page shows latest collection snapshot + empty states (`spec/system/collector_collection_spec.rb`)
 
 ### Implementation for US3
 
-- [ ] T028 [US3] Implement component details route/controller/view (`app/controllers/portal/components_controller.rb`, `app/views/portal/components/show.html.erb`)
-- [ ] T029 [US3] Implement component collection route/controller/view (`app/controllers/portal/collections_controller.rb`, `app/views/portal/collections/show.html.erb`)
-- [ ] T030 [US3] Add “not found” behavior for unknown component slugs (404)
-- [ ] T030a [US3] Implement `is_collector` conditional logic: redirect/404 on Details page access for collector components; hide Details link in navigation
+- [ ] T028 [US3] Implement collector details route/controller/view (`app/controllers/portal/collectors_controller.rb`, `app/views/portal/collectors/show.html.erb`)
+- [ ] T029 [US3] Implement collector collection route/controller/view (`app/controllers/portal/collections_controller.rb`, `app/views/portal/collections/show.html.erb`)
+- [ ] T030 [US3] Add “not found” behavior for unknown collector slugs (404)
+- [ ] T030a [US3] Implement `collection_only` conditional logic: redirect/404 on Details page access for collection-only collectors; hide Details link in navigation
 
-**Checkpoint**: Component pages working with collector-aware routing.
+**Checkpoint**: Collector pages working with collector-aware routing.
 
 ---
 
-## Phase 6: User Story 4 - Left Navigation for Components (Priority: P2)
+## Phase 6: User Story 4 - Left Navigation for Collectors (Priority: P2)
 
-**Goal**: Persistent left nav across portal pages with links to Details + Collection per component.
+**Goal**: Persistent left nav across portal pages with links to Details + Collection per collector.
 
 ### Tests for US4 (BDD-first)
 
-- [ ] T031 [US4] System spec: left nav present on index + component pages (`spec/system/navigation_spec.rb`)
+- [ ] T031 [US4] System spec: left nav present on index + collector pages (`spec/system/navigation_spec.rb`)
 
 ### Implementation for US4
 
 - [ ] T032 [US4] Implement nav partial + helper (`app/views/shared/_left_nav.html.erb`, `app/helpers/navigation_helper.rb`)
 - [ ] T033 [US4] Ensure active link highlighting works
-- [ ] T033a [US4] Hide Details link for collector components (check `is_collector` flag)
+- [ ] T033a [US4] Hide Details link for collection-only collectors (check `collection_only` flag)
 
 **Checkpoint**: Navigation complete with collector-aware link visibility.
 
 ---
 
-## Phase 7: User Story 5 - Carousel Mode Cycling Through Component Pages (Priority: P3)
+## Phase 7: User Story 5 - Carousel Mode Cycling Through Collector Pages (Priority: P3)
 
-**Goal**: Public carousel cycles through component pages with configurable dwell; stops when user manually navigates.
+**Goal**: Public carousel cycles through collector pages with configurable dwell; stops when user manually navigates.
 
 ### Tests for US5 (BDD-first)
 
@@ -174,24 +174,105 @@ description: "Task list for implementing feature 004"
 
 ### Implementation for US6
 
-- [ ] T047 [US6] Mark Heeler component as collector (`is_collector = true`) in seed data or migration
+- [ ] T047 [US6] Mark Heeler as a collection-only collector (`collection_only = true`) in seed data or migration
 - [ ] T048 [US6] Create Heeler-specific collection view template (`app/views/portal/collections/_heeler.html.erb`)
 - [ ] T049 [US6] Parse HeelerCollectionPayload schema: extract `zTime`, `wifi` array
 - [ ] T050 [US6] Render timestamp (convert `zTime` Unix timestamp to display format)
 - [ ] T051 [US6] Render AP count (length of `wifi` array)
 - [ ] T052 [US6] Render AP table with columns: SSID, BSSID, frequency (MHz), signal (dBm); limit to first 15 entries
-- [ ] T053 [US6] Add component-specific view routing logic (check `project` field or component identifier to select correct partial)
+- [ ] T053 [US6] Add collector-specific view routing logic (check `project` field or collector identifier to select correct partial)
 
 **Checkpoint**: US6 complete; Heeler collection view functional and independently verifiable.
 
 ---
 
-## Phase 9: Polish & Cross-Cutting
+## Phase 9: User Story 7 - Mellow Hyena ADSB Collection View (Priority: P2)
+
+**Goal**: Display Mellow Hyena ADSB's aviation beacon observations with a header (timestamp, count, platform, site) and a table of up to 15 observations enriched with registration/model from the adsbex stanza.
+
+**Independent Test**: Upload Hyena ADSB collection JSON; navigate to Hyena ADSB collection page; verify header fields and observation table with adsbex enrichment (including "unknown" fallback).
+
+### Tests for US7 (BDD-first)
+
+- [ ] T059 [P] [US7] System spec: Hyena ADSB collection shows header with timestamp, beacon count, platform, site (`spec/system/hyena_adsb_collection_spec.rb`)
+- [ ] T060 [P] [US7] System spec: Hyena ADSB collection table displays up to 15 observations with adsbHex, registration, model, flight, altitude, track
+- [ ] T061 [P] [US7] System spec: registration and model resolved from adsbex by adsbHex match
+- [ ] T062 [P] [US7] System spec: registration and model show "unknown" when adsbHex not found in adsbex
+- [ ] T063 [P] [US7] System spec: Hyena ADSB collection truncates display to 15 observations when more than 15 are present
+- [ ] T064 [P] [US7] System spec: Hyena ADSB empty state when no collection data received
+
+### Implementation for US7
+
+- [ ] T065 [US7] Mark Hyena ADSB collector as collection-only (`collection_only = true`) in seed data or migration
+- [ ] T066 [US7] Create Hyena ADSB-specific collection view template (`app/views/portal/collections/_hyena_adsb.html.erb`)
+- [ ] T067 [US7] Parse HyenaAdsbCollectionPayload schema: extract `zTime`, `platform`, `geoLoc.site`, `observation` array, `adsbex` array
+- [ ] T068 [US7] Render header: timestamp (convert `zTime` Unix timestamp to display format), observation count, platform, site
+- [ ] T069 [US7] Build adsbex lookup map keyed by `adsbHex` for O(1) enrichment
+- [ ] T070 [US7] Render observation table: adsbHex, registration, model, flight, altitude, track; limit to first 15; fall back to "unknown" for registration/model when no adsbex match
+- [ ] T071 [US7] Extend collector-specific view routing to dispatch to `_hyena_adsb` partial (check `project` field = `"hyena-adsb"`)
+
+**Checkpoint**: US7 complete; Hyena ADSB collection view functional and independently verifiable.
+
+---
+
+## Phase 10: User Story 8 - Mellow Hyena UAT Collection View (Priority: P2)
+
+**Goal**: Display Mellow Hyena UAT's aviation beacon observations with a header (timestamp, count, platform, site) and a table of up to 15 observations enriched with registration/model from the adsbex stanza.
+
+**Independent Test**: Upload Hyena UAT collection JSON; navigate to Hyena UAT collection page; verify header fields and observation table with adsbex enrichment (including "unknown" fallback).
+
+### Tests for US8 (BDD-first)
+
+- [ ] T072 [P] [US8] System spec: Hyena UAT collection shows header with timestamp, beacon count, platform, site (`spec/system/hyena_uat_collection_spec.rb`)
+- [ ] T073 [P] [US8] System spec: Hyena UAT collection table displays up to 15 observations with adsbHex, registration, model, flight, altitude, track
+- [ ] T074 [P] [US8] System spec: registration and model resolved from adsbex by adsbHex match
+- [ ] T075 [P] [US8] System spec: registration and model show "unknown" when adsbHex not found in adsbex
+- [ ] T076 [P] [US8] System spec: Hyena UAT collection truncates display to 15 observations when more than 15 are present
+- [ ] T077 [P] [US8] System spec: Hyena UAT empty state when no collection data received
+
+### Implementation for US8
+
+- [ ] T078 [US8] Mark Hyena UAT as a collection-only collector (`collection_only = true`) in seed data or migration
+- [ ] T079 [US8] Create Hyena UAT-specific collection view template (`app/views/portal/collections/_hyena_uat.html.erb`)
+- [ ] T080 [US8] Parse HyenaUatCollectionPayload schema: extract `zTime`, `platform`, `geoLoc.site`, `observation` array, `adsbex` array
+- [ ] T081 [US8] Render header: timestamp (convert `zTime` Unix timestamp to display format), observation count, platform, site
+- [ ] T082 [US8] Build adsbex lookup map keyed by `adsbHex` for O(1) enrichment
+- [ ] T083 [US8] Render observation table: adsbHex, registration, model, flight, altitude, track; limit to first 15; fall back to "unknown" for registration/model when no adsbex match
+- [ ] T084 [US8] Extend collector-specific view routing to dispatch to `_hyena_uat` partial (check `project` field = `"hyena-uat"`)
+
+**Checkpoint**: US8 complete; Hyena UAT collection view functional and independently verifiable.
+
+---
+
+## Phase 11: User Story 9 - Mellow Mastodon Collection View (Priority: P2)
+
+**Goal**: Display Mellow Mastodon's energy survey results with a header (timestamp, peakers count, platform, site).
+
+**Independent Test**: Upload Mastodon collection JSON; navigate to Mastodon collection page; verify header fields render correctly.
+
+### Tests for US9 (BDD-first)
+
+- [ ] T085 [P] [US9] System spec: Mastodon collection shows header with timestamp, peakers count, platform, site (`spec/system/mastodon_collection_spec.rb`)
+- [ ] T086 [P] [US9] System spec: Mastodon empty state when no collection data received
+
+### Implementation for US9
+
+- [ ] T087 [US9] Mark Mastodon as a collection-only collector (`collection_only = true`) in seed data or migration
+- [ ] T088 [US9] Create Mastodon-specific collection view template (`app/views/portal/collections/_mastodon.html.erb`)
+- [ ] T089 [US9] Parse MastodonCollectionPayload schema: extract `zTime`, `platform`, `geoLoc.site`, `peakers`
+- [ ] T090 [US9] Render header: timestamp (convert `zTime` Unix timestamp to display format), peakers count, platform, site
+- [ ] T091 [US9] Extend collector-specific view routing to dispatch to `_mastodon` partial (check `project` field = `"mastodon"`)
+
+**Checkpoint**: US9 complete; Mastodon collection view functional and independently verifiable.
+
+---
+
+## Phase 12: Polish & Cross-Cutting
 
 - [ ] T054 [P] Documentation: verify `quickstart.md` curl examples work with auth and match OpenAPI
 - [ ] T055 Security hardening pass: confirm secrets never logged; ensure constant-time token verification
 - [ ] T056 Run full test suite in Docker (`bundle exec rspec` via compose)
-- [ ] T057 [P] Verify all FR-001 through FR-037 are implemented and tested
+- [ ] T057 [P] Verify all FR-001 through FR-050 are implemented and tested
 - [ ] T058 [P] Constitution compliance final check against v2.0.4
 
 ---
@@ -200,5 +281,5 @@ description: "Task list for implementing feature 004"
 
 - Phase 1 → Phase 2 is blocking.
 - After Phase 2, US1 and US2 can proceed (US1 recommended first for data).
-- US3/US4 depend on components existing (typically via US1 or seeds).
+- US3/US4 depend on collectors existing (typically via US1 or seeds).
 - US5 can be done last; it depends on basic portal routes/pages.

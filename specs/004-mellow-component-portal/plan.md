@@ -1,15 +1,15 @@
-# Implementation Plan: Mellow Component Portal
+# Implementation Plan: Mellow Collector Portal
 
-**Branch**: `004-mellow-component-portal` | **Date**: 2026-04-18 | **Spec**: `specs/004-mellow-component-portal/spec.md`
-**Input**: Feature specification from `/specs/004-mellow-component-portal/spec.md`
+**Branch**: `004-mellow-collector-portal` | **Date**: 2026-04-18 | **Spec**: `specs/004-mellow-collector-portal/spec.md`
+**Input**: Feature specification from `/specs/004-mellow-collector-portal/spec.md`
 
 ## Summary
 
 Build Mellow Koala as a Rails 8 + Tailwind CSS web application backed by PostgreSQL, deployed via Docker on Linux hosts. The app:
-- receives component configuration + collection updates via a JSON API (intended to be called by per-component CLI utilities),
-- provides an index overview of component configurations (with freshness/staleness),
-- supports left navigation to component Details + Collection pages,
-- provides a carousel mode that cycles through component pages for kiosk monitoring.
+- receives collector configuration + collection updates via a JSON API (intended to be called by per-collector CLI utilities),
+- provides an index overview of collector configurations (with freshness/staleness),
+- supports left navigation to collector Details + Collection pages,
+- provides a carousel mode that cycles through collector pages for kiosk monitoring.
 
 ## Technical Context
 
@@ -22,9 +22,9 @@ Build Mellow Koala as a Rails 8 + Tailwind CSS web application backed by Postgre
 **Monitoring**: Prometheus (metrics), Elasticsearch (structured logs)  
 **Network**: Potentially air-gapped (no external internet dependencies)  
 **Project Type**: Web application  
-**Performance Goals**: Index <2s for 100 components; API typical response <2s  
-**Constraints**: No browser auth for public portal views; ingestion API requires simple per-component auth; enforce payload size limits + idempotency; preserve raw payloads  
-**Scale/Scope**: ~100 components; frequent updates (design for retries and concurrency)
+**Performance Goals**: Index <2s for 100 collectors; API typical response <2s  
+**Constraints**: No browser auth for public portal views; ingestion API requires simple per-collector auth; enforce payload size limits + idempotency; preserve raw payloads  
+**Scale/Scope**: ~100 collectors; frequent updates (design for retries and concurrency)
 
 ## Constitution Check
 
@@ -34,11 +34,11 @@ Derived from `.specify/memory/constitution.md` (v2.0.4):
 
 - **Rails conventions**: Follow standard Rails patterns (ActiveRecord, RESTful routes, standard directory structure).
 - **Data integrity**: Use migrations; enforce unique constraints for idempotency; prefer FK relationships; keep raw JSON payload for audit; all timestamps in UTC.
-- **Security by design**: Strict JSON validation, size limits, safe error messages; require per-component auth for ingestion and do not log secrets; no external auth providers (air-gapped compatible).
+- **Security by design**: Strict JSON validation, size limits, safe error messages; require per-collector auth for ingestion and do not log secrets; no external auth providers (air-gapped compatible).
 - **Test coverage**: BDD (NON-NEGOTIABLE) - Use feature/system specs for Stories 1–5 (Given/When/Then). Treat scenarios as the primary truth; update them first when behavior changes.
 - **Performance & scalability**: Optimize queries (avoid N+1); background processing for long operations; <200ms page response target.
 - **Offline-first**: All dependencies bundleable; no cloud services required; Docker images for ARM64.
-- **Observability**: Log accepted/rejected uploads with component identifiers + request IDs; structured logs for Elasticsearch; expose metrics for Prometheus; surface staleness and recent errors in UI.
+- **Observability**: Log accepted/rejected uploads with collector identifiers + request IDs; structured logs for Elasticsearch; expose metrics for Prometheus; surface staleness and recent errors in UI.
 - **Maintainability**: Service objects for ingestion/parsing; keep UI controllers thin.
 
 No violations requiring justification.
@@ -48,7 +48,7 @@ No violations requiring justification.
 ### Documentation (this feature)
 
 ```text
-specs/004-mellow-component-portal/
+specs/004-mellow-collector-portal/
 ├── plan.md
 ├── research.md
 ├── data-model.md
@@ -91,24 +91,24 @@ Decide and document:
 - Freshness window default + configurability (e.g., env var; default 24h).
 - Carousel parameters (dwell default 30s; bounds; deterministic order; error handling).
 - Payload size limit default + status codes.
-- URL scheme for components (slugging rules).
+- URL scheme for collectors (slugging rules).
 
 ## Phase 1: Design & Contracts (outputs: data-model.md, contracts/, quickstart.md)
 
-1. Data model (component + snapshots): constraints, indexes, retention decisions.
+1. Data model (collector + snapshots): constraints, indexes, retention decisions.
 2. OpenAPI contract for ingestion endpoints + error responses.
 3. UI routes:
    - `/` index overview
-   - `/components/:slug` details
-   - `/components/:slug/collection` collection
-   - `/carousel` (cycles through component pages)
+   - `/collectors/:slug` details
+   - `/collectors/:slug/collection` collection
+   - `/carousel` (cycles through collector pages)
 4. Docker deployment/quickstart.
 
 ## Phase 2: Implementation Outline (to be turned into tasks.md later)
 
 - Rails 8 project skeleton with Tailwind + Postgres.
 - Database migrations/models:
-  - Component
+  - Collector
   - ConfigurationSnapshot
   - CollectionSnapshot
 - Ingestion API:
@@ -116,7 +116,7 @@ Decide and document:
 - UI:
   - index overview + staleness indicator
   - left navigation
-  - component details + collection pages
+  - collector details + collection pages
 - Carousel:
   - dwell handling, deterministic order, skip-on-error, stop on manual navigation.
 - BDD test suite:

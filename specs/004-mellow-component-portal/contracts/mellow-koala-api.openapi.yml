@@ -1,22 +1,22 @@
 openapi: 3.0.3
 info:
-  title: Mellow Koala Component Update API
+  title: Mellow Koala Collector Update API
   version: 1.0.0
   description: |
-    API for Mellow components to publish configuration and collection snapshots to Mellow Koala.
+    API for Mellow collectors to publish configuration and collection snapshots to Mellow Koala.
 
 servers:
   - url: http://localhost:3000
 
 paths:
-  /api/components/{component_id}/configuration_snapshots:
+  /api/collectors/{collector_id}/configuration_snapshots:
     post:
       summary: Upload a configuration snapshot
       operationId: createConfigurationSnapshot
       security:
-        - ComponentToken: []
+        - CollectorToken: []
       parameters:
-        - name: component_id
+        - name: collector_id
           in: path
           required: true
           schema:
@@ -47,7 +47,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Unknown component
+          description: Unknown collector
           content:
             application/json:
               schema:
@@ -71,14 +71,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /api/components/{component_id}/collection_snapshots:
+  /api/collectors/{collector_id}/collection_snapshots:
     post:
       summary: Upload a collection snapshot
       operationId: createCollectionSnapshot
       security:
-        - ComponentToken: []
+        - CollectorToken: []
       parameters:
-        - name: component_id
+        - name: collector_id
           in: path
           required: true
           schema:
@@ -109,7 +109,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '404':
-          description: Unknown component
+          description: Unknown collector
           content:
             application/json:
               schema:
@@ -135,7 +135,7 @@ paths:
 
 components:
   securitySchemes:
-    ComponentToken:
+    CollectorToken:
       type: http
       scheme: bearer
       bearerFormat: opaque
@@ -147,7 +147,7 @@ components:
       properties:
         snapshot_id:
           type: string
-          description: Idempotency identifier unique per component and snapshot type
+          description: Idempotency identifier unique per collector and snapshot type
         captured_at:
           type: string
           format: date-time
@@ -213,12 +213,12 @@ components:
 
     SnapshotAccepted:
       type: object
-      required: [status, component_id, snapshot_id]
+      required: [status, collector_id, snapshot_id]
       properties:
         status:
           type: string
           enum: [accepted]
-        component_id:
+        collector_id:
           type: string
         snapshot_id:
           type: string

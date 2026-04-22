@@ -1,9 +1,10 @@
 {
-  "feature_directory": "specs/003-mellow-summary-dashboard",
-  "feature_number": "003",
-  "feature_short_name": "mellow-summary-dashboard",
-  "feature_branch": "003-mellow-summary-dashboard",
-  "spec_file": "specs/003-mellow-summary-dashboard/spec.md",
-  "created_at": "2026-04-18T04:23:00Z",
-  "status": "draft"
+  "feature_directory": "specs/004-mellow-component-portal",
+  "feature_number": "004",
+  "feature_short_name": "mellow-component-portal",
+  "feature_branch": "004-mellow-component-portal",
+  "spec_file": "specs/004-mellow-component-portal/spec.md",
+  "plan_file": "specs/004-mellow-component-portal/plan.md",
+  "created_at": "2026-04-18T06:42:23Z",
+  "status": "planned"
 }

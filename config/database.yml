@@ -1,0 +1,30 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
+  port: <%= ENV.fetch("DB_PORT") { 5432 } %>
+  username: <%= ENV.fetch("DB_USERNAME") { "gsc" } %>
+  password: <%= ENV.fetch("DB_PASSWORD") { "byteme" } %>
+
+development:
+  <<: *default
+  database: mellow_koala_development
+
+test:
+  <<: *default
+  database: mellow_koala_test
+
+production:
+  primary:
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>
+  cable:
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>
+  cache:
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>
+  queue:
+    <<: *default
+    database: <%= ENV.fetch("DB_NAME") { "mellow_koala_production" } %>

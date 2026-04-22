@@ -1,0 +1,143 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# bin/import_heeler — import a Mellow Heeler JSON file into Mellow Koala
+#
+# Usage:
+#   bin/import_heeler <path-to-heeler-file.json>
+#
+# Configuration (in order of precedence):
+#   MELLOW_KOALA_TOKEN   — bearer token for mellow-heeler component
+#   MELLOW_KOALA_URL     — base URL of Mellow Koala (default: http://localhost:3000)
+#
+# Token may also be stored in ~/.mellow-koala/credentials (KEY=VALUE format):
+#   MELLOW_KOALA_TOKEN=your_token_here
+#   MELLOW_KOALA_URL=http://your-server:3000
+
+require "json"
+require "net/http"
+require "uri"
+require "digest"
+require "time"
+
+CREDENTIALS_FILE = File.join(Dir.home, ".mellow-koala", "credentials")
+COMPONENT_ID     = "mellow-heeler"
+
+def load_credentials_file
+  return {} unless File.exist?(CREDENTIALS_FILE)
+  File.readlines(CREDENTIALS_FILE, chomp: true).each_with_object({}) do |line, h|
+    next if line.strip.empty? || line.start_with?("#")
+    key, val = line.split("=", 2)
+    h[key.strip] = val&.strip if key && val
+  end
+end
+
+def resolve_config
+  creds = load_credentials_file
+  token = ENV["MELLOW_KOALA_TOKEN"] || creds["MELLOW_KOALA_TOKEN"]
+  url   = ENV["MELLOW_KOALA_URL"]   || creds["MELLOW_KOALA_URL"] || "http://localhost:3000"
+  [token, url]
+end
+
+def abort_with(msg)
+  warn "[import_heeler] ERROR: #{msg}"
+  exit 1
+end
+
+def info(msg)
+  puts "[import_heeler] #{msg}"
+end
+
+# ── Validate arguments ──────────────────────────────────────────────────────
+
+if ARGV.length != 1 || ARGV.first == "--help"
+  puts "Usage: bin/import_heeler <path-to-heeler-file.json>"
+  puts ""
+  puts "Environment variables:"
+  puts "  MELLOW_KOALA_TOKEN  Bearer token for mellow-heeler (required)"
+  puts "  MELLOW_KOALA_URL    Base URL of Mellow Koala (default: http://localhost:3000)"
+  puts ""
+  puts "Or set these in ~/.mellow-koala/credentials"
+  exit ARGV.first == "--help" ? 0 : 1
+end
+
+file_path = ARGV.first
+abort_with "File not found: #{file_path}" unless File.exist?(file_path)
+
+# ── Load and parse the Heeler JSON ──────────────────────────────────────────
+
+raw = File.read(file_path)
+payload = JSON.parse(raw)
+rescue_json = false
+
+unless payload.is_a?(Hash)
+  abort_with "Expected a JSON object, got #{payload.class}"
+end
+
+info "Loaded #{file_path} (#{File.size(file_path)} bytes)"
+info "Project: #{payload["project"]}, Site: #{payload.dig("geoLoc", "site")}, " \
+     "WiFi APs: #{Array(payload["wifi"]).size}, zTime: #{payload["zTime"]}"
+
+# ── Resolve config ───────────────────────────────────────────────────────────
+
+token, base_url = resolve_config
+abort_with "No bearer token found. Set MELLOW_KOALA_TOKEN env var or add it to ~/.mellow-koala/credentials" if token.nil? || token.empty?
+
+# ── Build the API request body ───────────────────────────────────────────────
+# Use SHA256 of file contents as idempotency key so retries are safe.
+
+snapshot_id  = "heeler-#{Digest::SHA256.hexdigest(raw)[0, 16]}"
+captured_at  = payload["zTime"] ? Time.at(payload["zTime"]).utc.iso8601 : nil
+
+request_body = {
+  snapshot_id: snapshot_id,
+  captured_at: captured_at,
+  payload:     payload
+}
+
+# ── POST to Mellow Koala API ─────────────────────────────────────────────────
+
+api_path = "/api/components/#{COMPONENT_ID}/collection_snapshots"
+uri      = URI.parse("#{base_url}#{api_path}")
+
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = uri.scheme == "https"
+http.read_timeout = 30
+http.open_timeout = 10
+
+req = Net::HTTP::Post.new(uri.path)
+req["Content-Type"]  = "application/json"
+req["Authorization"] = "Bearer #{token}"
+req.body             = JSON.generate(request_body)
+
+info "POSTing to #{uri} (snapshot_id: #{snapshot_id})"
+
+begin
+  response = http.request(req)
+rescue => e
+  abort_with "HTTP request failed: #{e.message}"
+end
+
+# ── Handle response ───────────────────────────────────────────────────────────
+
+case response.code.to_i
+when 200
+  info "OK (idempotent replay — snapshot already stored)"
+  exit 0
+when 201
+  info "SUCCESS — snapshot accepted and stored"
+  exit 0
+when 400
+  body = JSON.parse(response.body) rescue {}
+  abort_with "Validation error (400): #{body.dig("error", "message") || response.body}"
+when 401
+  abort_with "Unauthorized (401) — check your MELLOW_KOALA_TOKEN"
+when 403
+  abort_with "Forbidden (403) — token is invalid or does not match mellow-heeler"
+when 404
+  abort_with "Not found (404) — is mellow-heeler registered in Mellow Koala?"
+when 413
+  abort_with "Payload too large (413)"
+else
+  abort_with "Unexpected response #{response.code}: #{response.body}"
+end

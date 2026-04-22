@@ -1,0 +1,15 @@
+services:
+  web:
+    image: koala:latest
+    command: bash -c "bundle exec rails db:prepare && bundle exec rails db:seed && bundle exec rails server -b 0.0.0.0"
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: host.docker.internal
+      DB_USERNAME: gsc
+      DB_PASSWORD: byteme
+      RAILS_ENV: production
+      SECRET_KEY_BASE: dev-secret-not-for-production
+
+volumes:
+  postgres_data:

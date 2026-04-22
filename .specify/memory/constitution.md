@@ -1,8 +1,15 @@
 <!--
 Sync Impact Report:
 ─────────────────────────────────────────────────────────────────────────────
-Version: 1.2.1 → 2.0.0 → 2.0.1 → 2.0.2 (ARM64 & Resource Clarification)
+Version: 1.2.1 → 2.0.0 → 2.0.1 → 2.0.2 → 2.0.3 (Monitoring Infrastructure)
 Date: 2026-04-22
+
+CHANGES IN 2.0.3 (PATCH):
+- ✅ Added monitoring infrastructure: Prometheus & Elasticsearch
+- ✅ Updated Technology Stack with Monitoring & Observability section
+- ✅ Added structured logging guidance for Elasticsearch
+- ✅ Added metrics exposure guidance for Prometheus
+- ✅ Updated Resource Management to reference Prometheus monitoring
 
 CHANGES IN 2.0.2 (PATCH):
 - ✅ Clarified ARM architecture: 64-bit ARM (ARM64) only, not 32-bit
@@ -34,12 +41,14 @@ PRINCIPLES ADDED:
 - VI. Offline-First & Air-Gap Ready (NEW - critical for embedded)
 
 SECTIONS MODIFIED:
+- Technology Stack → Added Monitoring & Observability (Prometheus, Elasticsearch)
 - Technology Stack → ARM64 Linux, offline-capable, no cloud, PostgreSQL
 - Added "Embedded Deployment Constraints" section
 - Development Workflow → Added ARM64-specific considerations
 - Purpose statement → Clarified 64-bit ARM with generous resources
 
 VERSION BUMP RATIONALE:
+- PATCH (2.0.2 → 2.0.3): Added available monitoring infrastructure details
 - PATCH (2.0.1 → 2.0.2): Architecture and resource profile clarification
 - PATCH (2.0.0 → 2.0.1): Database technology correction (MySQL → PostgreSQL)
 - MAJOR (1.2.1 → 2.0.0): Fundamental shift from generic web app to 
@@ -52,6 +61,7 @@ TEMPLATES STATUS:
 - ✅ .specify/templates/tasks-template.md (reviewed - compatible)
 
 PREVIOUS VERSIONS:
+- 2.0.2 (2026-04-22): ARM64 & resource clarification
 - 2.0.1 (2026-04-22): Database correction (MySQL → PostgreSQL)
 - 2.0.0 (2026-04-22): Embedded systems specialization
 - 1.2.1 (2026-04-19): Generic web application constitution
@@ -149,6 +159,10 @@ would make the system unusable in its primary deployment context.
 - Tailwind CSS for styling
 - ARM64 Linux hosts (64-bit ARM embedded systems)
 
+**Monitoring & Observability**:
+- Prometheus (metrics collection and alerting)
+- Elasticsearch (log aggregation and search)
+
 **Deployment Environment**:
 - ARM64 architecture (64-bit ARM only)
 - Generous hardware resources (adequate memory and CPU)
@@ -169,6 +183,8 @@ would make the system unusable in its primary deployment context.
 - Database connection pooling MUST be configured appropriately for
   concurrent imports and resource limits
 - Logs MUST include timestamps and severity levels
+- Logs SHOULD be structured for Elasticsearch ingestion
+- Application metrics SHOULD be exposed for Prometheus collection
 - External HTTP calls MUST NOT be required for core functionality
 - Memory footprint MUST be appropriate for embedded systems
 - No CDN or external asset dependencies in production
@@ -194,7 +210,8 @@ would make the system unusable in its primary deployment context.
 - Log rotation MUST be configured to prevent disk space exhaustion
 - Background job queues SHOULD have timeout configurations for long-running
   tasks
-- Basic monitoring of system resources (CPU, memory, disk) is recommended
+- System resources (CPU, memory, disk) SHOULD be monitored via Prometheus
+- Application health metrics SHOULD be exposed for monitoring
 
 **Data Collection**:
 - Import utilities collect data from other embedded Mellow projects on the
@@ -258,4 +275,4 @@ Changes to core principles require documented justification and team consensus.
 - Cloud or internet-dependent features MUST be justified as non-core optional
   enhancements only
 
-**Version**: 2.0.2 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-04-22
+**Version**: 2.0.3 | **Ratified**: 2026-04-17 | **Last Amended**: 2026-04-22

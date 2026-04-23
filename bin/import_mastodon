@@ -1,13 +1,13 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# bin/import_heeler — import a Mellow Heeler JSON file into Mellow Koala
+# bin/import_mastodon — import a Mellow Mastodon JSON file into Mellow Koala
 #
 # Usage:
-#   bin/import_heeler <path-to-heeler-file.json>
+#   bin/import_mastodon <path-to-mastodon-file.json>
 #
 # Configuration (in order of precedence):
-#   MELLOW_KOALA_TOKEN   — bearer token for mellow-heeler component
+#   MELLOW_KOALA_TOKEN   — bearer token for mellow-mastodon collector
 #   MELLOW_KOALA_URL     — base URL of Mellow Koala (default: http://localhost:3000)
 #
 # Token may also be stored in ~/.mellow-koala/credentials (KEY=VALUE format):
@@ -21,7 +21,7 @@ require "digest"
 require "time"
 
 CREDENTIALS_FILE = File.join(Dir.home, ".mellow-koala", "credentials")
-COMPONENT_ID     = "mellow-heeler"
+COLLECTOR_ID     = "mellow-mastodon"
 
 def load_credentials_file
   return {} unless File.exist?(CREDENTIALS_FILE)
@@ -40,21 +40,21 @@ def resolve_config
 end
 
 def abort_with(msg)
-  warn "[import_heeler] ERROR: #{msg}"
+  warn "[import_mastodon] ERROR: #{msg}"
   exit 1
 end
 
 def info(msg)
-  puts "[import_heeler] #{msg}"
+  puts "[import_mastodon] #{msg}"
 end
 
 # ── Validate arguments ──────────────────────────────────────────────────────
 
 if ARGV.length != 1 || ARGV.first == "--help"
-  puts "Usage: bin/import_heeler <path-to-heeler-file.json>"
+  puts "Usage: bin/import_mastodon <path-to-mastodon-file.json>"
   puts ""
   puts "Environment variables:"
-  puts "  MELLOW_KOALA_TOKEN  Bearer token for mellow-heeler (required)"
+  puts "  MELLOW_KOALA_TOKEN  Bearer token for mellow-mastodon (required)"
   puts "  MELLOW_KOALA_URL    Base URL of Mellow Koala (default: http://localhost:3000)"
   puts ""
   puts "Or set these in ~/.mellow-koala/credentials"
@@ -64,19 +64,19 @@ end
 file_path = ARGV.first
 abort_with "File not found: #{file_path}" unless File.exist?(file_path)
 
-# ── Load and parse the Heeler JSON ──────────────────────────────────────────
+# ── Load and parse the Mastodon JSON ────────────────────────────────────────
 
 raw = File.read(file_path)
 payload = JSON.parse(raw)
-rescue_json = false
 
 unless payload.is_a?(Hash)
   abort_with "Expected a JSON object, got #{payload.class}"
 end
 
 info "Loaded #{file_path} (#{File.size(file_path)} bytes)"
-info "Project: #{payload["project"]}, Site: #{payload.dig("geoLoc", "site")}, " \
-     "WiFi APs: #{Array(payload["wifi"]).size}, zTime: #{payload["zTime"]}"
+info "Project: #{payload["project"]}, Platform: #{payload["platform"]}, " \
+     "Site: #{payload.dig("geoLoc", "site")}, " \
+     "Peakers: #{Array(payload["peakers"]).size}, zTime: #{payload["zTime"]}"
 
 # ── Resolve config ───────────────────────────────────────────────────────────
 
@@ -86,7 +86,7 @@ abort_with "No bearer token found. Set MELLOW_KOALA_TOKEN env var or add it to ~
 # ── Build the API request body ───────────────────────────────────────────────
 # Use SHA256 of file contents as idempotency key so retries are safe.
 
-snapshot_id  = "heeler-#{Digest::SHA256.hexdigest(raw)[0, 16]}"
+snapshot_id  = "mastodon-#{Digest::SHA256.hexdigest(raw)[0, 16]}"
 captured_at  = payload["zTime"] ? Time.at(payload["zTime"]).utc.iso8601 : nil
 
 request_body = {
@@ -97,7 +97,7 @@ request_body = {
 
 # ── POST to Mellow Koala API ─────────────────────────────────────────────────
 
-api_path = "/api/collectors/#{COMPONENT_ID}/collection_snapshots"
+api_path = "/api/collectors/#{COLLECTOR_ID}/collection_snapshots"
 uri      = URI.parse("#{base_url}#{api_path}")
 
 http = Net::HTTP.new(uri.host, uri.port)
@@ -133,9 +133,9 @@ when 400
 when 401
   abort_with "Unauthorized (401) — check your MELLOW_KOALA_TOKEN"
 when 403
-  abort_with "Forbidden (403) — token is invalid or does not match mellow-heeler"
+  abort_with "Forbidden (403) — token is invalid or does not match mellow-mastodon"
 when 404
-  abort_with "Not found (404) — is mellow-heeler registered in Mellow Koala?"
+  abort_with "Not found (404) — is mellow-mastodon registered in Mellow Koala?"
 when 413
   abort_with "Payload too large (413)"
 else

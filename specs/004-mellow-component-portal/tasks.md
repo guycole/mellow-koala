@@ -267,7 +267,26 @@ description: "Task list for implementing feature 004"
 
 ---
 
-## Phase 12: Polish & Cross-Cutting
+## Phase 12: CLI Import Utilities (US1 — per-collector)
+
+**Goal**: Each collection-only collector has a dedicated `bin/import_<name>` CLI utility for uploading a JSON file to the Mellow Koala API.
+
+### Fix existing utility
+
+- [X] T092 [US1] Fix stale API path in `bin/import_heeler`: change `/api/components/` → `/api/collectors/` (`bin/import_heeler`)
+
+### New utilities
+
+- [X] T093 [P] [US1] Create `bin/import_hyena_adsb` CLI utility (mirrors `import_heeler`; COLLECTOR_ID `mellow-hyena-adsb`; info line shows `platform`, `geoLoc.site`, `observation` count, `zTime`) (`bin/import_hyena_adsb`)
+- [X] T094 [P] [US1] Create `bin/import_hyena_uat` CLI utility (mirrors `import_heeler`; COLLECTOR_ID `mellow-hyena-uat`; info line shows `platform`, `geoLoc.site`, `observation` count, `zTime`) (`bin/import_hyena_uat`)
+- [X] T095 [P] [US1] Create `bin/import_mastodon` CLI utility (mirrors `import_heeler`; COLLECTOR_ID `mellow-mastodon`; info line shows `platform`, `geoLoc.site`, `peakers` count, `zTime`) (`bin/import_mastodon`)
+- [X] T096 [P] [US1] Make all new import utilities executable (`chmod +x`) (`bin/import_hyena_adsb`, `bin/import_hyena_uat`, `bin/import_mastodon`)
+
+**Checkpoint**: All four collectors have working CLI import utilities pointing at `/api/collectors/`.
+
+---
+
+## Phase 13: Polish & Cross-Cutting
 
 - [ ] T054 [P] Documentation: verify `quickstart.md` curl examples work with auth and match OpenAPI
 - [ ] T055 Security hardening pass: confirm secrets never logged; ensure constant-time token verification

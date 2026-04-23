@@ -1,7 +1,7 @@
 class Api::ConfigurationSnapshotsController < Api::BaseController
   def create
     result = Ingestion::IngestSnapshot.new(
-      component: @authenticated_component,
+      collector: @authenticated_collector,
       snapshot_class: ConfigurationSnapshot,
       params: snapshot_params
     ).call
@@ -28,7 +28,7 @@ class Api::ConfigurationSnapshotsController < Api::BaseController
   def accepted_body(snapshot)
     {
       status: "accepted",
-      component_id: snapshot.component.component_id,
+      collector_id: snapshot.collector.collector_id,
       snapshot_id: snapshot.snapshot_id,
       received_at: snapshot.received_at&.iso8601
     }

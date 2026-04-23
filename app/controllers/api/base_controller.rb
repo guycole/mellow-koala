@@ -1,22 +1,22 @@
 class Api::BaseController < ActionController::API
-  before_action :authenticate_component!
+  before_action :authenticate_collector!
 
   rescue_from ActionController::ParameterMissing, with: :render_bad_request
   rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
 
   private
 
-  def authenticate_component!
+  def authenticate_collector!
     raw_token = extract_bearer_token
     unless raw_token
       render json: error_body("unauthorized", "Missing Authorization header"), status: :unauthorized
       return
     end
 
-    component_id = params[:component_id]
-    @authenticated_component = Component.authenticate_by_token(component_id, raw_token)
-    unless @authenticated_component
-      render json: error_body("forbidden", "Invalid credentials or component mismatch"), status: :forbidden
+    collector_id = params[:collector_id]
+    @authenticated_collector = Collector.authenticate_by_token(collector_id, raw_token)
+    unless @authenticated_collector
+      render json: error_body("forbidden", "Invalid credentials or collector mismatch"), status: :forbidden
     end
   end
 
@@ -31,7 +31,7 @@ class Api::BaseController < ActionController::API
   end
 
   def render_not_found(_e)
-    render json: error_body("not_found", "Component not found"), status: :not_found
+    render json: error_body("not_found", "Collector not found"), status: :not_found
   end
 
   def error_body(code, message, details = nil)

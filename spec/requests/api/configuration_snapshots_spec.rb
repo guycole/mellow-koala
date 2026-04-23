@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Api::ConfigurationSnapshots", type: :request do
   let(:raw_token) { "super-secret-token-123" }
-  let(:component) { create(:component, ingest_token: raw_token) }
+  let(:collector) { create(:collector, ingest_token: raw_token) }
   let(:auth_headers) { { "Authorization" => "Bearer #{raw_token}", "Content-Type" => "application/json" } }
   let(:valid_payload) do
     {
@@ -12,10 +12,10 @@ RSpec.describe "Api::ConfigurationSnapshots", type: :request do
     }
   end
 
-  describe "POST /api/components/:component_id/configuration_snapshots" do
+  describe "POST /api/collectors/:collector_id/configuration_snapshots" do
     context "with valid auth and payload" do
       it "returns 201 and stores the snapshot" do
-        post "/api/components/#{component.component_id}/configuration_snapshots",
+        post "/api/collectors/#{collector.collector_id}/configuration_snapshots",
              params: valid_payload.to_json,
              headers: auth_headers
 
@@ -29,9 +29,9 @@ RSpec.describe "Api::ConfigurationSnapshots", type: :request do
 
     context "with idempotent retry" do
       it "returns 200 on replay and does not duplicate" do
-        create(:configuration_snapshot, component: component, snapshot_id: "cfg-0001")
+        create(:configuration_snapshot, collector: collector, snapshot_id: "cfg-0001")
 
-        post "/api/components/#{component.component_id}/configuration_snapshots",
+        post "/api/collectors/#{collector.collector_id}/configuration_snapshots",
              params: valid_payload.to_json,
              headers: auth_headers
 
@@ -42,7 +42,7 @@ RSpec.describe "Api::ConfigurationSnapshots", type: :request do
 
     context "with missing authentication" do
       it "returns 401" do
-        post "/api/components/#{component.component_id}/configuration_snapshots",
+        post "/api/collectors/#{collector.collector_id}/configuration_snapshots",
              params: valid_payload.to_json,
              headers: { "Content-Type" => "application/json" }
 
@@ -52,7 +52,7 @@ RSpec.describe "Api::ConfigurationSnapshots", type: :request do
 
     context "with invalid token" do
       it "returns 403" do
-        post "/api/components/#{component.component_id}/configuration_snapshots",
+        post "/api/collectors/#{collector.collector_id}/configuration_snapshots",
              params: valid_payload.to_json,
              headers: { "Authorization" => "Bearer wrong-token", "Content-Type" => "application/json" }
 
@@ -60,11 +60,11 @@ RSpec.describe "Api::ConfigurationSnapshots", type: :request do
       end
     end
 
-    context "when token belongs to a different component" do
-      let(:other_component) { create(:component) }
+    context "when token belongs to a different collector" do
+      let(:other_collector) { create(:collector) }
 
       it "returns 403" do
-        post "/api/components/#{other_component.component_id}/configuration_snapshots",
+        post "/api/collectors/#{other_collector.collector_id}/configuration_snapshots",
              params: valid_payload.to_json,
              headers: auth_headers
 
@@ -74,7 +74,7 @@ RSpec.describe "Api::ConfigurationSnapshots", type: :request do
 
     context "with missing payload" do
       it "returns 400 with error message" do
-        post "/api/components/#{component.component_id}/configuration_snapshots",
+        post "/api/collectors/#{collector.collector_id}/configuration_snapshots",
              params: { snapshot_id: "cfg-bad" }.to_json,
              headers: auth_headers
 
@@ -86,7 +86,7 @@ RSpec.describe "Api::ConfigurationSnapshots", type: :request do
 
     context "with missing snapshot_id" do
       it "returns 400" do
-        post "/api/components/#{component.component_id}/configuration_snapshots",
+        post "/api/collectors/#{collector.collector_id}/configuration_snapshots",
              params: { payload: { version: "1.0" } }.to_json,
              headers: auth_headers
 

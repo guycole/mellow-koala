@@ -1,15 +1,22 @@
 <div class="max-w-4xl">
   <div class="mb-6">
-    <h1 class="text-2xl font-bold text-gray-800"><%= @component.display_name %> — Collection</h1>
+    <h1 class="text-2xl font-bold text-gray-800"><%= @collector.display_name %> — Collection</h1>
   </div>
 
   <% if @latest_collection.nil? %>
     <div class="rounded-lg border border-dashed border-gray-300 p-10 text-center">
-      <p class="text-gray-500">No collection data available yet for this component.</p>
+      <p class="text-gray-500">No collection data available yet.</p>
     </div>
   <% else %>
-    <% if @latest_collection.payload["project"] == "heeler" %>
-      <%= render "heeler_collection", snapshot: @latest_collection %>
+    <% project = @latest_collection.payload["project"] %>
+    <% if project == "heeler" %>
+      <%= render "heeler", snapshot: @latest_collection %>
+    <% elsif project == "hyena-adsb" %>
+      <%= render "hyena_adsb", snapshot: @latest_collection %>
+    <% elsif project == "hyena-uat" %>
+      <%= render "hyena_uat", snapshot: @latest_collection %>
+    <% elsif project == "mastodon" %>
+      <%= render "mastodon", snapshot: @latest_collection %>
     <% else %>
       <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">
         <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Collection Snapshot</h2>

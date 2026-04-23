@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :collection_snapshot do
-    component
+    collector
     sequence(:snapshot_id) { |n| "col-#{n.to_s.rjust(4, '0')}" }
     captured_at { 1.hour.ago }
     received_at { Time.current }

@@ -1,0 +1,75 @@
+<%
+  observations = snapshot.payload["observation"] || []
+  obs_count    = observations.size
+  obs_rows     = observations.first(15)
+  adsbex_index = (snapshot.payload["adsbex"] || []).index_by { |e| e["adsbHex"] }
+  z_time       = snapshot.payload["zTime"]
+  observed_at  = z_time ? Time.at(z_time).utc : nil
+%>
+
+<div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">
+  <h2 class="text-sm font-semibold uppercase text-gray-400 mb-4">Latest Hyena ADSB Observation</h2>
+
+  <dl class="grid grid-cols-2 gap-4 mb-6">
+    <div>
+      <dt class="text-xs text-gray-500 uppercase tracking-wide">Observation Time (UTC)</dt>
+      <dd class="mt-1 text-sm font-mono text-gray-800">
+        <%= observed_at ? observed_at.iso8601 : "unknown" %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-xs text-gray-500 uppercase tracking-wide">ADSB Beacons Observed</dt>
+      <dd class="mt-1 text-sm font-mono text-gray-800"><%= obs_count %></dd>
+    </div>
+    <div>
+      <dt class="text-xs text-gray-500 uppercase tracking-wide">Site</dt>
+      <dd class="mt-1 text-sm font-mono text-gray-800">
+        <%= snapshot.payload.dig("geoLoc", "site") || "—" %>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-xs text-gray-500 uppercase tracking-wide">Platform</dt>
+      <dd class="mt-1 text-sm font-mono text-gray-800">
+        <%= snapshot.payload["platform"] || "—" %>
+      </dd>
+    </div>
+  </dl>
+
+  <% if obs_rows.any? %>
+    <h3 class="text-sm font-semibold text-gray-600 mb-2">
+      ADSB Observations
+      <% if obs_count > 15 %>
+        <span class="text-xs font-normal text-gray-400">(showing 15 of <%= obs_count %>)</span>
+      <% end %>
+    </h3>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm" data-testid="adsb-table">
+        <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+          <tr>
+            <th class="px-3 py-2 text-left">ADSB Hex</th>
+            <th class="px-3 py-2 text-left">Registration</th>
+            <th class="px-3 py-2 text-left">Model</th>
+            <th class="px-3 py-2 text-left">Flight</th>
+            <th class="px-3 py-2 text-right">Altitude (ft)</th>
+            <th class="px-3 py-2 text-right">Track (°)</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% obs_rows.each do |obs| %>
+            <% enrichment = adsbex_index[obs["adsbHex"]] %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-3 py-2 font-mono text-gray-600"><%= obs["adsbHex"] %></td>
+              <td class="px-3 py-2 font-mono"><%= enrichment&.dig("registration") || "unknown" %></td>
+              <td class="px-3 py-2 font-mono"><%= enrichment&.dig("model") || "unknown" %></td>
+              <td class="px-3 py-2"><%= obs["flight"] %></td>
+              <td class="px-3 py-2 text-right"><%= obs["altitude"] %></td>
+              <td class="px-3 py-2 text-right"><%= obs["track"] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-sm text-gray-400 italic">No ADSB observations in this snapshot.</p>
+  <% end %>
+</div>

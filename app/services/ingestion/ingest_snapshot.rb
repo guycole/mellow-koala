@@ -2,8 +2,8 @@ module Ingestion
   class IngestSnapshot
     Result = Struct.new(:success?, :snapshot, :status_code, :errors, keyword_init: true)
 
-    def initialize(component:, snapshot_class:, params:, replace: false)
-      @component = component
+    def initialize(collector:, snapshot_class:, params:, replace: false)
+      @collector = collector
       @snapshot_class = snapshot_class
       @params = params
       @replace = replace
@@ -33,9 +33,9 @@ module Ingestion
     def call_with_replace(snapshot_id)
       snapshot = nil
       @snapshot_class.transaction do
-        @snapshot_class.where(component: @component).delete_all
+        @snapshot_class.where(collector: @collector).delete_all
         snapshot = @snapshot_class.new(
-          component: @component,
+          collector: @collector,
           snapshot_id: snapshot_id,
           captured_at: @params[:captured_at],
           status: "accepted",
@@ -50,11 +50,11 @@ module Ingestion
     end
 
     def call_with_append(snapshot_id)
-      existing = @snapshot_class.find_by(component: @component, snapshot_id: snapshot_id)
+      existing = @snapshot_class.find_by(collector: @collector, snapshot_id: snapshot_id)
       return Result.new(success?: true, snapshot: existing, status_code: :ok) if existing
 
       snapshot = @snapshot_class.new(
-        component: @component,
+        collector: @collector,
         snapshot_id: snapshot_id,
         captured_at: @params[:captured_at],
         status: "accepted",

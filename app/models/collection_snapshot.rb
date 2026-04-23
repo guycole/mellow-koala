@@ -1,11 +1,11 @@
 class CollectionSnapshot < ApplicationRecord
-  belongs_to :component
+  belongs_to :collector
 
   validates :snapshot_id, presence: true
   validates :received_at, presence: true
   validates :status, presence: true, inclusion: { in: %w[accepted rejected] }
   validates :payload, presence: true
-  validates :snapshot_id, uniqueness: { scope: :component_id }
+  validates :snapshot_id, uniqueness: { scope: :collector_id }
 
   before_validation :set_received_at, on: :create
 

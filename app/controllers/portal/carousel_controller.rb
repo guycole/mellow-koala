@@ -5,23 +5,23 @@ class Portal::CarouselController < Portal::BaseController
 
   def show
     @dwell = clamp_dwell(params[:dwell].to_i.nonzero? || DEFAULT_DWELL)
-    components = Component.order(:display_name).to_a
+    collectors = Collector.order(:display_name).to_a
 
-    if components.empty?
+    if collectors.empty?
       @next_url = carousel_path(dwell: @dwell)
-      @component = nil
+      @collector = nil
       render :empty and return
     end
 
-    # Determine which component to show by cycling via index param
-    @index = (params[:index].to_i || 0).clamp(0, components.length - 1)
-    @component = components[@index]
-    @next_index = (@index + 1) % components.length
+    # Determine which collector to show by cycling via index param
+    @index = (params[:index].to_i || 0).clamp(0, collectors.length - 1)
+    @collector = collectors[@index]
+    @next_index = (@index + 1) % collectors.length
     @next_url = carousel_path(index: @next_index, dwell: @dwell)
 
-    # Show the component detail as the carousel page
-    @latest_config = @component.configuration_snapshots.accepted.recent.first
-    @latest_collection = @component.collection_snapshots.accepted.recent.first
+    # Show the collector detail as the carousel page
+    @latest_config = @collector.configuration_snapshots.accepted.recent.first
+    @latest_collection = @collector.collection_snapshots.accepted.recent.first
   end
 
   private

@@ -1,7 +1,7 @@
 {
   "platform": "rpi4i",
   "project": "hyena-adsb",
-  "timestamp": 1776973082,
+  "zTime": 1776973082,
   "version": 1,
   "geoLoc": {
     "site": "vallejo01"

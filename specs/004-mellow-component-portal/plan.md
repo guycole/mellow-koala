@@ -18,7 +18,7 @@ Build Mellow Koala as a Rails 8 + Tailwind CSS web application backed by Postgre
 **Storage**: PostgreSQL 15+  
 **Testing**: BDD-first acceptance scenarios (system specs) + RSpec request/model specs  
 **Target Platform**: Docker on ARM64 Linux hosts (dev via Docker Compose)  
-**Deployment**: Docker containers on 64-bit ARM embedded systems with generous resources  
+**Deployment**: Docker containers on 64-bit ARM embedded systems with adequate resources  
 **Monitoring**: Prometheus (metrics), Elasticsearch (structured logs)  
 **Network**: Potentially air-gapped (no external internet dependencies)  
 **Project Type**: Web application  
@@ -37,7 +37,7 @@ Derived from `.specify/memory/constitution.md` (v2.0.4):
 - **Security by design**: Strict JSON validation, size limits, safe error messages; require per-collector auth for ingestion and do not log secrets; no external auth providers (air-gapped compatible).
 - **Test coverage**: BDD (NON-NEGOTIABLE) - Use feature/system specs for Stories 1–5 (Given/When/Then). Treat scenarios as the primary truth; update them first when behavior changes.
 - **Performance & scalability**: Optimize queries (avoid N+1); background processing for long operations; <200ms page response target.
-- **Offline-first**: All dependencies bundleable; no cloud services required; Docker images for ARM64.
+- **Offline-first**: All dependencies bundleable; no cloud services required; image built directly on the ARM64 host from source (no image export/transfer needed).
 - **Observability**: Log accepted/rejected uploads with collector identifiers + request IDs; structured logs for Elasticsearch; expose metrics for Prometheus; surface staleness and recent errors in UI.
 - **Maintainability**: Service objects for ingestion/parsing; keep UI controllers thin.
 

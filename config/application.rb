@@ -18,6 +18,9 @@ require "action_cable/engine"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+require "prometheus/middleware/collector"
+require "prometheus/middleware/exporter"
+
 module MellowKoala
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
@@ -38,5 +41,9 @@ module MellowKoala
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Prometheus: collect HTTP request metrics and expose /metrics endpoint
+    config.middleware.use Prometheus::Middleware::Collector
+    config.middleware.use Prometheus::Middleware::Exporter
   end
 end

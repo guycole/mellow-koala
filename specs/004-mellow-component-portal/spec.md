@@ -7,7 +7,7 @@
 
 ## Technical Environment
 
-**Platform**: Docker containers on ARM64 Linux (64-bit ARM embedded systems with generous resources)  
+**Platform**: Docker containers on ARM64 Linux (64-bit ARM embedded systems with adequate resources)  
 **Database**: PostgreSQL 15+  
 **Monitoring**: Prometheus (metrics), Elasticsearch (structured logs)  
 **Network**: Air-gapped capable (no external internet dependencies)  

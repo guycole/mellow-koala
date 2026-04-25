@@ -8,11 +8,14 @@ class Api::CollectionSnapshotsController < Api::BaseController
     ).call
 
     if result.success?
+      AppMetrics.ingestion_total.increment(labels: { snapshot_type: "collection", status: "success" })
       render json: accepted_body(result.snapshot), status: result.status_code
     elsif result.status_code == :unprocessable_entity
+      AppMetrics.ingestion_total.increment(labels: { snapshot_type: "collection", status: "validation_error" })
       render json: error_body("validation_error", "Payload validation failed",
                               { fields: result.errors }), status: :bad_request
     else
+      AppMetrics.ingestion_total.increment(labels: { snapshot_type: "collection", status: "error" })
       render json: error_body("bad_request", result.errors.join(", ")), status: :bad_request
     end
   end

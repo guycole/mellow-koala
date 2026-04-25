@@ -1,8 +1,13 @@
 <!--
 Sync Impact Report:
 ─────────────────────────────────────────────────────────────────────────────
-Version: 1.2.1 → 2.0.0 → 2.0.1 → 2.0.2 → 2.0.3 → 2.0.4 (Docker Deployment)
-Date: 2026-04-22
+Version: 1.2.1 → 2.0.0 → 2.0.1 → 2.0.2 → 2.0.3 → 2.0.4 → 2.0.5 (Build-on-Host)
+Date: 2026-04-22 / 2026-04-25
+
+CHANGES IN 2.0.5 (PATCH):
+- ✅ Clarified production deployment: image built on the host, no image export/transfer
+- ✅ Removed Docker image export/load requirements from Offline Installation
+- ✅ Offline-first now means bundled gems + on-host docker build, not image shipping
 
 CHANGES IN 2.0.4 (PATCH):
 - ✅ Added Docker containerization to deployment model
@@ -21,7 +26,7 @@ CHANGES IN 2.0.3 (PATCH):
 
 CHANGES IN 2.0.2 (PATCH):
 - ✅ Clarified ARM architecture: 64-bit ARM (ARM64) only, not 32-bit
-- ✅ Clarified resource profile: generous resources, not constrained
+- ✅ Clarified resource profile: adequate resources, not constrained
 - ✅ Updated Principle V: Performance & Scalability (removed "Constraints")
 - ✅ Softened resource management requirements (SHOULD vs MUST)
 - ✅ All references updated: ARM → ARM64 throughout document
@@ -41,7 +46,7 @@ CHANGES IN 2.0.0 (MAJOR):
 
 PRINCIPLES MODIFIED:
 - V. Performance & Resource Constraints → Performance & Scalability
-  (clarified: generous resources, not constrained)
+  (clarified: adequate resources, not constrained)
 - All principles customized for embedded ARM64 monitoring context
 - Security principle adapted for air-gapped environments
 
@@ -52,14 +57,15 @@ SECTIONS MODIFIED:
 - Deployment Environment → Docker containerization in production
 - Technology Stack → Added Monitoring & Observability (Prometheus, Elasticsearch)
 - Technology Stack → ARM64 Linux, offline-capable, no cloud, PostgreSQL
-- Offline Installation → Docker image export/load procedures
+- Offline Installation → Build-on-host model; removed image export/load requirement
 - Testing Gates → Docker image testing requirements
 - Deployment → Docker-specific deployment requirements
 - Added "Embedded Deployment Constraints" section
 - Development Workflow → Added ARM64-specific considerations
-- Purpose statement → Clarified 64-bit ARM with generous resources
+- Purpose statement → Clarified 64-bit ARM with adequate resources
 
 VERSION BUMP RATIONALE:
+- PATCH (2.0.4 → 2.0.5): Clarified build-on-host production model; no image export needed
 - PATCH (2.0.3 → 2.0.4): Added Docker deployment model to deployment context
 - PATCH (2.0.2 → 2.0.3): Added available monitoring infrastructure details
 - PATCH (2.0.1 → 2.0.2): Architecture and resource profile clarification
@@ -74,6 +80,7 @@ TEMPLATES STATUS:
 - ✅ .specify/templates/tasks-template.md (reviewed - compatible)
 
 PREVIOUS VERSIONS:
+- 2.0.4 (2026-04-22): Docker deployment model
 - 2.0.3 (2026-04-22): Monitoring infrastructure (Prometheus, Elasticsearch)
 - 2.0.2 (2026-04-22): ARM64 & resource clarification
 - 2.0.1 (2026-04-22): Database correction (MySQL → PostgreSQL)
@@ -86,7 +93,7 @@ PREVIOUS VERSIONS:
 # Mellow Koala Constitution
 
 **Purpose**: Monitoring and displaying data from embedded applications running
-on 64-bit ARM Linux hosts with generous resources, potentially in air-gapped or
+on 64-bit ARM Linux hosts with adequate resources, potentially in air-gapped or
 internet-isolated environments.
 
 ## Core Principles
@@ -142,7 +149,7 @@ queue). Response times for user-facing pages SHOULD be under 200ms. Import
 utilities MUST handle batch processing for large datasets.
 
 **Embedded Deployment Context**: The application runs on 64-bit ARM Linux hosts
-with generous resources. While resource-efficient code is preferred, the system
+with adequate resources. While resource-efficient code is preferred, the system
 has adequate memory and CPU capacity for typical Rails applications. Database
 size growth MUST still be manageable through data retention policies where
 appropriate. The application MUST operate efficiently on ARM64 architecture with
@@ -216,13 +223,11 @@ would make the system unusable in its primary deployment context.
 - Document any gems that require special compilation flags for ARM64
 
 **Offline Installation**:
-- Docker images MUST be exportable and loadable for air-gapped deployment
-- Docker images MUST be built for ARM64 architecture
-- Bundle MUST support `bundle package --all` for offline installation
+- Production Docker images are built directly on the host (ARM64) from source — no image export/transfer workflow is required
+- Bundle MUST support `bundle package --all` for offline gem installation
 - Asset precompilation MUST work without internet access
 - Database setup scripts MUST not require external downloads
-- Documentation MUST include offline Docker image transfer procedures
-- Documentation MUST include offline installation procedures
+- Documentation MUST include offline installation procedures (clone + docker build on host)
 
 **Resource Management**:
 - Database size SHOULD be monitored with cleanup/archival policies where

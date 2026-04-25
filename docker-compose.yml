@@ -6,8 +6,8 @@ services:
       - "3000:3000"
     environment:
       DB_HOST: host.docker.internal
-      DB_USERNAME: gsc
-      DB_PASSWORD: byteme
+      DB_USERNAME: koala_admin
+      DB_PASSWORD: woofwoof
       RAILS_ENV: production
       SECRET_KEY_BASE: dev-secret-not-for-production
 

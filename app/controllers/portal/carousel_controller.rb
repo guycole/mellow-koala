@@ -5,7 +5,7 @@ class Portal::CarouselController < Portal::BaseController
 
   def show
     @dwell = clamp_dwell(params[:dwell].to_i.nonzero? || DEFAULT_DWELL)
-    collectors = Collector.order(:display_name).to_a
+    collectors = ::Collector.order(:display_name).to_a
 
     if collectors.empty?
       @next_url = carousel_path(dwell: @dwell)

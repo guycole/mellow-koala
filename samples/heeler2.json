@@ -1,0 +1,42 @@
+{
+  "geoLoc": {
+    "site": "mobile1",
+    "mode": 3,
+    "altitude": 39.4,
+    "errors": {
+      "epc": 0.15,
+      "epd": 0,
+      "eph": 3.277,
+      "epv": 4.37,
+      "epx": 0,
+      "epy": 0
+    },
+    "latitude": 38.92616,
+    "longitude": -122.000558333,
+    "speed": 33.768,
+    "fixTime": 1776399769,
+    "track": 333.19
+  },
+  "platform": "rpi3d",
+  "project": "heeler",
+  "version": 1,
+  "wifi": [
+    {
+      "bssid": "78:8a:20:6c:55:0d",
+      "capability": "unknown",
+      "file_time": "2026-04-13T08:35:14",
+      "frequency_mhz": 2442,
+      "signal_dbm": -66,
+      "ssid": "unknown"
+    },
+    {
+      "bssid": "e0:63:da:d4:4e:c4",
+      "capability": "unknown",
+      "file_time": "2026-04-13T08:35:14",
+      "frequency_mhz": 5540,
+      "signal_dbm": -75,
+      "ssid": "unknown"
+    }
+  ],
+  "zTime": 1776069314
+}

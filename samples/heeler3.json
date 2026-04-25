@@ -1,0 +1,34 @@
+{
+  "geoLoc": {
+    "site": "mobile1",
+    "mode": 3,
+    "altitude": 83.8,
+    "errors": {
+      "epc": 112.01,
+      "epd": 46.418,
+      "eph": 12.35,
+      "epv": 56.004,
+      "epx": 12.9,
+      "epy": 13.668
+    },
+    "latitude": 40.092878333,
+    "longitude": -122.217426667,
+    "speed": 31.876,
+    "fixTime": 1776057995,
+    "track": 0
+  },
+  "platform": "rpi3d",
+  "project": "heeler",
+  "version": 1,
+  "wifi": [
+    {
+      "bssid": "24:41:fe:f5:96:ba",
+      "capability": "unknown",
+      "file_time": "2026-04-13T05:21:13",
+      "frequency_mhz": 2462,
+      "signal_dbm": -113,
+      "ssid": "Verizon_N46VCQ"
+    }
+  ],
+  "zTime": 1776057673
+}

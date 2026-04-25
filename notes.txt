@@ -74,3 +74,14 @@ Your token: bcbeb75a8c47286fc4d0afd648e6b6d2358ae262616eb812b503b606b3c256b2
 => nil
 mellow-koala(prod)> 
 
+The mellow-koala.env on the production Linux server should use DB_HOST=localhost (or 127.0.0.1) since --network host works as expected there. host.docker.internal is only needed for local macOS testing.
+
+gsc@entropy:9>docker run --rm --env-file ./mellow-koala.env koala:latest bundle exec rails db:seed
+Created Mellow Heeler — ingest token: 6a66207ba04c4f5f499de7d77370d2b49f7f0341b8b06540faed3733b7ddf338
+Created Mellow Hyena-ADSB — ingest token: cc641a454527995aabe45dbe55391fa9e60c4c8896a5d2804add48a0e74de49c
+Created Mellow Hyena-UAT — ingest token: 7b9c1613641e60e3da1dc831cada06674c2e230996463d043bb0fea7575b9390
+Created Mellow Mastodon — ingest token: e4b625ffa8cfb1af342782ef2cab35f8a24a4491eb302d75f27b172d3bce675c
+Created Mellow Manatee — ingest token: 0968424bda6c3389ab7863cf95df1a2ee72dd01fbd41b02b2ca90b9700b2bc80
+gsc@entropy:10>
+
+It will print each ingest token on creation. Save the one for mellow-heeler into ~/.mellow-koala/credentials.

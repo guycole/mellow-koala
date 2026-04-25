@@ -21,6 +21,7 @@ class Portal::CarouselController < Portal::BaseController
 
     # Show the collector's latest collection data in the carousel
     @latest_collection = @collector.collection_snapshots.accepted.recent.first
+    @collection_history = @collector.collection_snapshots.accepted.recent.limit(10)
   end
 
   private

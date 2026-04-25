@@ -1,43 +1,17 @@
 <%# Auto-advance via meta refresh %>
 <meta http-equiv="refresh" content="<%= @dwell %>; url=<%= @next_url %>">
 
-<div class="max-w-4xl">
-  <div class="mb-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded font-medium">🔄 Carousel</span>
-      <span class="text-xs text-gray-400">Advancing in <span id="carousel-countdown"><%= @dwell %></span>s → <%= @next_url %></span>
-    </div>
-    <%= link_to "Stop Carousel", root_path, class: "text-xs text-red-500 hover:text-red-700 underline" %>
+<div class="mb-4 flex items-center justify-between">
+  <div class="flex items-center gap-3">
+    <span class="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded font-medium">🔄 Carousel</span>
+    <span class="text-xs text-gray-400">Advancing in <span id="carousel-countdown"><%= @dwell %></span>s → <%= @next_url %></span>
   </div>
-
-  <h1 class="text-2xl font-bold text-gray-800 mb-6"><%= @collector.display_name %></h1>
-
-  <% if @latest_collection.nil? %>
-    <div class="rounded-lg border border-dashed border-gray-300 p-10 text-center">
-      <p class="text-gray-500">No collection data available yet.</p>
-    </div>
-  <% else %>
-    <% project = @latest_collection.payload["project"] %>
-    <% if project == "heeler" %>
-      <%= render "portal/collectors/heeler", snapshot: @latest_collection %>
-    <% elsif project == "hyena-adsb" %>
-      <%= render "portal/collectors/hyena_adsb", snapshot: @latest_collection %>
-    <% elsif project == "hyena-uat" %>
-      <%= render "portal/collectors/hyena_uat", snapshot: @latest_collection %>
-    <% elsif project == "mastodon" %>
-      <%= render "portal/collectors/mastodon", snapshot: @latest_collection %>
-    <% else %>
-      <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6">
-        <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Collection Snapshot</h2>
-        <p class="text-xs text-gray-500 mb-3">Received: <strong><%= @latest_collection.received_at&.utc&.iso8601 %></strong></p>
-        <pre class="bg-gray-50 rounded p-4 text-sm overflow-x-auto text-gray-700"><%= JSON.pretty_generate(@latest_collection.payload) rescue @latest_collection.payload.to_s %></pre>
-      </div>
-    <% end %>
-  <% end %>
+  <%= link_to "Stop Carousel", root_path, class: "text-xs text-red-500 hover:text-red-700 underline" %>
 </div>
 
+<%= render template: "portal/collectors/collection" %>
+
 <script>
-  // Optional: countdown display
   var remaining = <%= @dwell %>;
   var el = document.getElementById("carousel-countdown");
   if (el) {

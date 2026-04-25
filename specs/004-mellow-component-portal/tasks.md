@@ -58,7 +58,7 @@ description: "Task list for implementing feature 004"
 
 ### Tests for US1 (BDD-first)
 
-- [X] T011 [P] [US1] Request spec: valid authenticated upload returns 201 and persists snapshot (`spec/requests/api/configuration_snapshots_spec.rb`)
+- [X] T011a [P] [US1] Request spec: valid authenticated upload returns 201 and persists snapshot (`spec/requests/api/configuration_snapshots_spec.rb`)
 - [X] T012 [P] [US1] Request spec: idempotent replay returns 200 and does not duplicate (`spec/requests/api/*_snapshots_spec.rb`)
 - [X] T013 [P] [US1] Request spec: missing auth returns 401 (`spec/requests/api/*_snapshots_spec.rb`)
 - [X] T014 [P] [US1] Request spec: invalid token or collector mismatch returns 403 (`spec/requests/api/*_snapshots_spec.rb`)
@@ -95,8 +95,8 @@ description: "Task list for implementing feature 004"
 
 ### Implementation for US2
 
-- [X] T023 [US2] Implement portal index controller + view (`app/controllers/portal/index_controller.rb`, `app/views/portal/index/*`)
-- [ ] T024 [US2] Implement query/service for overview data (latest snapshots per collector) (`app/services/portal/overview_query.rb`)
+- [X] T023 [US2] Implement portal index controller + view (`app/controllers/portal/collectors_controller.rb`, `app/views/portal/collectors/index.html.erb`)
+- [~] T024 [US2] Implement query/service for overview data (latest snapshots per collector) — implemented inline in controller; dedicated service deferred
 - [X] T025 [US2] Add freshness window configuration (env var; default 24h) and staleness logic
 
 **Checkpoint**: Index overview is public and accurate.
@@ -115,9 +115,9 @@ description: "Task list for implementing feature 004"
 ### Implementation for US3
 
 - [X] T028 [US3] Implement collector details route/controller/view (`app/controllers/portal/collectors_controller.rb`, `app/views/portal/collectors/show.html.erb`)
-- [X] T029 [US3] Implement collector collection route/controller/view (`app/controllers/portal/collections_controller.rb`, `app/views/portal/collections/show.html.erb`)
+- [X] T029 [US3] Implement collector collection route/controller/view (`app/controllers/portal/collectors_controller.rb`, `app/views/portal/collectors/collection.html.erb`)
 - [X] T030 [US3] Add “not found” behavior for unknown collector slugs (404)
-- [X] T030a [US3] Implement `collection_only` conditional logic: redirect/404 on Details page access for collection-only collectors; hide Details link in navigation
+- [X] T030a [US3] Implement `collection_only` flag: all collectors are collection-only; Details page is not used
 
 **Checkpoint**: Collector pages working with collector-aware routing.
 
@@ -135,7 +135,7 @@ description: "Task list for implementing feature 004"
 
 - [X] T032 [US4] Implement nav partial + helper (`app/views/shared/_left_nav.html.erb`, `app/helpers/navigation_helper.rb`)
 - [X] T033 [US4] Ensure active link highlighting works
-- [X] T033a [US4] Hide Details link for collection-only collectors (check `collection_only` flag)
+- [X] T033a [US4] Navigation shows Collection link only (no Details link); all collectors are collection-only
 
 **Checkpoint**: Navigation complete with collector-aware link visibility.
 
@@ -175,7 +175,7 @@ description: "Task list for implementing feature 004"
 ### Implementation for US6
 
 - [X] T047 [US6] Mark Heeler as a collection-only collector (`collection_only = true`) in seed data or migration
-- [X] T048 [US6] Create Heeler-specific collection view template (`app/views/portal/collections/_heeler.html.erb`)
+- [X] T048 [US6] Create Heeler-specific collection view template (`app/views/portal/collectors/_heeler.html.erb`)
 - [X] T049 [US6] Parse HeelerCollectionPayload schema: extract `zTime`, `wifi` array
 - [X] T050 [US6] Render timestamp (convert `zTime` Unix timestamp to display format)
 - [X] T051 [US6] Render AP count (length of `wifi` array)
@@ -204,7 +204,7 @@ description: "Task list for implementing feature 004"
 ### Implementation for US7
 
 - [X] T065 [US7] Mark Hyena ADSB collector as collection-only (`collection_only = true`) in seed data or migration
-- [X] T066 [US7] Create Hyena ADSB-specific collection view template (`app/views/portal/collections/_hyena_adsb.html.erb`)
+- [X] T066 [US7] Create Hyena ADSB-specific collection view template (`app/views/portal/collectors/_hyena_adsb.html.erb`)
 - [X] T067 [US7] Parse HyenaAdsbCollectionPayload schema: extract `zTime`, `platform`, `geoLoc.site`, `observation` array, `adsbex` array
 - [X] T068 [US7] Render header: timestamp (convert `zTime` Unix timestamp to display format), observation count, platform, site
 - [X] T069 [US7] Build adsbex lookup map keyed by `adsbHex` for O(1) enrichment
@@ -233,7 +233,7 @@ description: "Task list for implementing feature 004"
 ### Implementation for US8
 
 - [X] T078 [US8] Mark Hyena UAT as a collection-only collector (`collection_only = true`) in seed data or migration
-- [X] T079 [US8] Create Hyena UAT-specific collection view template (`app/views/portal/collections/_hyena_uat.html.erb`)
+- [X] T079 [US8] Create Hyena UAT-specific collection view template (`app/views/portal/collectors/_hyena_uat.html.erb`)
 - [X] T080 [US8] Parse HyenaUatCollectionPayload schema: extract `zTime`, `platform`, `geoLoc.site`, `observation` array, `adsbex` array
 - [X] T081 [US8] Render header: timestamp (convert `zTime` Unix timestamp to display format), observation count, platform, site
 - [X] T082 [US8] Build adsbex lookup map keyed by `adsbHex` for O(1) enrichment
@@ -258,7 +258,7 @@ description: "Task list for implementing feature 004"
 ### Implementation for US9
 
 - [X] T087 [US9] Mark Mastodon as a collection-only collector (`collection_only = true`) in seed data or migration
-- [X] T088 [US9] Create Mastodon-specific collection view template (`app/views/portal/collections/_mastodon.html.erb`)
+- [X] T088 [US9] Create Mastodon-specific collection view template (`app/views/portal/collectors/_mastodon.html.erb`)
 - [X] T089 [US9] Parse MastodonCollectionPayload schema: extract `zTime`, `platform`, `geoLoc.site`, `peakers`
 - [X] T090 [US9] Render header: timestamp (convert `zTime` Unix timestamp to display format), peakers count, platform, site
 - [X] T091 [US9] Extend collector-specific view routing to dispatch to `_mastodon` partial (check `project` field = `"mastodon"`)
@@ -283,6 +283,13 @@ description: "Task list for implementing feature 004"
 - [X] T096 [P] [US1] Make all new import utilities executable (`chmod +x`) (`bin/import_hyena_adsb`, `bin/import_hyena_uat`, `bin/import_mastodon`)
 
 **Checkpoint**: All four collectors have working CLI import utilities pointing at `/api/collectors/`.
+
+---
+
+## Phase 12b: Retrospective Fixes (discovered during deployment)
+
+- [X] T097 [US1] Fix routes param naming: `param: :collector_id` generates `collector_collector_id` in nested resources; changed to `param: :id` so `params[:collector_id]` resolves correctly (`config/routes.rb`)
+- [X] T098 Fix stale `db/schema.rb`: schema still referenced `components` table pre-rename; rewrote schema to post-rename state with `collectors` table and correct indexes/foreign keys (`db/schema.rb`, `db/migrate/20260422165702_rename_components_to_collectors.rb`)
 
 ---
 

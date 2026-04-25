@@ -159,7 +159,7 @@ As an operator, I want to see Mellow Mastodon's latest energy survey results so 
 
 ### User Story 4 - Left Navigation for Collectors (Priority: P2)
 
-As an operator, I want a persistent left navigation bar listing collectors and their pages so I can quickly move between collector details and collection information.
+As an operator, I want a persistent left navigation bar listing collectors and their pages so I can quickly navigate to each collector's collection page.
 
 **Why this priority**: Efficient navigation becomes essential as the number of collectors grows.
 
@@ -168,9 +168,8 @@ As an operator, I want a persistent left navigation bar listing collectors and t
 **Acceptance Scenarios (BDD)**:
 
 1. **Given** I am on any page, **When** the page renders, **Then** I see a left navigation bar
-2. **Given** multiple collectors exist, **When** I view the left navigation, **Then** I see an entry for each collector
-3. **Given** I click a collector’s “Details” link (where available), **When** navigation completes, **Then** I arrive at that collector’s detail page
-4. **Given** a collection-only collector is listed in the navigation, **When** I view its nav entry, **Then** only a Collection link is shown (no Details link)
+2. **Given** multiple collectors exist, **When** I view the left navigation, **Then** I see an entry for each collector with a Collection link
+3. **Given** I click a collector's Collection link, **When** navigation completes, **Then** I arrive at that collector's collection page
 
 ---
 
@@ -223,7 +222,7 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 #### Navigation
 
 - **FR-008**: System MUST provide a persistent left navigation bar across portal pages
-- **FR-009**: Navigation MUST list each collector with a Collection link only; no Details link is shown for any collector
+- **FR-009**: Navigation MUST list each collector with a Collection link only
 - **FR-010**: Navigation MUST indicate the currently active page
 
 #### API for Collector Updates

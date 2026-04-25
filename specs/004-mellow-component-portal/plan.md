@@ -8,12 +8,12 @@
 Build Mellow Koala as a Rails 8 + Tailwind CSS web application backed by PostgreSQL, deployed via Docker on Linux hosts. The app:
 - receives collector configuration + collection updates via a JSON API (intended to be called by per-collector CLI utilities),
 - provides an index overview of collector configurations (with freshness/staleness),
-- supports left navigation to collector Details + Collection pages,
+- supports left navigation to collector Collection pages,
 - provides a carousel mode that cycles through collector pages for kiosk monitoring.
 
 ## Technical Context
 
-**Language/Version**: Ruby 3.3.x + Rails 8.x  
+**Language/Version**: Ruby 3.4.9 + Rails 8.x  
 **Primary Dependencies**: Rails 8, tailwindcss-rails, pg, (testing) rspec-rails, capybara  
 **Storage**: PostgreSQL 15+  
 **Testing**: BDD-first acceptance scenarios (system specs) + RSpec request/model specs  

@@ -14,7 +14,7 @@
       "altitude": 28750,
       "track": 178,
       "speed": 466,
-      "adsb_hex": "a7e2af"
+      "adsbHex": "a7e2af"
     },
     {
       "flight": "SWA3917",
@@ -23,12 +23,12 @@
       "altitude": 8425,
       "track": 188,
       "speed": 256,
-      "adsb_hex": "ac2038"
+      "adsbHex": "ac2038"
     }
   ],
   "adsbex": [
     {
-      "adsb_hex": "a7e2af",
+      "adsbHex": "a7e2af",
       "category": "A2",
       "emergency": "none",
       "flight": "EJA607",
@@ -40,7 +40,7 @@
       "wierdo_flag": false
     },
     {
-      "adsb_hex": "ac2038",
+      "adsbHex": "ac2038",
       "category": "A3",
       "emergency": "none",
       "flight": "SWA3917",

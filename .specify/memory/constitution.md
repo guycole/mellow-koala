@@ -187,7 +187,7 @@ would make the system unusable in its primary deployment context.
 **Deployment Environment**:
 - Docker containerization in production
 - ARM64 architecture (64-bit ARM only)
-- Generous hardware resources (adequate memory and CPU)
+- Adequate hardware resources (CPU, memory and storage)
 - Limited package availability compared to x86_64 Linux
 - Potentially air-gapped (no external internet access)
 - No cloud services or external dependencies

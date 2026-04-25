@@ -1,7 +1,7 @@
 {
   "platform": "rpi4i",
   "project": "hyena-adsb",
-  "timestamp": 1776973082,
+  "zTime": 1776973082,
   "version": 1,
   "geoLoc": {
     "site": "vallejo01"
@@ -14,7 +14,7 @@
       "altitude": 32000,
       "track": 324,
       "speed": 444,
-      "adsb_hex": "71be42"
+      "adsbHex": "71be42"
     },
     {
       "flight": "UAL1045",
@@ -23,12 +23,12 @@
       "altitude": 14275,
       "track": 90,
       "speed": 379,
-      "adsb_hex": "a0b88a"
+      "adsbHex": "a0b88a"
     }
   ],
   "adsbex": [
     {
-      "adsb_hex": "71be42",
+      "adsbHex": "71be42",
       "category": "A5",
       "emergency": "none",
       "flight": "KAL012",
@@ -40,7 +40,7 @@
       "wierdo_flag": false
     },
     {
-      "adsb_hex": "a0b88a",
+      "adsbHex": "a0b88a",
       "category": "A3",
       "emergency": "none",
       "flight": "UAL1045",

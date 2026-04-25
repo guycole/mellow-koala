@@ -12,7 +12,6 @@
         <thead class="bg-gray-50">
           <tr>
             <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Collector</th>
-            <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Last Config</th>
             <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Last Collection</th>
             <th class="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Status</th>
           </tr>
@@ -24,14 +23,6 @@
                 <%= link_to collector.display_name, collection_collector_path(collector), class: "font-medium text-indigo-600 hover:text-indigo-800" %>
                 <% if collector.description.present? %>
                   <p class="text-xs text-gray-400 mt-1"><%= collector.description %></p>
-                <% end %>
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-600">
-                <% last_cfg = collector.last_configuration_at %>
-                <% if last_cfg %>
-                  <span title="<%= last_cfg.utc.iso8601 %>"><%= time_ago_in_words(last_cfg) %> ago</span>
-                <% else %>
-                  <span class="text-gray-400 italic">Never</span>
                 <% end %>
               </td>
               <td class="px-6 py-4 text-sm text-gray-600">

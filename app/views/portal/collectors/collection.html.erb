@@ -10,13 +10,13 @@
   <% else %>
     <% project = @latest_collection.payload["project"] %>
     <% if project == "heeler" %>
-      <%= render "heeler", snapshot: @latest_collection %>
+      <%= render "portal/collectors/heeler", snapshot: @latest_collection %>
     <% elsif project == "hyena-adsb" %>
-      <%= render "hyena_adsb", snapshot: @latest_collection %>
+      <%= render "portal/collectors/hyena_adsb", snapshot: @latest_collection %>
     <% elsif project == "hyena-uat" %>
-      <%= render "hyena_uat", snapshot: @latest_collection %>
+      <%= render "portal/collectors/hyena_uat", snapshot: @latest_collection %>
     <% elsif project == "mastodon" %>
-      <%= render "mastodon", snapshot: @latest_collection %>
+      <%= render "portal/collectors/mastodon", snapshot: @latest_collection %>
     <% else %>
       <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">
         <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Collection Snapshot</h2>

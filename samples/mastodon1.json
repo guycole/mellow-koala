@@ -1,0 +1,22 @@
+{
+    "platform": "rpi4c",
+    "project": "mastodon",
+    "zTime": 1762297264,
+    "version": 1,
+    "geoLoc": {
+        "site": "vallejo01"
+    },
+    "algorithm": 1,
+    "peakers": [
+        [
+            119750708,
+            1.67,
+            -32.58611940298508
+        ],
+        [
+            124099830,
+            6.34,
+            -32.071641791044776
+        ]
+    ]
+}

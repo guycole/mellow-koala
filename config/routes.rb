@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   # Ingestion API (authenticated per-collector)
   namespace :api do
-    resources :collectors, only: [], param: :collector_id do
+    resources :collectors, only: [], param: :id do
       resources :configuration_snapshots, only: [ :create ]
       resources :collection_snapshots, only: [ :create ]
     end

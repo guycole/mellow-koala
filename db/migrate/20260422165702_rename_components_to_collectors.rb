@@ -21,30 +21,7 @@ class RenameComponentsToCollectors < ActiveRecord::Migration[8.0]
     add_foreign_key :collection_snapshots,    :collectors
     add_foreign_key :configuration_snapshots, :collectors
 
-    # 7. Rename indexes — parent table
-    rename_index :collectors, :index_components_on_component_id, :index_collectors_on_collector_id
-    rename_index :collectors, :index_components_on_slug,         :index_collectors_on_slug
-
-    # 8. Rename indexes — collection_snapshots
-    rename_index :collection_snapshots,
-                 :index_collection_snapshots_on_component_id,
-                 :index_collection_snapshots_on_collector_id
-    rename_index :collection_snapshots,
-                 :idx_collection_snapshots_component_snapshot,
-                 :idx_collection_snapshots_collector_snapshot
-    rename_index :collection_snapshots,
-                 :index_collection_snapshots_on_component_id_and_received_at,
-                 :index_collection_snapshots_on_collector_id_and_received_at
-
-    # 9. Rename indexes — configuration_snapshots
-    rename_index :configuration_snapshots,
-                 :index_configuration_snapshots_on_component_id,
-                 :index_configuration_snapshots_on_collector_id
-    rename_index :configuration_snapshots,
-                 :idx_config_snapshots_component_snapshot,
-                 :idx_config_snapshots_collector_snapshot
-    rename_index :configuration_snapshots,
-                 :index_configuration_snapshots_on_component_id_and_received_at,
-                 :index_configuration_snapshots_on_collector_id_and_received_at
+    # Note: PostgreSQL automatically renames indexes when tables/columns are
+    # renamed, so explicit rename_index calls are not needed here.
   end
 end

@@ -4,8 +4,8 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
   port: <%= ENV.fetch("DB_PORT") { 5432 } %>
-  username: <%= ENV.fetch("DB_USERNAME") { "gsc" } %>
-  password: <%= ENV.fetch("DB_PASSWORD") { "byteme" } %>
+  username: <%= ENV.fetch("DB_USERNAME") { "koala_admin" } %>
+  password: <%= ENV.fetch("DB_PASSWORD") { "woofwoof" } %>
 
 development:
   <<: *default

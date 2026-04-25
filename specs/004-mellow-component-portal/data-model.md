@@ -22,7 +22,7 @@ Represents a contributing Mellow application (Heeler, Hyena, Mastodon, etc.).
 - Unique index on `collector_id`
 - Unique index on `slug`
 - `ingest_token_digest` MUST be non-null; compare tokens using constant-time comparison (or bcrypt)
-- `collection_only` MUST default to false; used by routing and navigation to hide Details link/page for collection-only collectors
+- `collection_only` MUST default to true; all collectors are collection-only
 
 **Collection-Only Collector Behavior**:
 - When `collection_only = true`: collector only has Collection view; Details page/link MUST NOT be shown

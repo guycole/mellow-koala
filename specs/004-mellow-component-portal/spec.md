@@ -43,13 +43,13 @@ As an operator, I want the index page to show an overview of tasking for all kno
 
 **Why this priority**: It is the primary operator view and a fast way to spot problems.
 
-**Independent Test**: Create 2 collectors with configuration snapshots, visit `/`, verify the overview reflects their latest configuration timestamps and key fields.
+**Independent Test**: Create 2 collectors with collection snapshots, visit `/`, verify the overview reflects their latest collection timestamps and key fields.
 
 **Acceptance Scenarios (BDD)**:
 
-1. **Given** no collectors have reported configuration, **When** I visit the index page, **Then** I see an empty state indicating no collectors are available
-2. **Given** collectors have reported configuration, **When** I visit the index page, **Then** I see a row/card per collector with its name and last-updated timestamp
-3. **Given** a collector has stale configuration (older than a defined freshness window), **When** I visit the index page, **Then** that collector is visually marked as stale
+1. **Given** no collectors have reported data, **When** I visit the index page, **Then** I see an empty state indicating no collectors are available
+2. **Given** collectors have reported collection data, **When** I visit the index page, **Then** I see a row/card per collector with its name and last-updated timestamp
+3. **Given** a collector has stale collection data (older than a defined freshness window), **When** I visit the index page, **Then** that collector is visually marked as stale
 
 ---
 
@@ -59,16 +59,15 @@ As an operator, I want to view a collector’s applicable pages so I can inspect
 
 **Why this priority**: The index is summary-only; operators need drill-down.
 
-**Note**: Not all collectors have a Details page. Collector collectors expose Collection only. Only collectors that submit configuration snapshots have a Details page.
+**Note**: All current collectors are collection-only and expose the Collection view only. There is no Details (configuration snapshot) page for any collector.
 
-**Independent Test**: Navigate to a non-collection-only collector and verify it shows the latest configuration snapshot; navigate to a collection-only collector and verify only the collection view is available.
+**Independent Test**: Navigate to a collector and verify only the collection view is available; verify attempting to access the detail URL redirects to the collection view.
 
 **Acceptance Scenarios (BDD)**:
 
-1. **Given** a non-collection-only collector exists, **When** I navigate to that collector’s detail page, **Then** I see the latest configuration snapshot
-2. **Given** a collector has collection information, **When** I open the collection view, **Then** I see recent collection summaries/items with timestamps
-3. **Given** a collector has never reported collection information, **When** I open the collection view, **Then** I see an empty state explaining no data is available yet
-4. **Given** a collection-only collector exists, **When** I attempt to navigate to its detail page, **Then** I am redirected to or shown only the collection view
+1. **Given** a collector has collection information, **When** I open the collection view, **Then** I see recent collection summaries/items with timestamps
+2. **Given** a collector has never reported collection information, **When** I open the collection view, **Then** I see an empty state explaining no data is available yet
+3. **Given** any collector exists, **When** I attempt to navigate to its detail page, **Then** I am redirected to the collection view
 ---
 
 ### User Story 6 - Mellow Heeler Collection View (Priority: P2)
@@ -160,7 +159,7 @@ As an operator, I want to see Mellow Mastodon's latest energy survey results so 
 
 ### User Story 4 - Left Navigation for Collectors (Priority: P2)
 
-As an operator, I want a persistent left navigation bar listing collectors and their pages so I can quickly move between collector details and collection information.
+As an operator, I want a persistent left navigation bar listing collectors and their pages so I can quickly navigate to each collector's collection page.
 
 **Why this priority**: Efficient navigation becomes essential as the number of collectors grows.
 
@@ -169,9 +168,8 @@ As an operator, I want a persistent left navigation bar listing collectors and t
 **Acceptance Scenarios (BDD)**:
 
 1. **Given** I am on any page, **When** the page renders, **Then** I see a left navigation bar
-2. **Given** multiple collectors exist, **When** I view the left navigation, **Then** I see an entry for each collector
-3. **Given** I click a collector’s “Details” link (where available), **When** navigation completes, **Then** I arrive at that collector’s detail page
-4. **Given** a collection-only collector is listed in the navigation, **When** I view its nav entry, **Then** only a Collection link is shown (no Details link)
+2. **Given** multiple collectors exist, **When** I view the left navigation, **Then** I see an entry for each collector with a Collection link
+3. **Given** I click a collector's Collection link, **When** navigation completes, **Then** I arrive at that collector's collection page
 
 ---
 
@@ -210,21 +208,21 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 #### Collector Registry & Overview
 
 - **FR-001**: System MUST represent each Mellow collector as a "collector" with a stable identifier and display name
-- **FR-002**: Index page MUST display an overview of all collectors and their latest configuration status
+- **FR-002**: Index page MUST display an overview of all collectors and their latest collection status
 - **FR-003**: Index page MUST show last-updated timestamps for configuration and collection info (when available)
 - **FR-004**: System MUST compute and display a freshness/staleness indicator based on last update times
 
 #### Collector Detail & Collection Views
 
-- **FR-005**: System MUST provide a collector detail page that displays the latest configuration snapshot
+- **FR-005**: ~~System MUST provide a collector detail page that displays the latest configuration snapshot~~ *(obsolete — all collectors are collection-only)*
 - **FR-006**: System MUST provide a view for collection information per collector
-- **FR-006a**: Collection-only collectors (those that only submit collection snapshots) MUST NOT expose a Details page; the system MUST treat collection as their only view
+- **FR-006a**: All collectors are collection-only and MUST NOT expose a Details page; the system MUST treat collection as the only view for every collector
 - **FR-007**: Collector pages MUST show appropriate empty states when no data exists
 
 #### Navigation
 
 - **FR-008**: System MUST provide a persistent left navigation bar across portal pages
-- **FR-009**: Navigation MUST list each collector with a Collection link; a Details link MUST NOT be shown for collection-only collectors (those that only submit collection snapshots)
+- **FR-009**: Navigation MUST list each collector with a Collection link only
 - **FR-010**: Navigation MUST indicate the currently active page
 
 #### API for Collector Updates
@@ -270,7 +268,7 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 - **FR-034**: Mellow Heeler collection page MUST display the count of WiFi AP beacons in the last observation
 - **FR-035**: Mellow Heeler collection page MUST display a table of up to 15 AP beacons per observation, with columns: SSID, BSSID, frequency (MHz), signal strength (dBm)
 - **FR-036**: Mellow Heeler collection payload schema is defined in `data-model.md` (see HeelerCollectionPayload)
-- **FR-037**: Collection-only collectors (those that only submit collection snapshots) MUST NOT have a Details (configuration snapshot) page; navigation MUST only expose the Collection view for these collectors
+- **FR-037**: All collectors are collection-only; no collector has a Details (configuration snapshot) page; navigation MUST only expose the Collection view for every collector
 
 #### Mellow Hyena ADSB — Collector-Specific Display Requirements
 
@@ -311,9 +309,9 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 
 ## Success Criteria
 
-1. Collectors can upload configuration and collection information via API and see it reflected in the portal
+1. Collectors can upload collection information via API and see it reflected in the portal
 2. Index shows an accurate overview with freshness indicators
-3. Operators can navigate via left nav to details/collection pages for each collector
+3. Operators can navigate via left nav to the collection page for each collector
 4. Carousel cycles through collector pages with the configured dwell and loops
 5. Re-importing the same JSON file leaves the collector with identical data (idempotent result)
 6. Mellow Hyena ADSB collection page shows header (timestamp, beacon count, platform, site) and table of up to 15 observations with enriched registration/model from adsbex lookup
@@ -327,6 +325,7 @@ As an operator using a kiosk/display, I want a carousel mode that cycles through
 - Upload endpoints require simple authentication (e.g., a per-collector shared secret/bearer token). Network controls (reverse proxy allowlist/firewall) are recommended but are not a substitute for authentication.
 - Payload schemas may evolve; unknown fields should be tolerated and preserved.
 - Collection data for a collector represents the current state only; historical collection data is not retained.
+- All current collectors are collection-only; configuration snapshots are not used by any active collector.
 - Configuration snapshots remain append-only (historical); only collection data is replaced on import.
 
 ## Out of Scope (V1)

@@ -5,6 +5,6 @@ class ApplicationController < ActionController::Base
   private
 
   def nav_collectors
-    @nav_collectors ||= Collector.order(:display_name)
+    @nav_collectors ||= ::Collector.order(:display_name)
   end
 end

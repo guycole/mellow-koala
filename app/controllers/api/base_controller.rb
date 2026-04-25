@@ -14,7 +14,7 @@ class Api::BaseController < ActionController::API
     end
 
     collector_id = params[:collector_id]
-    @authenticated_collector = Collector.authenticate_by_token(collector_id, raw_token)
+    @authenticated_collector = ::Collector.authenticate_by_token(collector_id, raw_token)
     unless @authenticated_collector
       render json: error_body("forbidden", "Invalid credentials or collector mismatch"), status: :forbidden
     end

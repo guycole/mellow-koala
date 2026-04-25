@@ -7,7 +7,6 @@
     <% nav_collectors.each do |collector| %>
       <div class="mb-3">
         <div class="text-sm font-medium text-gray-700 mb-1"><%= collector.display_name %></div>
-        <%= link_to "Details", collector_path(collector), class: "block pl-2 py-1 text-sm rounded #{'bg-indigo-50 text-indigo-700 font-medium' if current_page?(collector_path(collector))} hover:bg-gray-100" unless collector.collection_only? %>
         <%= link_to "Collection", collection_collector_path(collector), class: "block pl-2 py-1 text-sm rounded #{'bg-indigo-50 text-indigo-700 font-medium' if current_page?(collection_collector_path(collector))} hover:bg-gray-100" %>
       </div>
     <% end %>

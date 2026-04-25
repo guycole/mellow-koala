@@ -10,12 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_04_20_203758) do
+ActiveRecord::Schema[8.0].define(version: 2026_04_22_165702) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
   create_table "collection_snapshots", force: :cascade do |t|
-    t.bigint "component_id", null: false
+    t.bigint "collector_id", null: false
     t.string "snapshot_id", null: false
     t.datetime "captured_at"
     t.datetime "received_at", null: false
@@ -24,13 +24,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_20_203758) do
     t.jsonb "error_details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["component_id", "received_at"], name: "index_collection_snapshots_on_component_id_and_received_at"
-    t.index ["component_id", "snapshot_id"], name: "idx_collection_snapshots_component_snapshot", unique: true
-    t.index ["component_id"], name: "index_collection_snapshots_on_component_id"
+    t.index ["collector_id", "received_at"], name: "index_collection_snapshots_on_collector_id_and_received_at"
+    t.index ["collector_id", "snapshot_id"], name: "idx_collection_snapshots_collector_snapshot", unique: true
+    t.index ["collector_id"], name: "index_collection_snapshots_on_collector_id"
   end
 
-  create_table "components", force: :cascade do |t|
-    t.string "component_id", null: false
+  create_table "collectors", force: :cascade do |t|
+    t.string "collector_id", null: false
     t.string "display_name", null: false
     t.string "slug", null: false
     t.text "description"
@@ -38,13 +38,13 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_20_203758) do
     t.datetime "token_rotated_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "collector", default: false, null: false
-    t.index ["component_id"], name: "index_components_on_component_id", unique: true
-    t.index ["slug"], name: "index_components_on_slug", unique: true
+    t.boolean "collection_only", default: false, null: false
+    t.index ["collector_id"], name: "index_collectors_on_collector_id", unique: true
+    t.index ["slug"], name: "index_collectors_on_slug", unique: true
   end
 
   create_table "configuration_snapshots", force: :cascade do |t|
-    t.bigint "component_id", null: false
+    t.bigint "collector_id", null: false
     t.string "snapshot_id", null: false
     t.datetime "captured_at"
     t.datetime "received_at", null: false
@@ -53,11 +53,11 @@ ActiveRecord::Schema[8.0].define(version: 2026_04_20_203758) do
     t.jsonb "error_details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["component_id", "received_at"], name: "index_configuration_snapshots_on_component_id_and_received_at"
-    t.index ["component_id", "snapshot_id"], name: "idx_config_snapshots_component_snapshot", unique: true
-    t.index ["component_id"], name: "index_configuration_snapshots_on_component_id"
+    t.index ["collector_id", "received_at"], name: "index_configuration_snapshots_on_collector_id_and_received_at"
+    t.index ["collector_id", "snapshot_id"], name: "idx_config_snapshots_collector_snapshot", unique: true
+    t.index ["collector_id"], name: "index_configuration_snapshots_on_collector_id"
   end
 
-  add_foreign_key "collection_snapshots", "components"
-  add_foreign_key "configuration_snapshots", "components"
+  add_foreign_key "collection_snapshots", "collectors"
+  add_foreign_key "configuration_snapshots", "collectors"
 end

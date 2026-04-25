@@ -21,7 +21,7 @@
           <% @collectors.each do |collector| %>
             <tr class="hover:bg-gray-50">
               <td class="px-6 py-4">
-                <%= link_to collector.display_name, collector_path(collector), class: "font-medium text-indigo-600 hover:text-indigo-800" %>
+                <%= link_to collector.display_name, collection_collector_path(collector), class: "font-medium text-indigo-600 hover:text-indigo-800" %>
                 <% if collector.description.present? %>
                   <p class="text-xs text-gray-400 mt-1"><%= collector.description %></p>
                 <% end %>

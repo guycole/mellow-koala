@@ -85,3 +85,10 @@ Created Mellow Manatee — ingest token: 0968424bda6c3389ab7863cf95df1a2ee72dd01
 gsc@entropy:10>
 
 It will print each ingest token on creation. Save the one for mellow-heeler into ~/.mellow-koala/credentials.
+
+saturday morning
+docker run --rm --env-file /etc/mellow-koala.env --network host koala:latest bundle exec rails db:seed
+Updated Mellow Heeler (token unchanged)
+Created Mellow Hyena-ADSB — ingest token: ed94e1b30e7479c3c4cae4062041c208812161839c3061f40ecdc103114658e1
+Created Mellow Mastodon — ingest token: 779ff0b25f40674506fc0c3f21e69334333cf580ce406154eb9d1cf16050dd58
+Created Mellow Manatee — ingest token: 5be68f8461d3db1df4ffae32abe74a1435e43e6d0e07a17b95dc68cc8d2ca09d

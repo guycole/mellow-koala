@@ -10,30 +10,30 @@
     <%= link_to "Stop Carousel", root_path, class: "text-xs text-red-500 hover:text-red-700 underline" %>
   </div>
 
-  <h1 class="text-2xl font-bold text-gray-800 mb-2"><%= @collector.display_name %></h1>
-  <p class="text-sm text-gray-500 mb-6">ID: <code class="bg-gray-100 px-1 rounded"><%= @collector.collector_id %></code></p>
+  <h1 class="text-2xl font-bold text-gray-800 mb-6"><%= @collector.display_name %></h1>
 
-  <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-    <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6">
-      <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Configuration</h2>
-      <% if @latest_config %>
-        <p class="text-xs text-gray-500 mb-2"><%= @latest_config.received_at&.utc&.iso8601 %></p>
-        <pre class="bg-gray-50 rounded p-3 text-xs overflow-x-auto text-gray-700 max-h-64"><%= JSON.pretty_generate(@latest_config.payload) rescue @latest_config.payload.to_s %></pre>
-      <% else %>
-        <p class="text-gray-400 italic text-sm">No configuration yet</p>
-      <% end %>
+  <% if @latest_collection.nil? %>
+    <div class="rounded-lg border border-dashed border-gray-300 p-10 text-center">
+      <p class="text-gray-500">No collection data available yet.</p>
     </div>
-
-    <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6">
-      <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Collection</h2>
-      <% if @latest_collection %>
-        <p class="text-xs text-gray-500 mb-2"><%= @latest_collection.received_at&.utc&.iso8601 %></p>
-        <pre class="bg-gray-50 rounded p-3 text-xs overflow-x-auto text-gray-700 max-h-64"><%= JSON.pretty_generate(@latest_collection.payload) rescue @latest_collection.payload.to_s %></pre>
-      <% else %>
-        <p class="text-gray-400 italic text-sm">No collection data yet</p>
-      <% end %>
-    </div>
-  </div>
+  <% else %>
+    <% project = @latest_collection.payload["project"] %>
+    <% if project == "heeler" %>
+      <%= render "portal/collectors/heeler", snapshot: @latest_collection %>
+    <% elsif project == "hyena-adsb" %>
+      <%= render "portal/collectors/hyena_adsb", snapshot: @latest_collection %>
+    <% elsif project == "hyena-uat" %>
+      <%= render "portal/collectors/hyena_uat", snapshot: @latest_collection %>
+    <% elsif project == "mastodon" %>
+      <%= render "portal/collectors/mastodon", snapshot: @latest_collection %>
+    <% else %>
+      <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6">
+        <h2 class="text-sm font-semibold uppercase text-gray-400 mb-3">Latest Collection Snapshot</h2>
+        <p class="text-xs text-gray-500 mb-3">Received: <strong><%= @latest_collection.received_at&.utc&.iso8601 %></strong></p>
+        <pre class="bg-gray-50 rounded p-4 text-sm overflow-x-auto text-gray-700"><%= JSON.pretty_generate(@latest_collection.payload) rescue @latest_collection.payload.to_s %></pre>
+      </div>
+    <% end %>
+  <% end %>
 </div>
 
 <script>

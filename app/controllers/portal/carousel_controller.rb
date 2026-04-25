@@ -19,8 +19,7 @@ class Portal::CarouselController < Portal::BaseController
     @next_index = (@index + 1) % collectors.length
     @next_url = carousel_path(index: @next_index, dwell: @dwell)
 
-    # Show the collector detail as the carousel page
-    @latest_config = @collector.configuration_snapshots.accepted.recent.first
+    # Show the collector's latest collection data in the carousel
     @latest_collection = @collector.collection_snapshots.accepted.recent.first
   end
 

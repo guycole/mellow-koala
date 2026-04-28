@@ -1,0 +1,148 @@
+{
+    "meta": {
+        "application": "hyena-adsb-v2",
+        "crate": "wombat01",
+        "hostName": "c4c",
+        "schemaVersion": 2,
+        "timeStampEpoch": 1777342505,
+        "timeStampIso8601": "2026-04-28T02:15:05+00:00"
+    },
+    "geoLoc": {
+        "site": "anderson1",
+        "altitude": 118.6,
+        "latitude": 40.4174,
+        "longitude": -122.2405
+    },
+    "payload": {
+        "adsbex": [
+            {
+                "adsb_hex": "aa6ba4",
+                "category": "A5",
+                "emergency": "none",
+                "flight": "UAL927",
+                "registration": "N77019",
+                "model": "B772",
+                "ladd_flag": false,
+                "military_flag": false,
+                "pia_flag": false,
+                "wierdo_flag": false
+            },
+            {
+                "adsb_hex": "a18b41",
+                "category": "A3",
+                "emergency": "none",
+                "flight": "SKW3371",
+                "registration": "N199SY",
+                "model": "E75L",
+                "ladd_flag": false,
+                "military_flag": false,
+                "pia_flag": false,
+                "wierdo_flag": false
+            },
+            {
+                "adsb_hex": "ae1193",
+                "category": "A2",
+                "emergency": "none",
+                "flight": "GRZLY50",
+                "registration": "166500",
+                "model": "C560",
+                "ladd_flag": false,
+                "military_flag": true,
+                "pia_flag": false,
+                "wierdo_flag": false
+            },
+            {
+                "adsb_hex": "a2f721",
+                "category": "A3",
+                "emergency": "none",
+                "flight": "SKW4100",
+                "registration": "N290SY",
+                "model": "E75L",
+                "ladd_flag": false,
+                "military_flag": false,
+                "pia_flag": false,
+                "wierdo_flag": false
+            },
+            {
+                "adsb_hex": "abf3b8",
+                "category": "A3",
+                "emergency": "none",
+                "flight": "SWA298",
+                "registration": "N8698B",
+                "model": "B738",
+                "ladd_flag": false,
+                "military_flag": false,
+                "pia_flag": false,
+                "wierdo_flag": false
+            },
+            {
+                "adsb_hex": "a9616a",
+                "category": "A1",
+                "emergency": "none",
+                "flight": "CGGMG",
+                "registration": "N703TP",
+                "model": "S22T",
+                "ladd_flag": false,
+                "military_flag": false,
+                "pia_flag": false,
+                "wierdo_flag": false
+            }
+        ],
+        "observation": [
+            {
+                "hex": "aa6ba4",
+                "flight": "UAL927  ",
+                "lat": 40.888087,
+                "lon": -121.94562,
+                "altitude": 39000,
+                "track": 196,
+                "speed": 478
+            },
+            {
+                "hex": "a18b41",
+                "flight": "SKW3371 ",
+                "lat": 40.403432,
+                "lon": -122.706985,
+                "altitude": 36000,
+                "track": 0,
+                "speed": 444
+            },
+            {
+                "hex": "ae1193",
+                "flight": "GRZLY50 ",
+                "lat": 40.611288,
+                "lon": -121.825083,
+                "altitude": 37000,
+                "track": 155,
+                "speed": 405
+            },
+            {
+                "hex": "a2f721",
+                "flight": "SKW4100 ",
+                "lat": 40.64583,
+                "lon": -122.103923,
+                "altitude": 34000,
+                "track": 10,
+                "speed": 391
+            },
+            {
+                "hex": "abf3b8",
+                "flight": "SWA298  ",
+                "lat": 40.697205,
+                "lon": -122.81366,
+                "altitude": 37000,
+                "track": 177,
+                "speed": 464
+            },
+            {
+                "hex": "a9616a",
+                "flight": "CGGMG   ",
+                "lat": 40.147674,
+                "lon": -122.24943,
+                "altitude": 10950,
+                "track": 168,
+                "speed": 191
+            }
+        ]
+    }
+}

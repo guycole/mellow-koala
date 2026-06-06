@@ -16,4 +16,4 @@ docker run --rm --add-host=host.docker.internal:host-gateway -e RAILS_ENV=produc
 # Updated Mellow Manatee (token unchanged)
 #
 docker run -d --name koala --restart unless-stopped -p 3000:3000 --add-host=host.docker.internal:host-gateway -e RAILS_ENV=production -e SECRET_KEY_BASE=2242555804fff6e93f99a01048c2a7f8d4c782b351aff514fed1794a31e95e9bcefa5c3615d8c4fcb773e0482dd425eea4e7775256fc8568f44c812fd9da774e -e DB_HOST=host.docker.internal -e DB_USERNAME=koala_admin -e DB_PASSWORD=woofwoof koala:latest
-
+#

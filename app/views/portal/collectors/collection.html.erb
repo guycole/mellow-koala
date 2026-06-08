@@ -9,7 +9,8 @@
     </div>
   <% else %>
     <% project = @latest_collection.payload["project"] %>
-    <% if project == "heeler" %>
+    <% collector_id = @collector.collector_id %>
+    <% if project == "heeler" || collector_id == "mellow-heeler" %>
       <%= render "portal/collectors/heeler", snapshot: @latest_collection %>
     <% elsif project == "hyena-adsb" %>
       <%= render "portal/collectors/hyena_adsb", snapshot: @latest_collection %>

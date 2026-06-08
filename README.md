@@ -111,9 +111,10 @@ first seed):
 
 ```bash
 docker run --rm \
+  --add-host=host.docker.internal:host-gateway \
   -e RAILS_ENV=production \
   -e SECRET_KEY_BASE=<your-secret> \
-  -e DB_HOST=<postgres-host> \
+  -e DB_HOST=host.docker.internal \
   -e DB_USERNAME=koala_admin \
   -e DB_PASSWORD=<db-password> \
   koala:latest bundle exec rails db:prepare db:seed
@@ -122,6 +123,10 @@ docker run --rm \
 Note the ingest tokens printed for each collector — these are the values
 collectors must supply as `MELLOW_KOALA_TOKEN`.
 
+If PostgreSQL runs in another container on a user-defined Docker network,
+replace `host.docker.internal` with that database service name and omit the
+`--add-host` flag.
+
 ### 5. Start the server
 
 ```bash
@@ -129,9 +134,10 @@ docker run -d \
   --name koala \
   --restart unless-stopped \
   -p 3000:3000 \
+  --add-host=host.docker.internal:host-gateway \
   -e RAILS_ENV=production \
   -e SECRET_KEY_BASE=<your-secret> \
-  -e DB_HOST=<postgres-host> \
+  -e DB_HOST=host.docker.internal \
   -e DB_USERNAME=koala_admin \
   -e DB_PASSWORD=<db-password> \
   koala:latest
@@ -151,6 +157,10 @@ The portal is now available at `http://<host>:3000`.
 | `DB_NAME` | No | `mellow_koala_production` | Database name |
 | `RAILS_MAX_THREADS` | No | `5` | Puma thread count / DB pool size |
 | `PROMETHEUS_MULTIPROC_DIR` | No | — | Writable directory for multi-process Prometheus metrics aggregation (needed when running Puma in cluster mode) |
+
+When the app container needs to reach a PostgreSQL server running on the Docker
+host, use `DB_HOST=host.docker.internal` and add `--add-host=host.docker.internal:host-gateway`
+to `docker run`. On Docker Compose, add `extra_hosts: ["host.docker.internal:host-gateway"]`.
 
 ### Prometheus
 

@@ -4,6 +4,8 @@ services:
     command: bash -c "bundle exec rails db:prepare && bundle exec rails db:seed && bundle exec rails server -b 0.0.0.0"
     ports:
       - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       DB_HOST: host.docker.internal
       DB_USERNAME: koala_admin

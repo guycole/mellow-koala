@@ -3,8 +3,14 @@
   obs_count    = observations.size
   obs_rows     = observations.first(15)
   adsbex_index = (snapshot.payload["adsbex"] || []).index_by { |e| e["adsbHex"] }
-  z_time       = snapshot.payload["zTime"]
-  observed_at  = z_time ? Time.at(z_time).utc : nil
+  epoch_seconds = snapshot.payload["epochSeconds"] || snapshot.payload["zTime"]
+  observed_at   = if epoch_seconds
+    Time.at(epoch_seconds.to_f).utc
+  else
+    snapshot.captured_at&.utc || snapshot.received_at&.utc
+  end
+  observed_label = observed_at ? observed_at.strftime("%Y-%m-%d %H:%M:%S UTC") : "unknown"
+  hostname = snapshot.payload["hostname"] || snapshot.payload["hostName"] || snapshot.payload["platform"]
 %>
 
 <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">
@@ -14,7 +20,7 @@
     <div>
       <dt class="text-xs text-gray-500 uppercase tracking-wide">Observation Time (UTC)</dt>
       <dd class="mt-1 text-sm font-mono text-gray-800">
-        <%= observed_at ? observed_at.iso8601 : "unknown" %>
+        <%= observed_label %>
       </dd>
     </div>
     <div>
@@ -28,9 +34,9 @@
       </dd>
     </div>
     <div>
-      <dt class="text-xs text-gray-500 uppercase tracking-wide">Platform</dt>
+      <dt class="text-xs text-gray-500 uppercase tracking-wide">Hostname</dt>
       <dd class="mt-1 text-sm font-mono text-gray-800">
-        <%= snapshot.payload["platform"] || "—" %>
+        <%= hostname || "—" %>
       </dd>
     </div>
   </dl>

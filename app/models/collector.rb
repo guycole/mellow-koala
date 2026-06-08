@@ -35,7 +35,7 @@ class Collector < ApplicationRecord
 
   def stale?(window = nil)
     window ||= ENV.fetch("STALENESS_WINDOW_HOURS", 24).to_i.hours
-    last = last_configuration_at
+    last = last_collection_at
     last.nil? || last < window.ago
   end
 

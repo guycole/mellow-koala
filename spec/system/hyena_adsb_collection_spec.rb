@@ -13,9 +13,9 @@ RSpec.describe "Mellow Hyena ADSB Collection View", type: :system do
 
   let(:base_payload) do
     {
-      "platform"    => "rpi4c",
+      "hostName"    => "rpi4c",
       "project"     => "hyena-adsb",
-      "zTime"       => z_time,
+      "epochSeconds" => z_time,
       "version"     => 1,
       "geoLoc"      => { "site" => "anderson1" },
       "observation" => [

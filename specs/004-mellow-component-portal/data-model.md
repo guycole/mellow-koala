@@ -151,9 +151,9 @@ Mellow Hyena ADSB reports aviation ADSB beacon observations from a site. The `ad
 
 ```json
 {
-  "platform": "rpi4c",
+  "hostName": "rpi4c",
   "project": "hyena-adsb",
-  "zTime": 1706505957,
+  "epochSeconds": 1706505957,
   "version": 1,
   "geoLoc": {
     "site": "anderson1"
@@ -190,9 +190,9 @@ Mellow Hyena ADSB reports aviation ADSB beacon observations from a site. The `ad
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `platform` | string | Hardware platform (e.g., `rpi4c`) |
+| `hostName` | string | Host name for the collector (e.g., `rpi4c`) |
 | `project` | string | Always `"hyena-adsb"` for Mellow Hyena ADSB payloads |
-| `zTime` | integer | Unix timestamp of observation |
+| `epochSeconds` | integer | Epoch seconds timestamp of observation |
 | `version` | integer | Payload format version |
 | `geoLoc.site` | string | Site/location identifier |
 | `observation` | array | List of observed ADSB beacons |
@@ -216,7 +216,7 @@ Mellow Hyena ADSB reports aviation ADSB beacon observations from a site. The `ad
 | `adsbex[].wierdoFlag` | boolean | Anomaly/weirdo flag |
 
 **Display requirements (FR-038–FR-042):**
-- Show header: timestamp (`zTime` converted to local time), count of `observation` entries, `platform`, `geoLoc.site`
+- Show header: timestamp (`epochSeconds` converted from epoch seconds to local time), count of `observation` entries, `hostName`, `geoLoc.site`
 - Render a table of up to 15 observation rows: adsbHex, registration, model, flight, altitude, track
 - For each row, look up `registration` and `model` from `adsbex` by matching `adsbHex`; display "unknown" if no match
 - Truncate to 15 entries if more are present
@@ -230,9 +230,9 @@ Mellow Hyena UAT reports UAT aviation beacon observations from a site. The paylo
 
 ```json
 {
-  "platform": "rpi4c",
+  "hostName": "rpi4c",
   "project": "hyena-uat",
-  "zTime": 1706505957,
+  "epochSeconds": 1706505957,
   "version": 1,
   "geoLoc": {
     "site": "anderson1"
@@ -268,7 +268,7 @@ Mellow Hyena UAT reports UAT aviation beacon observations from a site. The paylo
 **Fields:** Same as HyenaAdsbCollectionPayload; only `project` differs (`"hyena-uat"`).
 
 **Display requirements (FR-043–FR-047):**
-- Show header: timestamp (`zTime` converted to local time), count of `observation` entries, `platform`, `geoLoc.site`
+- Show header: timestamp (`epochSeconds` converted from epoch seconds to local time), count of `observation` entries, `hostName`, `geoLoc.site`
 - Render a table of up to 15 observation rows: adsbHex, registration, model, flight, altitude, track
 - For each row, look up `registration` and `model` from `adsbex` by matching `adsbHex`; display "unknown" if no match
 - Truncate to 15 entries if more are present

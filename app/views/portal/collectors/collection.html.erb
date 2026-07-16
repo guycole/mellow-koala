@@ -9,12 +9,13 @@
     </div>
   <% else %>
     <% project = @latest_collection.payload["project"] %>
+    <% legacy_application = @latest_collection.payload.dig("meta", "application") %>
     <% collector_id = @collector.collector_id %>
     <% if project == "heeler" || collector_id == "mellow-heeler" %>
       <%= render "portal/collectors/heeler", snapshot: @latest_collection %>
-    <% elsif project == "hyena-adsb" %>
+    <% elsif project == "hyena-adsb" || collector_id == "mellow-hyena-adsb" || legacy_application == "hyena-adsb-v2" %>
       <%= render "portal/collectors/hyena_adsb", snapshot: @latest_collection %>
-    <% elsif project == "hyena-uat" %>
+    <% elsif project == "hyena-uat" || collector_id == "mellow-hyena-uat" || legacy_application == "hyena-uat-v2" %>
       <%= render "portal/collectors/hyena_uat", snapshot: @latest_collection %>
     <% elsif project == "mastodon" %>
       <%= render "portal/collectors/mastodon", snapshot: @latest_collection %>

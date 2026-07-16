@@ -125,4 +125,32 @@ RSpec.describe "Mellow Hyena ADSB Collection View", type: :system do
     visit collection_collector_path(collector)
     expect(page).to have_text("No collection data available yet")
   end
+
+  it "renders the styled ADSB view for legacy payload snapshots" do
+    legacy_payload = {
+      "meta" => {
+        "application" => "hyena-adsb-v2",
+        "hostName" => "c4c",
+        "timeStampEpoch" => z_time
+      },
+      "geoLoc" => { "site" => "anderson1" },
+      "payload" => {
+        "observation" => [
+          { "flight" => "SKW3695", "altitude" => 33000, "track" => 178, "hex" => "a25925" }
+        ],
+        "adsbex" => [
+          { "adsb_hex" => "a25925", "registration" => "N250SY", "model" => "E75L" }
+        ]
+      }
+    }
+
+    create(:collection_snapshot, collector: collector, payload: legacy_payload)
+
+    visit collection_collector_path(collector)
+
+    expect(page).to have_text("Latest Hyena ADSB Observation")
+    expect(page).to have_text("a25925")
+    expect(page).to have_text("N250SY")
+    expect(page).to have_text("c4c")
+  end
 end

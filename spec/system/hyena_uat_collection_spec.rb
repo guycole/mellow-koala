@@ -100,4 +100,32 @@ RSpec.describe "Mellow Hyena UAT Collection View", type: :system do
     visit collection_collector_path(collector)
     expect(page).to have_text("No collection data available yet")
   end
+
+  it "renders the styled UAT view for legacy payload snapshots" do
+    legacy_payload = {
+      "meta" => {
+        "application" => "hyena-uat-v2",
+        "hostName" => "c4c",
+        "timeStampEpoch" => z_time
+      },
+      "geoLoc" => { "site" => "anderson1" },
+      "payload" => {
+        "observation" => [
+          { "flight" => "N12345", "altitude" => 8500, "track" => 90, "hex" => "b11111" }
+        ],
+        "adsbex" => [
+          { "adsb_hex" => "b11111", "registration" => "N12345", "model" => "C172" }
+        ]
+      }
+    }
+
+    create(:collection_snapshot, collector: collector, payload: legacy_payload)
+
+    visit collection_collector_path(collector)
+
+    expect(page).to have_text("Latest Hyena UAT Observation")
+    expect(page).to have_text("b11111")
+    expect(page).to have_text("N12345")
+    expect(page).to have_text("c4c")
+  end
 end

@@ -1,8 +1,9 @@
 <%
-  observations = snapshot.payload["observation"] || []
+  source_payload = snapshot.payload["payload"].is_a?(Hash) ? snapshot.payload["payload"] : snapshot.payload
+  observations = source_payload["observation"] || []
   obs_count    = observations.size
   obs_rows     = observations.first(15)
-  raw_adsbex = snapshot.payload["adsbex"]
+  raw_adsbex = source_payload["adsbex"]
   adsbex_index = case raw_adsbex
   when Hash
     raw_adsbex.transform_keys { |k| k.to_s.downcase }
@@ -18,14 +19,14 @@
   else
     {}
   end
-  epoch_seconds = snapshot.payload["epochSeconds"] || snapshot.payload["zTime"]
+  epoch_seconds = snapshot.payload["epochSeconds"] || snapshot.payload["zTime"] || snapshot.payload.dig("meta", "timeStampEpoch")
   observed_at   = if epoch_seconds
     Time.at(epoch_seconds.to_f).utc
   else
     snapshot.captured_at&.utc || snapshot.received_at&.utc
   end
   observed_label = observed_at ? observed_at.strftime("%Y-%m-%d %H:%M:%S UTC") : "unknown"
-  hostname = snapshot.payload["hostname"] || snapshot.payload["hostName"] || snapshot.payload["platform"]
+  hostname = snapshot.payload["hostname"] || snapshot.payload["hostName"] || snapshot.payload["platform"] || snapshot.payload.dig("meta", "hostName") || snapshot.payload.dig("meta", "crate")
 %>
 
 <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">
@@ -94,4 +95,11 @@
   <% else %>
     <p class="text-sm text-gray-400 italic">No UAT observations in this snapshot.</p>
   <% end %>
+
+  <details class="mt-6 border-t border-gray-100 pt-4" data-testid="hyena-uat-raw-json">
+    <summary class="cursor-pointer text-sm font-semibold text-gray-600 hover:text-gray-800">
+      Raw Payload JSON
+    </summary>
+    <pre class="mt-3 bg-gray-50 rounded p-4 text-sm overflow-x-auto text-gray-700"><%= JSON.pretty_generate(snapshot.payload) rescue snapshot.payload.to_s %></pre>
+  </details>
 </div>

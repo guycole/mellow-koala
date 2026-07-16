@@ -2,7 +2,22 @@
   observations = snapshot.payload["observation"] || []
   obs_count    = observations.size
   obs_rows     = observations.first(15)
-  adsbex_index = (snapshot.payload["adsbex"] || []).index_by { |e| e["adsbHex"] }
+  raw_adsbex = snapshot.payload["adsbex"]
+  adsbex_index = case raw_adsbex
+  when Hash
+    raw_adsbex.transform_keys { |k| k.to_s.downcase }
+  when Array
+    raw_adsbex.each_with_object({}) do |entry, index|
+      next unless entry.is_a?(Hash)
+
+      hex = entry["adsbHex"] || entry["adsb_hex"] || entry["hex"]
+      next if hex.blank?
+
+      index[hex.to_s.downcase] = entry
+    end
+  else
+    {}
+  end
   epoch_seconds = snapshot.payload["epochSeconds"] || snapshot.payload["zTime"]
   observed_at   = if epoch_seconds
     Time.at(epoch_seconds.to_f).utc
@@ -62,12 +77,13 @@
         </thead>
         <tbody class="divide-y divide-gray-100">
           <% obs_rows.each do |obs| %>
-            <% enrichment = adsbex_index[obs["adsbHex"]] %>
+            <% obs_hex = obs["adsbHex"] || obs["adsb_hex"] || obs["hex"] %>
+            <% enrichment = adsbex_index[obs_hex.to_s.downcase] %>
             <tr class="hover:bg-gray-50">
-              <td class="px-3 py-2 font-mono text-gray-600"><%= obs["adsbHex"] %></td>
+              <td class="px-3 py-2 font-mono text-gray-600"><%= obs_hex %></td>
               <td class="px-3 py-2 font-mono"><%= enrichment&.dig("registration") || "unknown" %></td>
               <td class="px-3 py-2 font-mono"><%= enrichment&.dig("model") || "unknown" %></td>
-              <td class="px-3 py-2"><%= obs["flight"] %></td>
+              <td class="px-3 py-2"><%= obs["flight"].presence || enrichment&.dig("flight") || "" %></td>
               <td class="px-3 py-2 text-right"><%= obs["altitude"] %></td>
               <td class="px-3 py-2 text-right"><%= obs["track"] %></td>
             </tr>

@@ -1,7 +1,7 @@
 {
-  "platform": "rpi4i",
+  "hostName": "rpi4i",
   "project": "hyena-adsb",
-  "zTime": 1776973082,
+  "epochSeconds": 1776973082,
   "version": 1,
   "geoLoc": {
     "site": "vallejo01"

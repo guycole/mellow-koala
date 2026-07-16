@@ -1,7 +1,12 @@
 require "rails_helper"
 
 RSpec.describe "Mellow Hyena UAT Collection View", type: :system do
-  before { driven_by :rack_test }
+  before do
+    driven_by :rack_test
+    Collector.where(collector_id: "mellow-hyena-uat").or(
+      Collector.where(slug: "mellow-hyena-uat")
+    ).delete_all
+  end
 
   let(:collector) do
     create(:collector, :collection_only, collector_id: "mellow-hyena-uat",
@@ -9,13 +14,13 @@ RSpec.describe "Mellow Hyena UAT Collection View", type: :system do
   end
 
   let(:z_time) { 1_706_505_957 }
-  let(:expected_utc) { Time.at(z_time).utc.iso8601 }
+  let(:expected_observation_label) { Time.at(z_time).utc.strftime("%Y-%m-%d %H:%M:%S UTC") }
 
   let(:base_payload) do
     {
-      "platform"    => "rpi4c",
+      "hostName"    => "rpi4c",
       "project"     => "hyena-uat",
-      "zTime"       => z_time,
+      "epochSeconds" => z_time,
       "version"     => 1,
       "geoLoc"      => { "site" => "anderson1" },
       "observation" => [
@@ -35,7 +40,7 @@ RSpec.describe "Mellow Hyena UAT Collection View", type: :system do
     create(:collection_snapshot, collector: collector, payload: base_payload)
     visit collection_collector_path(collector)
     expect(page).to have_text("Observation Time (UTC)")
-    expect(page).to have_text(expected_utc)
+    expect(page).to have_text(expected_observation_label)
     expect(page).to have_text("UAT Beacons Observed")
     expect(page).to have_text("1")
     expect(page).to have_text("anderson1")

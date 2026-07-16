@@ -24,23 +24,6 @@ require_relative "../lib/importer_config"
 
 COMPONENT_ID     = "mellow-heeler"
 
-def load_credentials_file
-  return {} unless File.exist?(CREDENTIALS_FILE)
-  File.readlines(CREDENTIALS_FILE, chomp: true).each_with_object({}) do |line, h|
-    next if line.strip.empty? || line.start_with?("#")
-    key, val = line.split("=", 2)
-    h[key.strip] = val&.strip if key && val
-  end
-end
-
-def resolve_config
-  creds = load_credentials_file
-  token = ENV["MELLOW_HEELER_TOKEN"] || creds["MELLOW_HEELER_TOKEN"] ||
-          ENV["MELLOW_KOALA_TOKEN"]  || creds["MELLOW_KOALA_TOKEN"]
-  url   = ENV["MELLOW_KOALA_URL"]   || creds["MELLOW_KOALA_URL"] || "http://localhost:3000"
-  [ token, url ]
-end
-
 def abort_with(msg)
   warn "[import_heeler] ERROR: #{msg}"
   exit 1
@@ -87,8 +70,6 @@ info "Project: #{payload["project"]}, Site: #{payload.dig("geoLoc", "site")}, " 
 
 # ── Resolve config ───────────────────────────────────────────────────────────
 
-token, base_url = resolve_config
-abort_with "No bearer token found. Set MELLOW_HEELER_TOKEN (or MELLOW_KOALA_TOKEN) env var or add it to ~/.mellow-koala/credentials" if token.nil? || token.empty?
 token, base_url = ImporterConfig.resolve_config(COMPONENT_ID)
 abort_with "No bearer token found. Set MELLOW_HEELER_TOKEN (preferred) or MELLOW_KOALA_TOKEN, or add one of those keys to ~/.mellow-koala/credentials" if token.nil? || token.empty?
 

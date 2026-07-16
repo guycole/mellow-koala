@@ -39,13 +39,15 @@ Each utility reads its credentials from (in order of precedence):
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `MELLOW_KOALA_TOKEN` | Yes | — | Bearer token for the collector (shown by `db:seed`) |
+| `MELLOW_HEELER_TOKEN`, `MELLOW_HYENA_ADSB_TOKEN`, `MELLOW_HYENA_UAT_TOKEN`, `MELLOW_MASTODON_TOKEN` | Yes, preferred | — | Collector-specific bearer token |
+| `MELLOW_KOALA_TOKEN` | Yes, fallback only | — | Generic bearer token when only one collector is configured |
 | `MELLOW_KOALA_URL` | No | `http://localhost:3000` | Base URL of the Koala server |
 
 Example credentials file:
 
 ```
-MELLOW_KOALA_TOKEN=abc123...
+MELLOW_HYENA_UAT_TOKEN=abc123...
+MELLOW_HYENA_ADSB_TOKEN=def456...
 MELLOW_KOALA_URL=http://koala.local:3000
 ```
 
@@ -120,7 +122,9 @@ docker run --rm \
 ```
 
 Note the ingest tokens printed for each collector — these are the values
-collectors must supply as `MELLOW_KOALA_TOKEN`.
+collectors must supply as their collector-specific token variable, such as
+`MELLOW_HYENA_UAT_TOKEN`. `MELLOW_KOALA_TOKEN` remains available as a generic
+fallback when only one collector is configured on a host.
 
 ### 5. Start the server
 

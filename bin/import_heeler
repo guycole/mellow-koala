@@ -19,25 +19,9 @@ require "net/http"
 require "uri"
 require "digest"
 require "time"
+require_relative "../lib/importer_config"
 
-CREDENTIALS_FILE = File.join(Dir.home, ".mellow-koala", "credentials")
 COMPONENT_ID     = "mellow-heeler"
-
-def load_credentials_file
-  return {} unless File.exist?(CREDENTIALS_FILE)
-  File.readlines(CREDENTIALS_FILE, chomp: true).each_with_object({}) do |line, h|
-    next if line.strip.empty? || line.start_with?("#")
-    key, val = line.split("=", 2)
-    h[key.strip] = val&.strip if key && val
-  end
-end
-
-def resolve_config
-  creds = load_credentials_file
-  token = ENV["MELLOW_KOALA_TOKEN"] || creds["MELLOW_KOALA_TOKEN"]
-  url   = ENV["MELLOW_KOALA_URL"]   || creds["MELLOW_KOALA_URL"] || "http://localhost:3000"
-  [ token, url ]
-end
 
 def abort_with(msg)
   warn "[import_heeler] ERROR: #{msg}"
@@ -54,7 +38,8 @@ if ARGV.length != 1 || ARGV.first == "--help"
   puts "Usage: bin/import_heeler <path-to-heeler-file.json>"
   puts ""
   puts "Environment variables:"
-  puts "  MELLOW_KOALA_TOKEN  Bearer token for mellow-heeler (required)"
+  puts "  MELLOW_HEELER_TOKEN  Bearer token for mellow-heeler (preferred)"
+  puts "  MELLOW_KOALA_TOKEN   Generic bearer token fallback"
   puts "  MELLOW_KOALA_URL    Base URL of Mellow Koala (default: http://localhost:3000)"
   puts ""
   puts "Or set these in ~/.mellow-koala/credentials"
@@ -82,8 +67,8 @@ info "Project: #{payload["project"]}, Site: #{payload.dig("geoLoc", "site")}, " 
 
 # ── Resolve config ───────────────────────────────────────────────────────────
 
-token, base_url = resolve_config
-abort_with "No bearer token found. Set MELLOW_KOALA_TOKEN env var or add it to ~/.mellow-koala/credentials" if token.nil? || token.empty?
+token, base_url = ImporterConfig.resolve_config(COMPONENT_ID)
+abort_with "No bearer token found. Set MELLOW_HEELER_TOKEN (preferred) or MELLOW_KOALA_TOKEN, or add one of those keys to ~/.mellow-koala/credentials" if token.nil? || token.empty?
 
 # ── Build the API request body ───────────────────────────────────────────────
 # Use SHA256 of file contents as idempotency key so retries are safe.
@@ -133,7 +118,7 @@ when 400
   body = JSON.parse(response.body) rescue {}
   abort_with "Validation error (400): #{body.dig("error", "message") || response.body}"
 when 401
-  abort_with "Unauthorized (401) — check your MELLOW_KOALA_TOKEN"
+  abort_with "Unauthorized (401) — check your MELLOW_HEELER_TOKEN or MELLOW_KOALA_TOKEN"
 when 403
   abort_with "Forbidden (403) — token is invalid or does not match mellow-heeler"
 when 404

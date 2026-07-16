@@ -20,8 +20,8 @@ require "net/http"
 require "uri"
 require "digest"
 require "time"
+require_relative "../lib/importer_config"
 
-CREDENTIALS_FILE = File.join(Dir.home, ".mellow-koala", "credentials")
 COMPONENT_ID     = "mellow-heeler"
 
 def load_credentials_file
@@ -59,6 +59,8 @@ if ARGV.length != 1 || ARGV.first == "--help"
   puts "  MELLOW_HEELER_TOKEN  Bearer token for mellow-heeler (preferred)"
   puts "  MELLOW_KOALA_TOKEN   Fallback bearer token"
   puts "  MELLOW_KOALA_URL     Base URL of Mellow Koala (default: http://localhost:3000)"
+  puts "  MELLOW_KOALA_TOKEN   Generic bearer token fallback"
+  puts "  MELLOW_KOALA_URL    Base URL of Mellow Koala (default: http://localhost:3000)"
   puts ""
   puts "Or set these in ~/.mellow-koala/credentials"
   exit ARGV.first == "--help" ? 0 : 1
@@ -87,6 +89,8 @@ info "Project: #{payload["project"]}, Site: #{payload.dig("geoLoc", "site")}, " 
 
 token, base_url = resolve_config
 abort_with "No bearer token found. Set MELLOW_HEELER_TOKEN (or MELLOW_KOALA_TOKEN) env var or add it to ~/.mellow-koala/credentials" if token.nil? || token.empty?
+token, base_url = ImporterConfig.resolve_config(COMPONENT_ID)
+abort_with "No bearer token found. Set MELLOW_HEELER_TOKEN (preferred) or MELLOW_KOALA_TOKEN, or add one of those keys to ~/.mellow-koala/credentials" if token.nil? || token.empty?
 
 # ── Build the API request body ───────────────────────────────────────────────
 # Use SHA256 of file contents as idempotency key so retries are safe.
@@ -136,7 +140,7 @@ when 400
   body = JSON.parse(response.body) rescue {}
   abort_with "Validation error (400): #{body.dig("error", "message") || response.body}"
 when 401
-  abort_with "Unauthorized (401) — check your MELLOW_KOALA_TOKEN"
+  abort_with "Unauthorized (401) — check your MELLOW_HEELER_TOKEN or MELLOW_KOALA_TOKEN"
 when 403
   abort_with "Forbidden (403) — token is invalid or does not match mellow-heeler"
 when 404

@@ -17,7 +17,7 @@
       <%= render "portal/collectors/hyena_adsb", snapshot: @latest_collection %>
     <% elsif project == "hyena-uat" || collector_id == "mellow-hyena-uat" || legacy_application == "hyena-uat-v2" %>
       <%= render "portal/collectors/hyena_uat", snapshot: @latest_collection %>
-    <% elsif project == "mastodon" %>
+    <% elsif project == "mastodon" || collector_id == "mellow-mastodon" %>
       <%= render "portal/collectors/mastodon", snapshot: @latest_collection %>
     <% else %>
       <div class="rounded-lg border border-gray-200 bg-white shadow-sm p-6 mb-6">

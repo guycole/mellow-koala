@@ -59,9 +59,9 @@ unless payload.is_a?(Hash)
 end
 
 info "Loaded #{file_path} (#{File.size(file_path)} bytes)"
-info "Project: #{payload["project"]}, Platform: #{payload["platform"]}, " \
+info "Project: #{payload["project"]}, Host: #{payload["hostName"]}, " \
      "Site: #{payload.dig("geoLoc", "site")}, " \
-     "Peakers: #{Array(payload["peakers"]).size}, zTime: #{payload["zTime"]}"
+     "Peakers: #{Array(payload["peakers"]).size}, epochSeconds: #{payload["epochSeconds"]}"
 
 # ── Resolve config ───────────────────────────────────────────────────────────
 
@@ -72,7 +72,7 @@ abort_with "No bearer token found. Set MELLOW_MASTODON_TOKEN (preferred) or MELL
 # Use SHA256 of file contents as idempotency key so retries are safe.
 
 snapshot_id  = "mastodon-#{Digest::SHA256.hexdigest(raw)[0, 16]}"
-captured_at  = payload["zTime"] ? Time.at(payload["zTime"]).utc.iso8601 : nil
+captured_at  = payload["epochSeconds"] ? Time.at(payload["epochSeconds"]).utc.iso8601 : nil
 
 request_body = {
   snapshot_id: snapshot_id,

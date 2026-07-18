@@ -1,7 +1,7 @@
 {
-    "platform": "rpi4c",
+    "hostName": "rpi4c",
     "project": "mastodon",
-    "zTime": 1762297264,
+    "epochSeconds": 1762297264,
     "version": 1,
     "geoLoc": {
         "site": "vallejo01"
